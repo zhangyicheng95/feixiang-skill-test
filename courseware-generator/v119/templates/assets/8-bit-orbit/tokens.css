@@ -1,0 +1,37 @@
+/* 8-Bit Orbit tokens
+ * Adapted from the source template's pixel-neon arcade system.
+ * Usage:
+ * 1. Copy these variables before 8-bit-orbit/page-shared.css in <template class="page-shared"><style>...</style></template>.
+ * 2. Add data-cw-template="8-bit-orbit" to every page-root.
+ */
+
+[data-cw-template="8-bit-orbit"] {
+  --cw-orbit-void: #0a0e27;
+  --cw-orbit-navy: #0f1b3d;
+  --cw-orbit-cyan: #5edcf4;
+  --cw-orbit-pink: #f0a6ca;
+  --cw-orbit-yellow: #f4d03f;
+  --cw-orbit-lavender: #e2d5f2;
+  --cw-orbit-white: #ffffff;
+  --cw-orbit-display-font:
+    "Tektur", "Chakra Petch", "Source Han Sans SC", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  --cw-orbit-body-font:
+    "Chakra Petch", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  --cw-orbit-mono-font:
+    "Space Mono", "Chakra Petch", "Source Han Sans SC", "PingFang SC",
+    "Microsoft YaHei", monospace;
+  --cw-orbit-hero-text-shadow:
+    4px 4px 0 var(--cw-orbit-yellow),
+    8px 8px 0 var(--cw-orbit-navy);
+  --cw-orbit-title-text-shadow: 3px 3px 0 var(--cw-orbit-navy);
+  --cw-template-title-font: var(--cw-orbit-display-font);
+  --cw-template-body-font: var(--cw-orbit-body-font);
+  --cw-template-label-font: var(--cw-orbit-mono-font);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: var(--cw-orbit-white);
+  --cw-template-muted-color: rgba(255, 255, 255, 0.72);
+  --cw-template-label-color: var(--cw-orbit-pink);
+  --cw-template-title-shadow: none;
+}

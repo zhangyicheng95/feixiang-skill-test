@@ -1,0 +1,278 @@
+/* CW_TEMPLATE_ASSET: 8-bit-orbit/page-shared.css START
+ * REQUIRED_VARIANTS: slide-01-hero, slide-02-mission-brief, slide-03-core-systems, slide-04-analytics-core, slide-05-resource-allocation, slide-06-roadmap, slide-07-platform-vitals, slide-08-quote, slide-09-access-tiers, slide-10-closing-cta, native-interaction-shell
+ *
+ * 8-Bit Orbit safe shared theme layer
+ * Append after 8-bit-orbit/tokens.css inside the existing single page-shared
+ * style block. Never replace or delete the original courseware CSS.
+ *
+ * This file distills the source template's 10 slide recipes into page-root
+ * visual tokens only: background, page text color, title/body/label font
+ * family, title/body/label color, and text shadow. It must not rebuild lesson
+ * components, insert labels, resize controls, restyle media frames, or change
+ * event-bearing DOM.
+ */
+
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-font: var(--cw-orbit-display-font);
+  --cw-template-body-font: var(--cw-orbit-body-font);
+  --cw-template-label-font: var(--cw-orbit-mono-font);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: var(--cw-orbit-white);
+  --cw-template-muted-color: rgba(255, 255, 255, 0.72);
+  --cw-template-label-color: var(--cw-orbit-pink);
+  --cw-template-title-shadow: none;
+  font-family: var(--cw-template-body-font);
+  color: var(--cw-template-body-color);
+  background:
+    radial-gradient(circle at 4% 31%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 16% 72%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 29% 16%, var(--cw-orbit-cyan) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 45% 82%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 72% 20%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 88% 60%, var(--cw-orbit-cyan) 0 2px, transparent 2.8px),
+    linear-gradient(rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(15, 27, 61, 0.86), rgba(10, 14, 39, 1)),
+    var(--cw-orbit-void);
+  background-size: auto, auto, auto, auto, auto, auto, 40px 40px, 40px 40px, auto, auto;
+}
+
+/* Safe typography wiring. No size, spacing, layout, border, radius, or shadow-box rules.
+ * Selectors are intentionally stronger than common page-local color rules so
+ * the template actually applies without deleting the original CSS.
+ */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] :is([data-cw-role="title-block"], .title-block, .page-title, .slide-title),
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] :is(h1, h2, h3, h4)[data-cw-role="title-block"] {
+  font-family: var(--cw-template-title-font);
+  color: var(--cw-template-title-color);
+  text-shadow: var(--cw-template-title-shadow);
+}
+
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] :is([data-cw-role="title-block"], .title-block, .page-title, .slide-title) :is(h1, h2, h3, h4),
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] > :is(h1, h2, h3, h4):first-child {
+  font-family: var(--cw-template-title-font);
+  color: var(--cw-template-title-color);
+  text-shadow: var(--cw-template-title-shadow);
+}
+
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] :is([data-cw-role="content-block"], .content-block, .page-content, .lesson-content, .body-block) {
+  font-family: var(--cw-template-body-font);
+  color: var(--cw-template-body-color);
+}
+
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] :is([data-cw-role="content-block"], .content-block, .page-content, .lesson-content, .body-block) :is(p, li, figcaption, small, .classic-text, .content-text, .description, .subtitle, .summary-text),
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] > :is(p, ul, ol, .classic-text, .content-text, .description, .subtitle, .summary-text) {
+  font-family: var(--cw-template-body-font);
+  color: var(--cw-template-body-color);
+}
+
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"] :is(.cw-template-label, [data-cw-role="title-block"] small, .title-block small, .page-title small, .slide-title small) {
+  font-family: var(--cw-template-label-font);
+  color: var(--cw-template-label-color);
+}
+
+/* CW_TEMPLATE_VARIANT: slide-01-hero */
+/* Source slide 1: hero cover. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-01-hero"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="hero-cover"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: rgba(255, 255, 255, 0.72);
+  --cw-template-muted-color: rgba(255, 255, 255, 0.68);
+  --cw-template-label-color: var(--cw-orbit-pink);
+  --cw-template-title-shadow: var(--cw-orbit-hero-text-shadow);
+  background:
+    radial-gradient(circle at 5% 31%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 12% 73%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 28% 18%, var(--cw-orbit-cyan) 0 3px, transparent 3.6px),
+    radial-gradient(circle at 43% 82%, var(--cw-orbit-yellow) 0 3px, transparent 3.6px),
+    radial-gradient(circle at 66% 24%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 80% 72%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 94% 42%, var(--cw-orbit-cyan) 0 3px, transparent 3.6px),
+    linear-gradient(rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: auto, auto, auto, auto, auto, auto, auto, 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-02-mission-brief */
+/* Source slide 2: mission brief, pink grid with dark navy text. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-02-mission-brief"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="mission-brief"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-color: var(--cw-orbit-navy);
+  --cw-template-body-color: rgba(15, 27, 61, 0.75);
+  --cw-template-muted-color: rgba(15, 27, 61, 0.64);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    var(--cw-orbit-pink);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-03-core-systems */
+/* Source slide 3: core systems, cyan grid with navy headings and body. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-03-core-systems"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="core-systems"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="panel-grid"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-cyan);
+  --cw-template-title-color: var(--cw-orbit-navy);
+  --cw-template-body-color: rgba(15, 27, 61, 0.75);
+  --cw-template-muted-color: rgba(15, 27, 61, 0.64);
+  --cw-template-label-color: var(--cw-orbit-cyan);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-cyan);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-04-analytics-core */
+/* Source slide 4: analytics core, dark grid with cyan title and pink subtitle. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-04-analytics-core"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="analytics-core"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-pink);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: rgba(255, 255, 255, 0.82);
+  --cw-template-muted-color: var(--cw-orbit-pink);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  background:
+    linear-gradient(rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-05-resource-allocation */
+/* Source slide 5: resource allocation, lavender grid with navy title. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-05-resource-allocation"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="resource-allocation"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-color: var(--cw-orbit-navy);
+  --cw-template-body-color: rgba(15, 27, 61, 0.72);
+  --cw-template-muted-color: rgba(15, 27, 61, 0.6);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.05) 1px, transparent 1px),
+    var(--cw-orbit-lavender);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-06-roadmap */
+/* Source slide 6: development roadmap, pink grid with navy title and cyan date accents. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-06-roadmap"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="roadmap"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-cyan);
+  --cw-template-title-color: var(--cw-orbit-navy);
+  --cw-template-body-color: rgba(15, 27, 61, 0.7);
+  --cw-template-muted-color: rgba(15, 27, 61, 0.64);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    var(--cw-orbit-pink);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-07-platform-vitals */
+/* Source slide 7: platform vitals, dark grid with cyan numbers and pink labels. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-07-platform-vitals"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="platform-vitals"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-pink);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: rgba(255, 255, 255, 0.78);
+  --cw-template-muted-color: rgba(255, 255, 255, 0.5);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  --cw-template-title-shadow: var(--cw-orbit-title-text-shadow);
+  background:
+    linear-gradient(rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-08-quote */
+/* Source slide 8: quote, cyan grid with navy quote text and yellow rule accent. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-08-quote"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-color: var(--cw-orbit-navy);
+  --cw-template-body-color: var(--cw-orbit-navy);
+  --cw-template-muted-color: rgba(15, 27, 61, 0.7);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-cyan);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-09-access-tiers */
+/* Source slide 9: access tiers, lavender grid with navy title and pink label. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-09-access-tiers"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="access-tiers"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="tier-cards"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-pink);
+  --cw-template-title-color: var(--cw-orbit-navy);
+  --cw-template-body-color: rgba(15, 27, 61, 0.72);
+  --cw-template-muted-color: rgba(15, 27, 61, 0.6);
+  --cw-template-label-color: var(--cw-orbit-pink);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.05) 1px, transparent 1px),
+    var(--cw-orbit-lavender);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-10-closing-cta */
+/* Source slide 10: closing CTA, dark grid with cyan/yellow hero shadow. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="slide-10-closing-cta"],
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="closing-cta"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: rgba(255, 255, 255, 0.72);
+  --cw-template-muted-color: rgba(255, 255, 255, 0.68);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  --cw-template-title-shadow: var(--cw-orbit-hero-text-shadow);
+  background:
+    radial-gradient(circle at 10% 20%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 80% 70%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    linear-gradient(rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.07) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: auto, auto, 40px 40px, 40px 40px, auto;
+}
+
+/* CW_TEMPLATE_VARIANT: native-interaction-shell */
+/* Interaction pages keep the native lesson component structure and use the safest dark recipe. */
+[data-cw-role="page-root"][data-cw-template="8-bit-orbit"][data-cw-variant="native-interaction-shell"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-yellow);
+  --cw-template-title-color: var(--cw-orbit-cyan);
+  --cw-template-body-color: rgba(255, 255, 255, 0.78);
+  --cw-template-muted-color: rgba(255, 255, 255, 0.6);
+  --cw-template-label-color: var(--cw-orbit-yellow);
+  background:
+    linear-gradient(rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: 36px 36px, 36px 36px, auto;
+}
+
+/* CW_TEMPLATE_ASSET: 8-bit-orbit/page-shared.css END */

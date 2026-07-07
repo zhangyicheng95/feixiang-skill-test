@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "physics-formula-typography Self-Check Report",
+  "description": "物理公式与物理量排版规范自检。所有核心检查通过时才能交付，同时要确认普通 UI 文案和非物理英文没有被过度 MathJax 化。",
+  "type": "object",
+  "required": [
+    "version",
+    "mode",
+    "final_html_url",
+    "checks",
+    "passed",
+    "status"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "example": "1.6.2"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["fresh_generate", "fix_existing"]
+    },
+    "source_html_url": {
+      "type": ["string", "null"],
+      "format": "uri"
+    },
+    "final_html_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "checks": {
+      "type": "object",
+      "required": [
+        "mathjax_cdn",
+        "delimiter_policy",
+        "visible_symbol_coverage",
+        "quantity_unit_font",
+        "control_label_units",
+        "semantic_subscripts",
+        "unicode_or_html_subscripts",
+        "dynamic_typeset",
+        "dynamic_typeset_nonempty_root",
+        "canvas_svg_labels",
+        "canvas_chart_formula_labels",
+        "force_vector_labels",
+        "interaction_smoke",
+        "non_overconstraint"
+      ],
+      "properties": {
+        "mathjax_cdn": {
+          "$ref": "#/definitions/check_item",
+          "description": "必须使用指定 metis-online MathJax3 CDN，且 window.MathJax 配置在 CDN 之前。"
+        },
+        "delimiter_policy": {
+          "$ref": "#/definitions/check_item",
+          "description": "全 HTML 无 $...$，只使用 \\(...\\) 与 \\[...\\]。"
+        },
+        "visible_symbol_coverage": {
+          "$ref": "#/definitions/check_item",
+          "description": "画面所有可见公式、物理量字母、单位和动态读数都已进入 MathJax。"
+        },
+        "quantity_unit_font": {
+          "$ref": "#/definitions/check_item",
+          "description": "物理量斜体，单位用 \\mathrm 正体，数字与单位之间有合适间距。"
+        },
+        "control_label_units": {
+          "$ref": "#/definitions/check_item",
+          "description": "控件、滑块、输入项 label 中的物理量和单位提示已进入 MathJax；例如不保留 质量 \\(m\\) (kg)、速度 \\(v\\) (m/s)、磁感应强度 \\(B\\) (T) 等半规范写法；普通按钮和开关文案不强行 MathJax 化。"
+        },
+        "semantic_subscripts": {
+          "$ref": "#/definitions/check_item",
+          "description": "vm/vM/v0/pm/pM/Px/V1/V2/V3 等自然写法已归一为 v_{m}/v_{M}/v_{0}/p_{m}/p_{M}/P_{x}/V_{1}/V_{2}/V_{3}。"
+        },
+        "unicode_or_html_subscripts": {
+          "$ref": "#/definitions/check_item",
+          "description": "无 Unicode 上下标、无 <sub>/<sup> 公式角标。"
+        },
+        "dynamic_typeset": {
+          "$ref": "#/definitions/check_item",
+          "description": "所有动态 DOM 更新后调用 MathJax.typesetPromise 或统一 helper。"
+        },
+        "dynamic_typeset_nonempty_root": {
+          "$ref": "#/definitions/check_item",
+          "description": "动态公式/单位更新后对真实非空 DOM 根节点重排；不存在 MathJax.typesetPromise([])、el ? [el] : [] 等空根兜底；交互后无裸 \\(...\\)。"
+        },
+        "canvas_svg_labels": {
+          "$ref": "#/definitions/check_item",
+          "description": "Canvas/SVG/Three.js 不直接绘制公式；公式标签使用 HTML overlay、CSS2DLabel 或 foreignObject。"
+        },
+        "canvas_chart_formula_labels": {
+          "$ref": "#/definitions/check_item",
+          "description": "Canvas/Chart.js/ECharts/WebGL 不直接渲染公式性标签、图例、轴标题或注释；公式、变量和单位使用 HTML overlay、自定义图例或 DOM caption 交给 MathJax。Chart.js/ECharts 内置轴标题只保留纯中文维度名，不能写 速度 (m/s)、力 (μN)、v (m/s) 等带变量/单位文本。纯图形磁场点/叉不算失败；该检查不评价物理方向或受力完整性。"
+        },
+        "force_vector_labels": {
+          "$ref": "#/definitions/check_item",
+          "description": "可见受力/场/速度标签如 F洛/FN/F合/F_G_N/v/B/E 已规范为 MathJax，不保留裸文本标签；该检查不评价力的方向或受力完整性。"
+        },
+        "interaction_smoke": {
+          "$ref": "#/definitions/check_item",
+          "description": "点击开始/播放/下一步、拖动滑块、切换步骤后仍无裸公式/裸变量/裸单位。"
+        },
+        "non_overconstraint": {
+          "$ref": "#/definitions/check_item",
+          "description": "普通 UI 文案、选项编号、英文缩写、CSS/JS 标识符没有被强行 MathJax 化。"
+        }
+      }
+    },
+    "formula_inventory": {
+      "type": "array",
+      "description": "本次识别并规范化的公式/变量/单位清单。",
+      "items": {
+        "type": "object",
+        "required": ["source_text", "normalized_latex", "location"],
+        "properties": {
+          "source_text": { "type": "string" },
+          "normalized_latex": { "type": "string" },
+          "location": { "type": "string" },
+          "dynamic": { "type": "boolean" }
+        }
+      }
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["passed", "degraded"]
+    },
+    "unresolved_issues": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "definitions": {
+    "check_item": {
+      "type": "object",
+      "required": ["passed", "evidence"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "evidence": { "type": "string" },
+        "failed_locations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,233 @@
+/* CW_TEMPLATE_ASSET: retro-zine/page-shared.css START
+ * REQUIRED_VARIANTS: slide-01-hero, slide-02-split-mission, slide-03-statement, slide-04-info-grid, slide-05-visual-target, slide-06-editorial, slide-07-numbered-values, slide-08-collage, slide-09-form-note, slide-10-closing, native-interaction-shell
+ *
+ * Retro Zine safe shared theme layer
+ * Append after retro-zine/tokens.css as the final template layer inside the
+ * existing single page-shared style block. Never replace or delete the original
+ * courseware CSS.
+ *
+ * This file distills the source template's 10 slide recipes into page-root
+ * visual tokens only: background, outside-component page text color,
+ * title/body/label/note font family, title/body/label color, and text shadow.
+ * It must not recolor text inside component-shell / interactive-root /
+ * media-block / button-skin / feedback-layer, rebuild lesson components,
+ * insert labels, resize controls, restyle media frames, or change event-bearing
+ * DOM.
+ */
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"] {
+  --cw-template-title-font: var(--cw-retro-display-font);
+  --cw-template-body-font: var(--cw-retro-body-font);
+  --cw-template-label-font: var(--cw-retro-display-font);
+  --cw-template-note-font: var(--cw-retro-note-font);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-muted);
+  --cw-template-label-color: var(--cw-retro-green);
+  --cw-template-title-shadow: none;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 78% 80%, rgba(26, 26, 26, 0.08) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgba(244, 239, 230, 0.34) 0%, rgba(244, 239, 230, 0) 26%),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), rgba(0, 143, 77, 0) 42%),
+    var(--cw-retro-bg) !important;
+  background-size: 18px 18px, 22px 22px, 24px 24px, auto, auto, auto !important;
+}
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"]::before {
+  background: transparent !important;
+  background-image: none !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* Safe typography wiring. No size, spacing, layout, border, radius, or shadow-box rules.
+ * Only text outside component frames follows the template. Text inside
+ * component-shell / interactive-root / media-block / button-skin /
+ * feedback-layer keeps its original generated color.
+ */
+[data-cw-role="page-root"][data-cw-template="retro-zine"] :is([data-cw-role="title-block"], .title-block, .page-title, .slide-title):not([data-cw-role="component-shell"] *):not([data-cw-role="interactive-root"] *):not([data-cw-role="media-block"] *):not([data-cw-role="button-skin"] *):not([data-cw-role="feedback-layer"] *),
+[data-cw-role="page-root"][data-cw-template="retro-zine"] :is(h1, h2, h3, h4)[data-cw-role="title-block"]:not([data-cw-role="component-shell"] *):not([data-cw-role="interactive-root"] *):not([data-cw-role="media-block"] *):not([data-cw-role="button-skin"] *):not([data-cw-role="feedback-layer"] *) {
+  font-family: var(--cw-template-title-font);
+  color: var(--cw-template-title-color);
+  text-shadow: var(--cw-template-title-shadow);
+}
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"] :is([data-cw-role="title-block"], .title-block, .page-title, .slide-title) :is(h1, h2, h3, h4):not([data-cw-role="component-shell"] *):not([data-cw-role="interactive-root"] *):not([data-cw-role="media-block"] *):not([data-cw-role="button-skin"] *):not([data-cw-role="feedback-layer"] *),
+[data-cw-role="page-root"][data-cw-template="retro-zine"] > :is(h1, h2, h3, h4):first-child {
+  font-family: var(--cw-template-title-font);
+  color: var(--cw-template-title-color);
+  text-shadow: var(--cw-template-title-shadow);
+}
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"] :is([data-cw-role="content-block"], .content-block, .page-content, .lesson-content, .body-block) :is(p, li, figcaption, small, .classic-text, .content-text, .description, .subtitle, .summary-text):not([data-cw-role="component-shell"] *):not([data-cw-role="interactive-root"] *):not([data-cw-role="media-block"] *):not([data-cw-role="button-skin"] *):not([data-cw-role="feedback-layer"] *),
+[data-cw-role="page-root"][data-cw-template="retro-zine"] > :is(p, ul, ol, .classic-text, .content-text, .description, .subtitle, .summary-text) {
+  font-family: var(--cw-template-body-font);
+  color: var(--cw-template-body-color);
+}
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"] :is(.cw-template-label, [data-cw-role="title-block"] small, .title-block small, .page-title small, .slide-title small):not([data-cw-role="component-shell"] *):not([data-cw-role="interactive-root"] *):not([data-cw-role="media-block"] *):not([data-cw-role="button-skin"] *):not([data-cw-role="feedback-layer"] *) {
+  font-family: var(--cw-template-label-font);
+  color: var(--cw-template-label-color);
+}
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"] :is(.cw-template-note):not([data-cw-role="component-shell"] *):not([data-cw-role="interactive-root"] *):not([data-cw-role="media-block"] *):not([data-cw-role="button-skin"] *):not([data-cw-role="feedback-layer"] *) {
+  font-family: var(--cw-template-note-font);
+  color: var(--cw-template-muted-color);
+}
+
+/* CW_TEMPLATE_VARIANT: slide-01-hero */
+/* Source slide 1: hero title, beige paper with green display title. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-01-hero"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="hero-cover"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 18% 22%, rgba(0, 143, 77, 0.12), transparent 22%),
+    radial-gradient(circle at 84% 76%, rgba(244, 239, 230, 0.26), transparent 28%),
+    var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-02-split-mission */
+/* Source slide 2: split mission, beige plus dark beige accent panel. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-02-split-mission"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="split-mission"] {
+  --cw-template-title-color: var(--cw-retro-ink);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    linear-gradient(90deg, rgba(184, 169, 138, 0) 0 50%, rgba(184, 169, 138, 0.55) 50% 100%),
+    var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-03-statement */
+/* Source slide 3: statement, green field with white display quote. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-03-statement"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="statement-focus"] {
+  --cw-template-title-color: var(--cw-retro-paper);
+  --cw-template-body-color: var(--cw-retro-paper);
+  --cw-template-muted-color: var(--cw-retro-paper);
+  --cw-template-label-color: var(--cw-retro-paper);
+  background: var(--cw-retro-green) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-04-info-grid */
+/* Source slide 4: info grid, paper background with green header and black body. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-04-info-grid"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="info-grid"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background: var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-05-visual-target */
+/* Source slide 5: full visual, dark beige field with green-white visual emphasis. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-05-visual-target"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="visual-feature"] {
+  --cw-template-title-color: var(--cw-retro-paper);
+  --cw-template-body-color: var(--cw-retro-paper);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-paper);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(244, 239, 230, 0.16), transparent 34%),
+    var(--cw-retro-bg-dark) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-06-editorial */
+/* Source slide 6: editorial, paper field with green section title and black body. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-06-editorial"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="editorial-columns"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-ink);
+  background: var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-07-numbered-values */
+/* Source slide 7: numbered values, paper field with green digits and black labels. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-07-numbered-values"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="numbered-points"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background: var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-08-collage */
+/* Source slide 8: collage, paper field with green, cream, dark beige, and black accents. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-08-collage"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="collage"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-bg);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), transparent 38%),
+    var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-09-form-note */
+/* Source slide 9: RSVP form note, cream card on paper with green title. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-09-form-note"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="form-note"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    radial-gradient(circle at 84% 12%, rgba(244, 239, 230, 0.42), transparent 30%),
+    var(--cw-retro-bg) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: slide-10-closing */
+/* Source slide 10: closing, black field with beige title and green accents. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="slide-10-closing"],
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="closing"] {
+  --cw-template-title-color: var(--cw-retro-bg);
+  --cw-template-body-color: var(--cw-retro-bg);
+  --cw-template-muted-color: var(--cw-retro-green);
+  --cw-template-label-color: var(--cw-retro-green);
+  background: var(--cw-retro-ink) !important;
+}
+
+/* CW_TEMPLATE_VARIANT: native-interaction-shell */
+/* Interaction pages keep the native lesson component structure and use the safest paper recipe. */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cw-variant="native-interaction-shell"] {
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-muted);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.12), rgba(0, 143, 77, 0) 38%),
+    var(--cw-retro-bg) !important;
+}
+
+/* Cover full-bleed image protection: when the generated cover image is the
+ * whole-page visual, the template must not replace it with a paper background.
+ * Typography variables still apply to title/subtitle outside protected media.
+ */
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cover-visual="full-bleed-background"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+[data-cw-role="page-root"][data-cw-template="retro-zine"][data-cover-visual="full-bleed-background"]::before {
+  background: transparent !important;
+  background-image: none !important;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* CW_TEMPLATE_ASSET: retro-zine/page-shared.css END */

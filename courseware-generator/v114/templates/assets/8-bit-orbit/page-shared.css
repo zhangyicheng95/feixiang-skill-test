@@ -1,0 +1,194 @@
+/* 8-Bit Orbit safe shared theme layer
+ * Paste after 8-bit-orbit/tokens.css inside the single page-shared style block.
+ * This layer is intentionally color-first. It must not rebuild lesson
+ * components, insert labels, resize controls, or change event-bearing DOM.
+ */
+
+[data-cw-template="8-bit-orbit"] {
+  position: relative;
+  min-height: 100%;
+  color: var(--cw-orbit-white);
+  font-family: var(--cw-orbit-body-font);
+  background:
+    radial-gradient(circle at 4% 31%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 16% 72%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 29% 16%, var(--cw-orbit-cyan) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 45% 82%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 72% 20%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 88% 60%, var(--cw-orbit-cyan) 0 2px, transparent 2.8px),
+    radial-gradient(circle at top left, rgba(240, 166, 202, 0.16), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(94, 220, 244, 0.18), transparent 30%),
+    linear-gradient(180deg, rgba(15, 27, 61, 0.86), rgba(10, 14, 39, 1)),
+    var(--cw-orbit-void);
+  overflow: visible;
+}
+
+[data-cw-template="8-bit-orbit"]::before,
+[data-cw-template="8-bit-orbit"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+[data-cw-template="8-bit-orbit"]::before {
+  background-image:
+    linear-gradient(rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.08) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.34;
+}
+
+[data-cw-template="8-bit-orbit"]::after {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(10, 14, 39, 0.18) 2px,
+    rgba(10, 14, 39, 0.18) 4px
+  );
+  opacity: 0.4;
+}
+
+[data-cw-template="8-bit-orbit"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+[data-cw-template="8-bit-orbit"] [data-cw-role="title-block"] h1,
+[data-cw-template="8-bit-orbit"] [data-cw-role="title-block"] h2,
+[data-cw-template="8-bit-orbit"] .cw-orbit-title {
+  color: var(--cw-orbit-white);
+  font-family: var(--cw-orbit-display-font);
+  text-shadow: var(--cw-orbit-title-text-shadow);
+}
+
+[data-cw-template="8-bit-orbit"] .cw-orbit-hero-title,
+[data-cw-template="8-bit-orbit"][data-cw-variant="hero-cover"] [data-cw-role="title-block"] h1,
+[data-cw-template="8-bit-orbit"][data-cw-variant="closing-cta"] [data-cw-role="title-block"] h1 {
+  color: var(--cw-orbit-cyan);
+  font-family: var(--cw-orbit-display-font);
+  text-shadow: var(--cw-orbit-hero-text-shadow);
+}
+
+[data-cw-template="8-bit-orbit"] p,
+[data-cw-template="8-bit-orbit"] li {
+  color: inherit;
+  font-family: var(--cw-orbit-body-font);
+}
+
+/* Existing component color adaptation only. Do not add geometry here. */
+[data-cw-template="8-bit-orbit"] [data-cw-role="component-shell"],
+[data-cw-template="8-bit-orbit"] [data-cw-role="media-block"],
+[data-cw-template="8-bit-orbit"] [data-cw-role="feedback-layer"],
+[data-cw-template="8-bit-orbit"] .cw-orbit-panel,
+[data-cw-template="8-bit-orbit"] .cw-orbit-feedback {
+  color: var(--cw-orbit-white);
+  background-color: rgba(15, 27, 61, 0.72);
+  border-color: rgba(94, 220, 244, 0.52);
+}
+
+[data-cw-template="8-bit-orbit"] [data-cw-role="button-skin"],
+[data-cw-template="8-bit-orbit"] .cw-orbit-btn {
+  color: var(--cw-orbit-navy);
+  background-color: var(--cw-orbit-cyan);
+  border-color: var(--cw-orbit-cyan);
+}
+
+[data-cw-template="8-bit-orbit"] [data-cw-role="button-skin"].is-pink,
+[data-cw-template="8-bit-orbit"] .cw-orbit-btn--pink {
+  background-color: var(--cw-orbit-pink);
+  border-color: var(--cw-orbit-pink);
+}
+
+[data-cw-template="8-bit-orbit"] [data-cw-role="feedback-layer"][data-state="correct"],
+[data-cw-template="8-bit-orbit"] .cw-orbit-feedback[data-state="correct"] {
+  border-color: var(--cw-orbit-yellow);
+}
+
+[data-cw-template="8-bit-orbit"] [data-cw-role="feedback-layer"][data-state="wrong"],
+[data-cw-template="8-bit-orbit"] .cw-orbit-feedback[data-state="wrong"] {
+  border-color: var(--cw-orbit-pink);
+}
+
+/* Visual variant system: variants choose page atmosphere only. */
+[data-cw-template="8-bit-orbit"][data-cw-variant="hero-cover"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="closing-cta"] {
+  background:
+    radial-gradient(circle at 5% 31%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 12% 73%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 28% 18%, var(--cw-orbit-cyan) 0 3px, transparent 3.6px),
+    radial-gradient(circle at 43% 82%, var(--cw-orbit-yellow) 0 3px, transparent 3.6px),
+    radial-gradient(circle at 66% 24%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 80% 72%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 94% 42%, var(--cw-orbit-cyan) 0 3px, transparent 3.6px),
+    radial-gradient(circle at center, rgba(94, 220, 244, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(15, 27, 61, 0.72), rgba(10, 14, 39, 1)),
+    var(--cw-orbit-void);
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] {
+  color: var(--cw-orbit-navy);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    var(--cw-orbit-lavender);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] [data-cw-role="title-block"] h1,
+[data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] [data-cw-role="title-block"] h2,
+[data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] [data-cw-role="component-shell"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] [data-cw-role="feedback-layer"] {
+  color: var(--cw-orbit-navy);
+  border-color: rgba(15, 27, 61, 0.22);
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] {
+  color: var(--cw-orbit-navy);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    var(--cw-orbit-pink);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] [data-cw-role="title-block"] h1,
+[data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] [data-cw-role="title-block"] h2,
+[data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] [data-cw-role="component-shell"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] [data-cw-role="feedback-layer"] {
+  color: var(--cw-orbit-navy);
+  border-color: rgba(15, 27, 61, 0.34);
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="panel-grid"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="native-interaction-shell"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(94, 220, 244, 0.2), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(240, 166, 202, 0.16), transparent 24%),
+    linear-gradient(rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: auto, auto, 36px 36px, 36px 36px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] {
+  color: var(--cw-orbit-navy);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-cyan);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] [data-cw-role="title-block"] h1,
+[data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] [data-cw-role="title-block"] h2,
+[data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] [data-cw-role="component-shell"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] [data-cw-role="feedback-layer"] {
+  color: var(--cw-orbit-navy);
+  border-color: var(--cw-orbit-navy);
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="tier-cards"] [data-cw-role="component-shell"] {
+  border-color: var(--cw-orbit-yellow);
+}

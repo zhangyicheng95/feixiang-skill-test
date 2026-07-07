@@ -1,0 +1,214 @@
+/* Retro Zine safe shared theme layer
+ * Append after retro-zine/tokens.css inside the existing single page-shared
+ * style block. Never replace or delete the original courseware CSS.
+ *
+ * This file distills the source template's 10 slide recipes into page-root
+ * visual tokens only: background, page text color, title/body/label/note font
+ * family, title/body/label color, and text shadow. It must not rebuild lesson
+ * components, insert labels, resize controls, restyle media frames, or change
+ * event-bearing DOM.
+ */
+
+[data-cw-template="retro-zine"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-red);
+  --cw-template-title-font: var(--cw-retro-display-font);
+  --cw-template-body-font: var(--cw-retro-body-font);
+  --cw-template-label-font: var(--cw-retro-display-font);
+  --cw-template-note-font: var(--cw-retro-note-font);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-muted);
+  --cw-template-label-color: var(--cw-retro-green);
+  --cw-template-title-shadow: none;
+  font-family: var(--cw-template-body-font);
+  color: var(--cw-template-body-color);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 78% 80%, rgba(26, 26, 26, 0.08) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgba(244, 239, 230, 0.34) 0%, rgba(244, 239, 230, 0) 26%),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), rgba(0, 143, 77, 0) 42%),
+    var(--cw-retro-bg);
+  background-size: 18px 18px, 22px 22px, 24px 24px, auto, auto, auto;
+}
+
+/* Safe typography wiring. No size, spacing, layout, border, radius, or shadow-box rules. */
+[data-cw-template="retro-zine"] :where([data-cw-role="title-block"]) {
+  font-family: var(--cw-template-title-font);
+  color: var(--cw-template-title-color);
+  text-shadow: var(--cw-template-title-shadow);
+}
+
+[data-cw-template="retro-zine"] :where([data-cw-role="title-block"] h1, [data-cw-role="title-block"] h2, [data-cw-role="title-block"] h3, [data-cw-role="title-block"] h4) {
+  font-family: inherit;
+  color: inherit;
+  text-shadow: inherit;
+}
+
+[data-cw-template="retro-zine"] :where([data-cw-role="content-block"]) {
+  font-family: var(--cw-template-body-font);
+  color: var(--cw-template-body-color);
+}
+
+[data-cw-template="retro-zine"] :where([data-cw-role="content-block"] p, [data-cw-role="content-block"] li, [data-cw-role="content-block"] figcaption, [data-cw-role="content-block"] small) {
+  color: var(--cw-template-body-color);
+}
+
+[data-cw-template="retro-zine"] :where(.cw-template-label, [data-cw-role="title-block"] small) {
+  font-family: var(--cw-template-label-font);
+  color: var(--cw-template-label-color);
+}
+
+[data-cw-template="retro-zine"] :where(.cw-template-note) {
+  font-family: var(--cw-template-note-font);
+  color: var(--cw-template-muted-color);
+}
+
+/* Source slide 1: hero title, beige paper with green display title. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-01-hero"],
+[data-cw-template="retro-zine"][data-cw-variant="hero-cover"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-green);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 18% 22%, rgba(0, 143, 77, 0.12), transparent 22%),
+    radial-gradient(circle at 84% 76%, rgba(244, 239, 230, 0.26), transparent 28%),
+    var(--cw-retro-bg);
+}
+
+/* Source slide 2: split mission, beige plus dark beige accent panel. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-02-split-mission"],
+[data-cw-template="retro-zine"][data-cw-variant="split-mission"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-bg-dark);
+  --cw-template-title-color: var(--cw-retro-ink);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    linear-gradient(90deg, rgba(184, 169, 138, 0) 0 50%, rgba(184, 169, 138, 0.55) 50% 100%),
+    var(--cw-retro-bg);
+}
+
+/* Source slide 3: statement, green field with white display quote. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-03-statement"],
+[data-cw-template="retro-zine"][data-cw-variant="statement-focus"] {
+  --primary-color: var(--cw-retro-paper);
+  --accent-color: var(--cw-retro-paper);
+  --cw-template-title-color: var(--cw-retro-paper);
+  --cw-template-body-color: var(--cw-retro-paper);
+  --cw-template-muted-color: var(--cw-retro-paper);
+  --cw-template-label-color: var(--cw-retro-paper);
+  background: var(--cw-retro-green);
+}
+
+/* Source slide 4: info grid, paper background with green header and black body. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-04-info-grid"],
+[data-cw-template="retro-zine"][data-cw-variant="info-grid"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-ink);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background: var(--cw-retro-bg);
+}
+
+/* Source slide 5: full visual, dark beige field with green-white visual emphasis. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-05-visual-target"],
+[data-cw-template="retro-zine"][data-cw-variant="visual-feature"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-paper);
+  --cw-template-title-color: var(--cw-retro-paper);
+  --cw-template-body-color: var(--cw-retro-paper);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-paper);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(244, 239, 230, 0.16), transparent 34%),
+    var(--cw-retro-bg-dark);
+}
+
+/* Source slide 6: editorial, paper field with green section title and black body. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-06-editorial"],
+[data-cw-template="retro-zine"][data-cw-variant="editorial-columns"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-ink);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-ink);
+  background: var(--cw-retro-bg);
+}
+
+/* Source slide 7: numbered values, paper field with green digits and black labels. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-07-numbered-values"],
+[data-cw-template="retro-zine"][data-cw-variant="numbered-points"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-ink);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background: var(--cw-retro-bg);
+}
+
+/* Source slide 8: collage, paper field with green, cream, dark beige, and black accents. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-08-collage"],
+[data-cw-template="retro-zine"][data-cw-variant="collage"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-ink);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-bg);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), transparent 38%),
+    var(--cw-retro-bg);
+}
+
+/* Source slide 9: RSVP form note, cream card on paper with green title. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-09-form-note"],
+[data-cw-template="retro-zine"][data-cw-variant="form-note"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-ink);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-ink);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    radial-gradient(circle at 84% 12%, rgba(244, 239, 230, 0.42), transparent 30%),
+    var(--cw-retro-bg);
+}
+
+/* Source slide 10: closing, black field with beige title and green accents. */
+[data-cw-template="retro-zine"][data-cw-variant="slide-10-closing"],
+[data-cw-template="retro-zine"][data-cw-variant="closing"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-bg);
+  --cw-template-title-color: var(--cw-retro-bg);
+  --cw-template-body-color: var(--cw-retro-bg);
+  --cw-template-muted-color: var(--cw-retro-green);
+  --cw-template-label-color: var(--cw-retro-green);
+  background: var(--cw-retro-ink);
+}
+
+/* Interaction pages keep the native lesson component structure and use the safest paper recipe. */
+[data-cw-template="retro-zine"][data-cw-variant="native-interaction-shell"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-red);
+  --cw-template-title-color: var(--cw-retro-green);
+  --cw-template-body-color: var(--cw-retro-ink);
+  --cw-template-muted-color: var(--cw-retro-muted);
+  --cw-template-label-color: var(--cw-retro-green);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.12), rgba(0, 143, 77, 0) 38%),
+    var(--cw-retro-bg);
+}

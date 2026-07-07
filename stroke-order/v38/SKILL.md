@@ -1,0 +1,192 @@
+---
+name: stroke-order
+description: 生成汉字笔顺教学内容时必须加载此 skill。提供 7818 字权威笔顺数据库（2842 小学教材字 3 轮教研审核 + 4976 字典扩展字自动映射）和通用加载器 stroke-loader.js。严禁 AI 硬编码笔画数据、严禁引入 cnchar/HanziWriter 等运行时笔顺库。查询结果按 tier 字段区分置信度：textbook 可信、extended 待验证。触发场景：笔顺、笔画、识字写字、笔顺演示、写字课件、笔画数、田字格、生字卡片、描红、笔顺动画。
+---
+
+更新时间：2026-04-21
+
+# 汉字笔顺数据标准（v10.6 · 双层置信度版）
+
+## 核心原则
+
+1. **AI 严禁硬编码笔画数据**（如 `['撇','横',...]`）——AI 的笔顺记忆已多次出错。
+2. **唯一数据源**：CDN 上的 `stroke-data.json`，覆盖 7818 字。
+3. **唯一查询入口**：`getStrokeData(char)` 返回 `{char, count, strokes, source, tier}`。
+4. **禁引任何第三方笔顺库**：cnchar、cnchar-draw、HanziWriter、chinese-stroke 全部禁用。
+5. **置信度分层**（重要）：
+   - **`tier: 'textbook'`**（2842 字）：小学语文教材会写+认读+OVERRIDE 字，**3 轮教研审核，100% 可信**
+   - **`tier: 'extended'`**（4976 字）：字典扩展字，默认映射+启发式规则处理，**≥98% 准确但未完全审核**
+
+## 生成代码时必做（照抄 URL，不要改）
+
+在 HTML `<head>` 注入：
+
+```html
+<script src="https://musk-test.fbcontent.cn/pub-musk-ai-studio/skills/stroke-order/v38/templates/stroke-loader.js"></script>
+```
+
+使用方式：
+
+```html
+<script>
+window.addEventListener('stroke-data-ready', function() {
+  var chars = [/* AI 填入字符数组 */];
+  chars.forEach(function(ch) {
+    var d = window.getStrokeData(ch);
+    // d = { char, count, strokes:[...], source:'db', tier:'textbook'|'extended' }
+    renderCard(ch, d);
+  });
+});
+</script>
+```
+
+## 场景化使用约束（按 tier 分化）
+
+### 场景 A：小学语文教学（课件/练习/生字卡）——**严格模式**
+
+**强制约束**：只使用 `tier === 'textbook'` 的字。
+
+```js
+var d = window.getStrokeData(ch);
+if (d.source !== 'db' || d.tier !== 'textbook') {
+  // 提示用户替换字或不展示笔顺
+  showMessage('"' + ch + '" 不在小学语文会写/认读字表，未提供笔顺');
+  return;
+}
+// 正常使用 d.strokes
+```
+
+**触发关键词**：「小学」「一年级」「部编版」「会写字」「识字写字」「生字」「田字格」「语文课件」等。
+
+### 场景 B：通用笔顺查询——**宽松模式**
+
+可以使用所有 `source === 'db'` 的字，但对 `tier === 'extended'` 必须**明显标注"待验证"**：
+
+```html
+<!-- 教材字：正常展示 -->
+<div class="pinyin-card tier-textbook">
+  <span class="count">8 画</span>
+  <span class="strokes">...</span>
+</div>
+
+<!-- 扩展字：灰色/虚线 + "待验证"徽章 -->
+<div class="pinyin-card tier-extended" style="border: 1px dashed #bdc3c7">
+  <span class="badge">⚠ 待验证</span>
+  <span class="count" style="color:#7f8c8d">11 画</span>
+  <span class="strokes">...</span>
+</div>
+```
+
+**触发关键词**：「笔顺查询」「成人识字」「汉字笔画」等非小学教材场景。
+
+### 判定默认场景
+
+如果 prompt 包含以下**任一**关键词，判定为"小学语文场景"→ 走严格模式：
+
+- "小学" / "幼小衔接"
+- "一年级" / "二年级" / "三年级" / "四年级" / "五年级" / "六年级"
+- "部编版" / "人教版" / "统编版"
+- "生字" / "会写字" / "会读字" / "识字"
+- "语文课件" / "小学语文" / "识字写字"
+
+其他场景默认用**宽松模式**。
+
+## 32 种标准笔画名称（白名单）
+
+- 基本(6)：点、横、竖、撇、捺、提
+- 折类(5)：横折、竖折、撇折、横撇、撇点
+- 钩类(12)：竖钩、弯钩、斜钩、卧钩、竖弯钩、横钩、横折钩、横折弯钩、横撇弯钩、横折折折钩、竖折折钩、横斜钩
+- 提类(2)：竖提、横折提
+- 弯折组合(7)：竖弯、横折弯、横折折撇、竖折撇、竖折折、横折折、横折折折
+
+> 注意：**竖折**（L 形直角，如"山"第2笔）与**竖弯**（弧形过渡，如"四"第4笔）是两个不同的独立笔画，不可互换。
+
+## 禁忌清单
+
+| # | 禁止 | 后果 |
+|---|---|---|
+| 1 | 代码中出现 `['撇','横',...]` 这种笔画数组字面量 | 数据源失控 |
+| 2 | 引入 cnchar / cnchar-order / cnchar-draw | 数据冲突 |
+| 3 | 引入 HanziWriter | 加载 `{char}.json` 污染 |
+| 4 | 除 `getStrokeData()` 外获取笔画数据 | 绕过校验 |
+| 5 | `source !== 'db'` 时用 AI 记忆补全 | 复活原 bug |
+| 6 | **小学场景使用 `tier: 'extended'` 的字** | **混淆教材标准** |
+| 7 | 笔画数据塞进 `<template>` / 静态 JSON script | 等价硬编码 |
+
+## 生成后自检
+
+1. 只引入了 `stroke-loader.js`，无 cnchar/HanziWriter
+2. `chars` 数组只含汉字字符
+3. 代码里搜不到任何笔画名称字符串字面量
+4. 所有笔画数据通过 `getStrokeData()`
+5. **根据场景判定 strict/loose 模式，在 strict 模式下过滤 `tier !== 'textbook'` 的字**
+6. extended 字 UI 上有"待验证"视觉标识
+7. 数据缺失/错误分支显示"暂无数据"
+
+## 纯文本对话模式
+
+当用户仅对话询问笔顺（不生成代码）：
+
+> "笔顺需要通过代码查询权威数据库。请要求我生成教学网页（小学课件会仅使用 2842 教材字，通用场景覆盖 7818 字）。"
+
+**严禁凭记忆输出任何字的笔顺**。
+
+## 正确示范（小学语文场景）
+
+```html
+<script src="https://musk-test.fbcontent.cn/pub-musk-ai-studio/skills/stroke-order/v38/templates/stroke-loader.js"></script>
+<script>
+window.addEventListener('stroke-data-ready', function() {
+  var chars = ['学', '写', '字', '彭'];  // 小学一二年级会写字
+  chars.forEach(function(ch) {
+    var d = window.getStrokeData(ch);
+    if (d.source === 'db' && d.tier === 'textbook') {
+      // 教材权威，直接展示
+      render(ch, d.count, d.strokes);
+    } else {
+      showMissing(ch);  // 不在教材字表或未收录
+    }
+  });
+});
+</script>
+```
+
+## 正确示范（通用场景，兼容 extended 字）
+
+```html
+<script src="https://musk-test.fbcontent.cn/pub-musk-ai-studio/skills/stroke-order/v38/templates/stroke-loader.js"></script>
+<script>
+window.addEventListener('stroke-data-ready', function() {
+  var chars = ['曼', '丁', '鼎'];  // 用户输入的任意字
+  chars.forEach(function(ch) {
+    var d = window.getStrokeData(ch);
+    if (d.source !== 'db') return showMissing(ch);
+    if (d.tier === 'textbook') {
+      render(ch, d, { badge: '✓ 教材' });
+    } else {
+      render(ch, d, { badge: '⚠ 待验证', dim: true });  // 灰色/虚线
+    }
+  });
+});
+</script>
+```
+
+## 数据库覆盖范围
+
+- **2842 字 textbook**：小学语文部编版 1-6 年级全部会写字 + 认读字 + OVERRIDE 高频易错字
+- **4976 字 extended**：通用规范一级字表（《通用规范汉字表》）中未被教材纳入的字，如"曼/丁/丙/乔/丸/丽/丢/丫/举/乍/之/乎"等
+
+## 数据库已覆盖的系统性修正（LLM 无需关心，自动生效）
+
+- 穴字头 HP → 横钩
+- 阝部件 HZZZG → 横撇弯钩
+- 殳/朵/㕣 部件 HZZ → 横折弯
+- 风/气族 HZWG → 横斜钩
+- 学字族连续 HP → 首个横钩
+- OVERRIDE 硬覆盖 25 字（鼎/写/凹/凸/虫/互/今/小/东 等）
+
+## 关联资源
+
+- `assets/stroke-data.json`（630 KB CDN 资源，运行时加载，**不进 LLM context**）
+- `templates/stroke-loader.js`（加载器，暴露 `getStrokeData` + `isTextbookChar`）
+- `templates/stroke-snippet.html`（即拿即用模板，带 tier 降级 UI）

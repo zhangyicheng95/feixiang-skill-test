@@ -1,0 +1,92 @@
+<!-- Retro Zine component snippets
+Usage rules:
+1. Reuse the existing content and existing event bindings.
+2. For buttons, preserve onclick / listeners / ids / data-* exactly; only add the classes shown below.
+3. For interactive pages, do not replace interactive-root. Only skin title-block, component-shell, button-skin, feedback-layer, media-block.
+-->
+
+<!-- Page root activation: choose one visual variant, but keep existing component positions -->
+<div class="lesson-page" data-cw-role="page-root" data-cw-template="retro-zine" data-cw-variant="info-grid">
+  ...
+</div>
+
+<!-- Visual variants for page-root
+hero-cover: cover / section opener
+statement-focus: central claim, key question, quote, conclusion
+info-grid: facts, concept cards, comparison blocks
+visual-feature: image-heavy page; only skin media container, never recolor image
+editorial-columns: reading, analysis, method explanation
+numbered-points: steps, key points, ordered principles
+collage: capability cards, activity fragments, review clusters
+form-note: worksheet-like prompt, reflection, exit ticket
+closing: ending / thanks / summary
+native-interaction-shell: interaction pages; only skin outer shell and controls
+-->
+
+<!-- Title block -->
+<header data-cw-role="title-block">
+  <span class="cw-retro-kicker">LESSON NOTE</span>
+  <h1 class="cw-retro-title">鸡兔同笼里的假设法</h1>
+  <span class="cw-retro-note">把复杂问题拆成可观察的变化</span>
+</header>
+
+<!-- Hero title: apply to existing title text, do not move other components -->
+<header data-cw-role="title-block">
+  <span class="cw-retro-kicker">CLASSROOM ZINE</span>
+  <h1 class="cw-retro-hero-title">鸡兔<br>同笼</h1>
+  <span class="cw-retro-stamp">LESSON 01</span>
+</header>
+
+<!-- Standard content card -->
+<section data-cw-role="component-shell" class="cw-retro-card">
+  <strong class="cw-retro-kicker">关键步骤</strong>
+  <p>先假设全部是兔，再比较脚数差额。</p>
+</section>
+
+<!-- Offset card for summary / emphasis -->
+<section data-cw-role="component-shell" class="cw-retro-card cw-retro-card--offset">
+  <span class="cw-retro-note">课堂提醒</span>
+  <p>只在外围换纸张卡片效果，不改互动节点和结构。</p>
+</section>
+
+<!-- Number / ordered point skin -->
+<section data-cw-role="component-shell" class="cw-retro-card">
+  <span class="cw-retro-number">01</span>
+  <p>观察总头数和总脚数。</p>
+</section>
+
+<!-- Editorial paragraph accent -->
+<p><span class="cw-retro-dropcap">假</span>设全部都是兔，再观察脚数如何变化。</p>
+
+<!-- Collage / paper tape decoration; decorative only -->
+<span class="cw-retro-tape" aria-hidden="true"></span>
+
+<!-- Form-note line skin -->
+<span class="cw-retro-form-line">我的发现是：每换一只动物，脚数变化 2。</span>
+
+<!-- Media container -->
+<figure data-cw-role="media-block">
+  <img src="https://example.com/demo.jpg" alt="示意图">
+</figure>
+
+<!-- Buttons: keep original attributes, only add class -->
+<button
+  data-cw-role="button-skin"
+  class="cw-retro-btn"
+  onclick="submitAnswer()"
+>
+  提交答案
+</button>
+
+<button
+  data-cw-role="button-skin"
+  class="cw-retro-btn cw-retro-btn--ink"
+  onclick="nextStep()"
+>
+  下一步
+</button>
+
+<!-- Feedback layer -->
+<div data-cw-role="feedback-layer" class="cw-retro-feedback" data-state="correct">
+  回答正确，继续观察“每变一只少两条腿”的规律。
+</div>

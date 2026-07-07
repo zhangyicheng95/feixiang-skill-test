@@ -1,0 +1,84 @@
+/* 8-Bit Orbit safe shared theme layer
+ * Append after 8-bit-orbit/tokens.css inside the existing single page-shared
+ * style block. Never replace or delete the original courseware CSS.
+ * This layer is intentionally page-level and variable-first. It must not
+ * rebuild lesson components, insert labels, resize controls, restyle media
+ * frames, or change event-bearing DOM.
+ */
+
+[data-cw-template="8-bit-orbit"] {
+  --primary-color: var(--cw-orbit-cyan);
+  --accent-color: var(--cw-orbit-yellow);
+  color: var(--cw-orbit-white);
+  background:
+    radial-gradient(circle at 4% 31%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 16% 72%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 29% 16%, var(--cw-orbit-cyan) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 45% 82%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 72% 20%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 88% 60%, var(--cw-orbit-cyan) 0 2px, transparent 2.8px),
+    radial-gradient(circle at top left, rgba(240, 166, 202, 0.16), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(94, 220, 244, 0.18), transparent 30%),
+    linear-gradient(180deg, rgba(15, 27, 61, 0.86), rgba(10, 14, 39, 1)),
+    var(--cw-orbit-void);
+}
+
+/* Visual variant system: variants choose page atmosphere only. */
+[data-cw-template="8-bit-orbit"][data-cw-variant="hero-cover"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="closing-cta"] {
+  background:
+    radial-gradient(circle at 5% 31%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 12% 73%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 28% 18%, var(--cw-orbit-cyan) 0 3px, transparent 3.6px),
+    radial-gradient(circle at 43% 82%, var(--cw-orbit-yellow) 0 3px, transparent 3.6px),
+    radial-gradient(circle at 66% 24%, var(--cw-orbit-pink) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 80% 72%, var(--cw-orbit-yellow) 0 2px, transparent 2.8px),
+    radial-gradient(circle at 94% 42%, var(--cw-orbit-cyan) 0 3px, transparent 3.6px),
+    radial-gradient(circle at center, rgba(94, 220, 244, 0.12), transparent 38%),
+    linear-gradient(180deg, rgba(15, 27, 61, 0.72), rgba(10, 14, 39, 1)),
+    var(--cw-orbit-void);
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="metric-bars"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-pink);
+  color: var(--cw-orbit-navy);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    var(--cw-orbit-lavender);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="process-timeline"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-yellow);
+  color: var(--cw-orbit-navy);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.06) 1px, transparent 1px),
+    var(--cw-orbit-pink);
+  background-size: 40px 40px, 40px 40px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="panel-grid"],
+[data-cw-template="8-bit-orbit"][data-cw-variant="native-interaction-shell"] {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(94, 220, 244, 0.2), transparent 28%),
+    radial-gradient(circle at 82% 12%, rgba(240, 166, 202, 0.16), transparent 24%),
+    linear-gradient(rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(94, 220, 244, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-void);
+  background-size: auto, auto, 36px 36px, 36px 36px, auto;
+}
+
+[data-cw-template="8-bit-orbit"][data-cw-variant="quote-focus"] {
+  --primary-color: var(--cw-orbit-navy);
+  --accent-color: var(--cw-orbit-yellow);
+  color: var(--cw-orbit-navy);
+  background:
+    linear-gradient(rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 27, 61, 0.08) 1px, transparent 1px),
+    var(--cw-orbit-cyan);
+  background-size: 40px 40px, 40px 40px, auto;
+}

@@ -1,0 +1,115 @@
+<!--
+  飞象老师 · 汉字笔顺即拿即用模板（v10.0.0）
+  ─────────────────────────────────────────────
+  架构：
+    1. 在 <head> 加载 stroke-loader.js（自动从 CDN 拉 stroke-data.json）
+    2. 监听 stroke-data-ready 事件，拿到全局 getStrokeData() 接口
+    3. 对每个字查询 { char, count, strokes, source }，由 UI 自由渲染
+
+  数据源：
+    飞象老师 2838 字教研校验版（2026-04-20），203 KB
+
+  禁忌：
+    - 不要硬编码任何笔画数组
+    - 不要再引入 cnchar / HanziWriter
+    - data.source !== 'db' 时显示"暂无数据"，不猜
+-->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>笔顺示例（v10 模板）</title>
+<style>
+  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; padding: 24px; background: #f7f8fa; }
+  .stroke-card {
+    display: inline-block;
+    margin: 8px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    min-width: 200px;
+    vertical-align: top;
+  }
+  .stroke-char { font-size: 48px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
+  .stroke-count { color: #e74c3c; font-size: 14px; margin-bottom: 8px; }
+  .stroke-seq { line-height: 1.8; color: #34495e; font-size: 14px; }
+  .stroke-seq .step { display: inline-block; margin: 2px 4px; padding: 2px 8px;
+                       background: #ecf0f1; border-radius: 4px; font-size: 13px; }
+  .err { color: #95a5a6; font-style: italic; }
+</style>
+
+<!-- ========== 1. 加载笔顺数据库（必须，URL 不要改） ========== -->
+<script src="https://musk-test.fbcontent.cn/pub-musk-ai-studio/skills/stroke-order/v35/templates/stroke-loader.js"></script>
+</head>
+
+<body>
+
+<h1>汉字笔顺教学示例</h1>
+<div id="app">正在加载笔顺数据...</div>
+
+<script>
+// ========== 2. 业务逻辑（AI 填充 chars 数组，不含任何笔画数据） ==========
+var chars = ['学', '写', '字', '彭', '窿', '铅'];  // ← AI 只填汉字，不得填笔画
+
+window.addEventListener('stroke-data-ready', function (ev) {
+  var app = document.getElementById('app');
+  app.innerHTML = '';
+
+  if (ev.detail && ev.detail.status === 'error') {
+    app.innerHTML = '<p class="err">笔顺数据库加载失败：' + ev.detail.error + '</p>';
+    return;
+  }
+
+  chars.forEach(function (ch) {
+    var d = window.getStrokeData(ch);
+    app.appendChild(renderCard(ch, d));
+  });
+});
+
+// ========== 3. UI 渲染（示例，实际由 LLM 按需求定制） ==========
+function renderCard(ch, d) {
+  var card = document.createElement('div');
+  card.className = 'stroke-card';
+
+  // 字头
+  var chDiv = document.createElement('div');
+  chDiv.className = 'stroke-char';
+  chDiv.textContent = ch;
+  card.appendChild(chDiv);
+
+  if (d.source === 'db') {
+    var cntDiv = document.createElement('div');
+    cntDiv.className = 'stroke-count';
+    cntDiv.textContent = d.count + ' 画';
+    card.appendChild(cntDiv);
+
+    var seqDiv = document.createElement('div');
+    seqDiv.className = 'stroke-seq';
+    d.strokes.forEach(function (name, i) {
+      var span = document.createElement('span');
+      span.className = 'step';
+      span.textContent = (i + 1) + '. ' + name;
+      seqDiv.appendChild(span);
+    });
+    card.appendChild(seqDiv);
+  } else {
+    // 关键：source !== 'db' 必须走错误路径，绝不用 AI 记忆补全
+    var errDiv = document.createElement('div');
+    errDiv.className = 'err';
+    if (d.source === 'missing') {
+      errDiv.textContent = '该字暂未收录于 2838 字表（权威数据库仅覆盖小学部编版会写字与认读字）';
+    } else if (d.source === 'loading') {
+      errDiv.textContent = '数据加载中...';
+    } else {
+      errDiv.textContent = '数据异常：' + (d.error || d.source);
+    }
+    card.appendChild(errDiv);
+  }
+  return card;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!-- 8-Bit Orbit component snippets
+Usage rules:
+1. Reuse the existing content and existing event bindings.
+2. For buttons, preserve onclick / listeners / ids / data-* exactly; only add the classes shown below.
+3. For interactive pages, do not replace interactive-root. Only skin title-block, component-shell, button-skin, feedback-layer, media-block.
+-->
+
+<!-- Page root activation -->
+<div class="lesson-page" data-cw-role="page-root" data-cw-template="8-bit-orbit">
+  ...
+</div>
+
+<!-- Title block -->
+<header data-cw-role="title-block">
+  <span class="cw-orbit-kicker">MISSION 06</span>
+  <h1 class="cw-orbit-title">用假设法破解鸡兔同笼</h1>
+</header>
+
+<!-- Standard panel -->
+<section data-cw-role="component-shell" class="cw-orbit-panel">
+  <span class="cw-orbit-kicker">CORE LOOP</span>
+  <p>先把全部看成兔，再按脚数差额倒推鸡的数量。</p>
+</section>
+
+<!-- Pink variant panel -->
+<section data-cw-role="component-shell" class="cw-orbit-panel cw-orbit-panel--pink">
+  <span class="cw-orbit-kicker">BONUS</span>
+  <p>只给外围组件换像素壳，不动互动脚本和节点命名。</p>
+</section>
+
+<!-- Media container -->
+<figure data-cw-role="media-block">
+  <img src="https://example.com/demo.jpg" alt="示意图">
+</figure>
+
+<!-- Buttons: keep original attributes, only add class -->
+<button
+  data-cw-role="button-skin"
+  class="cw-orbit-btn"
+  onclick="submitAnswer()"
+>
+  Start
+</button>
+
+<button
+  data-cw-role="button-skin"
+  class="cw-orbit-btn cw-orbit-btn--pink"
+  onclick="nextStep()"
+>
+  Next
+</button>
+
+<!-- Feedback layer -->
+<div data-cw-role="feedback-layer" class="cw-orbit-feedback" data-state="correct">
+  Success! 观察每次变换后腿数减少 2 的规律。
+</div>

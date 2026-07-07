@@ -1,0 +1,237 @@
+---
+name: magazine-layout
+description: 精美排版唯一主 Skill。Use when 用户要求把已给定内容或上传文档改造为 A4 打印友好的讲义、练习单、试卷、默写纸、知识清单、教案打印版、杂志风资料，或提到精美排版、可打印、A4、讲义、题单、模板复用、按这个格式来。本技能不搜题；内容已给定时先完整复现，再基于 Paged.js 0.4.3 做精美排版。PDF/截图/扫描卷必须 OCR/文本转换并保留真实原图/PDF 原页，禁止占位。
+---
+
+更新时间：2026-04-29
+
+# 精美排版
+
+## 使用时机
+
+当用户要求把**已给定内容**或**上传文档**改造成适合打印/分发的 HTML 时使用：
+
+- 讲义、练习单、试卷、题单、默写纸、知识清单、教案打印版
+- A4、可打印、打印友好、纸张、分页、杂志风、期刊风、精美排版
+- “按这个格式来”“记住这个格式”“参考 resourceId/文件一模一样排版”
+
+不适用于：
+
+- 屏幕优先的交互动画、教学游戏、单页课件
+- 多页 PPT 式课件
+- 需要重新搜题、组题、补题的任务
+- 上传 HTML 后要求“保持结构换内容”的同款复刻任务；此类先按模板锁定规则处理，必要时转到同款/复刻能力
+
+## 硬性执行门槛
+
+以下规则优先级高于所有审美和 HTML 生成习惯：
+
+1. 本任务只使用 `magazine-layout` 作为主 Skill；禁止再调用 `html-authoring`、`page-optimize`、`mathdesign-*` 等其他 HTML/排版 Skill。
+2. PDF、截图、扫描卷必须先调用 `convert_to_text` 或等效 OCR/文本转换工具；只调用 `read_file` 不够。
+3. PDF、截图、扫描卷必须在 HTML 中保留真实原卷资源：`<img>`、`<object>`、`<embed>`、`<iframe>` 至少一种。
+4. 禁止使用 `[此处保留原卷图形]`、`图略`、`占位说明`、`原图见附件` 等文字替代原图。
+5. 数学公式必须先配置并加载 MathJax，再配置 `PagedConfig.before`，最后加载 Paged.js。
+6. 生成前必须列出原始题量清单；生成后必须自检 HTML 题量。题量不一致不能交付。
+7. 未满足以上任一项时，必须重新生成或说明当前链路缺能力，禁止假装完成。
+
+## 文件说明
+
+| 文件 | 用途 | 何时读取 |
+|---|---|---|
+| `SKILL.md` | 总览、触发、主流程和验收 | 首先读取 |
+| [reproduction-guide.md](reproduction-guide.md) | 内容完整复现规则、题目/图片/公式/模板锁定规则 | Phase 1 执行前读取 |
+| [math-image-fidelity.md](math-image-fidelity.md) | 分数公式渲染、原图保留、题量不缩水专项规则 | 处理试卷/题单/PDF/截图前必须读取 |
+| [pdf-ocr-preprocess.md](pdf-ocr-preprocess.md) | OCRmyPDF / OCR 预处理策略与边界 | 处理扫描 PDF、图片型 PDF 前读取 |
+| [pdf-page-fidelity.md](pdf-page-fidelity.md) | PDF 原页保真层、禁止占位、页面转图/嵌入兜底方案 | 处理上传 PDF/扫描卷时必须读取 |
+| [pagedjs-template.md](pagedjs-template.md) | Paged.js 0.4.3 A4 打印 HTML 模板和 CSS 铁律 | Phase 2 生成 HTML 前读取 |
+| [examples.md](examples.md) | 零散题目、模板锁定、教案打印版示例 | 需要对齐后台配置或输出话术时读取 |
+
+## 核心原则
+
+**第一优先级是忠实复现，第二优先级才是美观。**
+
+- 单一入口：精美排版任务以 `magazine-layout` 为唯一主 Skill，不要再额外调用 `html-authoring`、`page-optimize`、`mathdesign-*` 等其他排版/HTML Skill，除非用户明确要求。HTML 技术规范、MathJax、Paged.js、PDF 保真规则全部以本 Skill 为准。
+- 不搜题：用户已给内容时，不自行补题、换题、删题。
+- 不改内容：原文、题号、标题、公式、图片、题型结构必须先完整保留。
+- 不先排版：必须先完成内容清点和复现，再进入视觉排版。
+- 打印优先：默认 A4 白底黑字，除非用户明确要海报/深色/杂志封面。
+- 模板可锁定：老师说“记住这个格式/下次按这个来/按 resourceId 一样”，固定层不得漂移。
+
+## 工作流程
+
+```plain
+Phase 1: 内容完整复现
+  读取 reproduction-guide.md
+  从输入/上传文档中提取全部内容 → 建立内容清单 → 保持题量、标题、图文关系、公式、题号
+    ↓
+Phase 1.2: PDF/OCR 预处理判断
+  扫描 PDF、图片型 PDF、截图类输入读取 pdf-ocr-preprocess.md 与 pdf-page-fidelity.md
+  必须调用 convert_to_text 或等效 OCR/文本转换；同时必须用真实图片/PDF 嵌入保留原图/原页
+    ↓
+Phase 1.5: 保真专项检查
+  读取 math-image-fidelity.md
+  校验分数公式可渲染、原图/表格已保留、题量前后一致
+    ↓
+Phase 2: 场景与模板判断
+  判断是试卷/题单/讲义/教案/默写纸/知识清单/模板复用
+  若命中“模板锁定”，固定层不变，只换可变层
+    ↓
+Phase 3: 精美排版生成
+  读取 pagedjs-template.md
+  基于 Paged.js 0.4.3 输出单文件 HTML
+  应用 A4、分页、防截断、打印按钮、白底黑字和场景匹配风格
+    ↓
+Phase 4: 自检交付
+  检查第一页非空、题量不缩水、公式图形正确、A4 打印稳定、无英文乱入
+```
+
+## Phase 1：内容完整复现
+
+执行排版前，先输出内部内容清单并据此生成 HTML：
+
+- 原始标题
+- 题型与顺序
+- 每类题目数量
+- 题号范围
+- 公式、分数、单位、已知量
+- 原图/表格/图文关系
+- 教案环节顺序
+- 老师明确要求的页数、A4、单栏/双栏、模板格式
+
+上传试卷/题单/教案时，禁止把“摘要式改写”当成排版。内容必须完整进入最终 HTML。
+
+## Phase 1.2：PDF/OCR 预处理判断
+
+当上传文件是扫描 PDF、图片型 PDF、截图型试卷时：
+
+- 必须优先调用可用的文本转换/OCR 工具提取文字，例如 `convert_to_text`；只调用 `read_file` 后直接 `create_file` 判定为失败。
+- 如果系统链路支持 OCRmyPDF，可先把 PDF 处理成带 OCR 文本层的 searchable PDF，再读取文本。
+- OCR 只负责辅助提取文字，不负责保真；HTML 仍必须保留原图/原页截图作为视觉保真层。
+- OCR 结果不完整时，不得只交付 OCR 到的部分题目；必须保留原页图或提示无法完整重排。
+- 禁止用“[此处保留原卷图形]”“图略”“占位说明”等文字代替原图；没有真实 `<img>`、`<object>` 或 `<iframe>` 就不能宣称已保留原图。
+- `create_file` 之前必须已经拿到原 PDF URL 或逐页图片 URL，并写入 HTML 的原卷保真层。
+
+## Phase 1.5：保真专项检查
+
+试卷、题单、PDF、截图类输入必须额外检查：
+
+- 分数/公式：`\\(\\dfrac{7}{9}\\)` 这类内容必须渲染成真正数学公式，不能作为可见源码露出。
+- 原图/图形：原卷中的几何图、统计图、表格、电路图、光路图必须保留；无法可靠重绘时直接保留原图或原页面截图。
+- 原页保真：上传 PDF 至少要在 HTML 中嵌入原 PDF 或原页截图作为兜底视觉层；仅有文字重排不合格。
+- 题量：先记录原始题量，再记录 HTML 题量，两者必须一致；排不下就自动增加页数，不能删题。
+
+### PDF 原图保留最低实现
+
+当上传资源是 PDF，且无法取得逐页图片时，HTML 必须至少嵌入原 PDF URL：
+
+```html
+<section class="source-pdf-section keep-together">
+  <h2>原卷保真层</h2>
+  <p class="source-note">保留原始 PDF，确保图形、表格和题量不丢失。下方重排内容仅作为辅助阅读与打印增强。</p>
+  <object class="source-pdf" data="原PDF资源URL" type="application/pdf">
+    <iframe class="source-pdf" src="原PDF资源URL" title="原始试卷 PDF"></iframe>
+  </object>
+</section>
+```
+
+禁止使用 `[此处保留原卷图形]`、`图略`、`占位说明`、`原图见附件` 等文字代替真实图片或 PDF 原页。PDF/截图类 HTML 中如果 `<img>`、`<object>`、`<embed>`、`<iframe>` 全部为 0，必须判定失败并重新生成。
+
+## Phase 2：场景与风格选择
+
+| 场景 | 默认排版策略 |
+|---|---|
+| 试卷/题单 | 保持题型顺序和题号，白底黑字，紧凑但不拥挤 |
+| 英语练习单 | 题型结构稳定，填空横线标准，支持模板锁定与单元替换 |
+| 默写纸 | 答题区清晰，横线/格线适合手写 |
+| 知识清单 | 分区、表格、重点框，信息密度高 |
+| 教案打印版 | 保持教学环节，不排成阅读材料 |
+| 语文古诗文 | 克制、雅致、纸面友好，避免波普风 |
+| 趣味低幼练习 | 可用活泼风格，但不得牺牲可读性和打印性 |
+
+## Phase 3：HTML 输出要求
+
+单文件 HTML，必须包含：
+
+1. `https://unpkg.com/pagedjs@0.4.3/dist/paged.polyfill.js`
+2. `@page { size: A4 portrait; margin: 12mm 15mm; }`
+3. `@media print` 打印样式
+4. `.no-print` 打印隐藏
+5. `.question, .section, table, figure, img, .keep-together { break-inside: avoid; }`
+6. 右下角打印按钮：`window.print()`
+7. 出现分数、根式、方程、百分式、LaTeX 源码时必须引入 MathJax 渲染公式
+8. PDF/截图类必须包含真实原卷资源层：`<img>`、`<object>`、`<embed>` 或 `<iframe>`
+9. 禁止手动切固定高度页面，交给 Paged.js 自动分页
+
+脚本顺序必须是：
+
+```html
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script>
+  window.PagedConfig = {
+    before: async () => {
+      if (window.MathJax?.typesetPromise) {
+        await window.MathJax.typesetPromise();
+      }
+    }
+  };
+</script>
+<script src="https://unpkg.com/pagedjs@0.4.3/dist/paged.polyfill.js"></script>
+```
+
+## 模板锁定规则
+
+当用户说以下任一句，进入模板锁定：
+
+- “记住这个格式”
+- “下次按这个来”
+- “按照 resourceId XXXX 一模一样的格式”
+- “参考我给的文件，格式排版要一模一样”
+- “继续制作 Unit 5 / 下一个单元”
+
+锁定后分两层：
+
+- 固定层：布局方式、配色、字体字号、页边距、题型结构顺序、排版规则、技术规格。
+- 可变层：年级/学科/单元、具体词汇与语法、阅读语篇、题目内容。
+
+任何固定层变化必须由老师主动要求，AI不得自行调整。
+
+## 禁止事项
+
+- 禁止删题、换题、改题、漏题。
+- 禁止题量大幅缩水。
+- 禁止把原图丢失后自行生成错误图。
+- 禁止使用“[此处保留原卷图形]”“占位”“图略”等文字代替真实图片/PDF 原页。
+- 禁止在 HTML 中 `<img>`、`<object>`、`<embed>`、`<iframe>` 都为 0 的情况下交付 PDF/截图类试卷。
+- 禁止只调用 `read_file` 就处理扫描 PDF/截图卷；必须调用 OCR/文本转换工具。
+- 禁止调用其他 HTML/排版 Skill 覆盖本 Skill 的 Paged.js、MathJax、PDF 保真规则。
+- 禁止公式、分数、单位、已知量错误；禁止把 `\\(\\dfrac{}{}\\)` 原样显示给用户。
+- 禁止第一页空白。
+- 禁止中文资料出现无意义英文标题。
+- 禁止黑底白字作为默认打印风格。
+- 禁止上传教案后排成阅读材料。
+- 禁止未命中用户要求时一页两栏。
+
+## 验收清单
+
+- [ ] 输入内容已完整复现，题目数量不缩水。
+- [ ] 标题、题号、题型顺序、图片、公式、表格均保留。
+- [ ] 分数、根式、方程等数学内容已被 MathJax 或等效方式正确渲染。
+- [ ] 原卷图形、图表、几何图、电路图没有丢失。
+- [ ] PDF/截图类输入已使用 OCR/文本转换辅助提取，并保留原图兜底。
+- [ ] PDF/截图类 HTML 中存在真实 `<img>`、`<object>` 或 `<iframe>` 原页保真层，没有占位文字冒充原图。
+- [ ] 第一页不是空白页。
+- [ ] A4 打印预览正常。
+- [ ] 题目、表格、图片不被分页切断。
+- [ ] 填空横线为标准单横线，适合手写。
+- [ ] 风格与学科/场景匹配。
+- [ ] HTML 可直接浏览器打开并打印。

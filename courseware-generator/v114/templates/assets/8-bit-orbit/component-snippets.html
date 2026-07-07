@@ -1,0 +1,49 @@
+<!-- 8-Bit Orbit safe wiring snippets
+Usage rules:
+1. These snippets are structural examples only. Do not copy any new visible text into the courseware.
+2. Reuse existing lesson content, component DOM, event bindings, ids, classes, data-* and inline logic.
+3. Add template markers to every existing page-root.
+4. Components may receive color variables only. Do not change component shape, size, radius, shadow, border width, layout, text, or event bindings.
+5. Do not insert decorative labels, badges, mission text, level text, or sample copy that was not already in the original courseware.
+-->
+
+<!-- Page root activation: apply to every existing page-root -->
+<div data-cw-role="page-root" data-cw-template="8-bit-orbit" data-cw-variant="panel-grid">
+  ...
+</div>
+
+<!-- Visual variants for page-root
+hero-cover: cover / section opener
+metric-bars: existing data, comparison, progress, distribution
+process-timeline: existing steps, process, route, chronology
+panel-grid: concept cards, explanation, practice panels
+quote-focus: quote, key conclusion, central question
+tier-cards: existing grouped options, levels, differentiated tasks
+closing-cta: summary / ending
+native-interaction-shell: interaction pages; background and color variables only
+-->
+
+<!-- Existing title-block: keep all existing visible text. Optional classes only affect existing title text. -->
+<header data-cw-role="title-block">
+  ...
+</header>
+
+<!-- Existing component-shell: keep original DOM and text. Only colors may be adapted by CSS variables. -->
+<section data-cw-role="component-shell">
+  ...
+</section>
+
+<!-- Existing media-block: keep original img / svg / canvas URLs and structure. -->
+<figure data-cw-role="media-block">
+  ...
+</figure>
+
+<!-- Existing button: preserve original attributes and text; only color variables may change. -->
+<button data-cw-role="button-skin" onclick="existingFunction()">
+  ...
+</button>
+
+<!-- Existing feedback layer: preserve original state logic and text. -->
+<div data-cw-role="feedback-layer" data-state="correct">
+  ...
+</div>

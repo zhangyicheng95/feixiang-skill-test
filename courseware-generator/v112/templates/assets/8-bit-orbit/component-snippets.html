@@ -1,0 +1,90 @@
+<!-- 8-Bit Orbit component snippets
+Usage rules:
+1. Reuse the existing content and existing event bindings.
+2. For buttons, preserve onclick / listeners / ids / data-* exactly; only add the classes shown below.
+3. For interactive pages, do not replace interactive-root. Only skin title-block, component-shell, button-skin, feedback-layer, media-block.
+-->
+
+<!-- Page root activation: choose one visual variant, but keep existing component positions -->
+<div class="lesson-page" data-cw-role="page-root" data-cw-template="8-bit-orbit" data-cw-variant="panel-grid">
+  ...
+</div>
+
+<!-- Visual variants for page-root
+hero-cover: cover / section opener
+metric-bars: data, comparison, progress, distribution
+process-timeline: steps, process, route, chronology
+panel-grid: concept cards, explanation, practice panels
+quote-focus: quote, key conclusion, central question
+tier-cards: grouped options, levels, differentiated tasks
+closing-cta: summary / ending
+native-interaction-shell: interaction pages; only skin outer shell and controls
+-->
+
+<!-- Title block -->
+<header data-cw-role="title-block">
+  <span class="cw-orbit-kicker">MISSION 06</span>
+  <h1 class="cw-orbit-title">用假设法破解鸡兔同笼</h1>
+</header>
+
+<!-- Hero title: apply to existing title text, do not move other components -->
+<header data-cw-role="title-block">
+  <span class="cw-orbit-kicker">MISSION START</span>
+  <h1 class="cw-orbit-hero-title">鸡兔<br>同笼</h1>
+</header>
+
+<!-- Standard panel -->
+<section data-cw-role="component-shell" class="cw-orbit-panel">
+  <span class="cw-orbit-kicker">CORE LOOP</span>
+  <p>先把全部看成兔，再按脚数差额倒推鸡的数量。</p>
+</section>
+
+<!-- Metric bar skin: only use when the page already has comparable values -->
+<section data-cw-role="component-shell" class="cw-orbit-panel">
+  <span class="cw-orbit-kicker">PROGRESS</span>
+  <div class="cw-orbit-meter"><span style="width:72%"></span></div>
+</section>
+
+<!-- Timeline node skin: use for existing steps, do not rebuild the lesson flow -->
+<span class="cw-orbit-node is-active">1</span>
+<span class="cw-orbit-node">2</span>
+
+<!-- Pink variant panel -->
+<section data-cw-role="component-shell" class="cw-orbit-panel cw-orbit-panel--pink">
+  <span class="cw-orbit-kicker">BONUS</span>
+  <p>只给外围组件换像素壳，不动互动脚本和节点命名。</p>
+</section>
+
+<!-- Optional decorative field for cover / ending pages -->
+<div class="cw-orbit-pixel-field" aria-hidden="true"></div>
+
+<!-- Optional badge cluster; keep it decorative or summary-only -->
+<span class="cw-orbit-badge">READY</span>
+<span class="cw-orbit-badge">LEVEL 01</span>
+
+<!-- Media container -->
+<figure data-cw-role="media-block">
+  <img src="https://example.com/demo.jpg" alt="示意图">
+</figure>
+
+<!-- Buttons: keep original attributes, only add class -->
+<button
+  data-cw-role="button-skin"
+  class="cw-orbit-btn"
+  onclick="submitAnswer()"
+>
+  Start
+</button>
+
+<button
+  data-cw-role="button-skin"
+  class="cw-orbit-btn cw-orbit-btn--pink"
+  onclick="nextStep()"
+>
+  Next
+</button>
+
+<!-- Feedback layer -->
+<div data-cw-role="feedback-layer" class="cw-orbit-feedback" data-state="correct">
+  Success! 观察每次变换后腿数减少 2 的规律。
+</div>

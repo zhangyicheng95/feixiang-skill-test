@@ -1,0 +1,212 @@
+/* Retro Zine shared theme layer
+ * Paste this file after retro-zine/tokens.css inside the single page-shared style block.
+ * This file only targets visual slots. It never renames events, functions, ids, or image assets.
+ */
+
+[data-cw-template="retro-zine"] {
+  position: relative;
+  min-height: 100%;
+  padding: 28px 34px 30px;
+  color: var(--cw-retro-ink);
+  font-family: var(--cw-retro-body-font);
+  background:
+    linear-gradient(180deg, rgba(244, 239, 230, 0.34) 0%, rgba(244, 239, 230, 0) 26%),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), rgba(0, 143, 77, 0) 42%),
+    var(--cw-retro-bg);
+  overflow: hidden;
+}
+
+[data-cw-template="retro-zine"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 78% 80%, rgba(26, 26, 26, 0.08) 0 1px, transparent 1px);
+  background-size: 18px 18px, 22px 22px, 24px 24px;
+  mix-blend-mode: multiply;
+}
+
+[data-cw-template="retro-zine"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="title-block"] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 14px 18px 12px;
+  border: var(--cw-retro-rule);
+  background:
+    linear-gradient(90deg, rgba(0, 143, 77, 0.12), rgba(0, 143, 77, 0) 36%),
+    var(--cw-retro-paper);
+  box-shadow: 10px 10px 0 var(--cw-retro-shadow);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="title-block"] h1,
+[data-cw-template="retro-zine"] [data-cw-role="title-block"] h2,
+[data-cw-template="retro-zine"] .cw-retro-title {
+  margin: 0;
+  color: var(--cw-retro-ink);
+  font-family: var(--cw-retro-title-font);
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+}
+
+[data-cw-template="retro-zine"] .cw-retro-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 5px 10px 4px;
+  border: 2px solid var(--cw-retro-line);
+  background: var(--cw-retro-green);
+  color: var(--cw-retro-paper);
+  font-family: var(--cw-retro-display-font);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="content-block"] {
+  display: grid;
+  gap: var(--cw-retro-gap);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-grid-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="component-shell"],
+[data-cw-template="retro-zine"] .cw-retro-card {
+  position: relative;
+  border: var(--cw-retro-rule);
+  border-radius: var(--cw-retro-radius);
+  padding: 16px 18px;
+  background: rgba(244, 239, 230, 0.92);
+  box-shadow: 8px 8px 0 var(--cw-retro-shadow);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-card--offset::after {
+  content: "";
+  position: absolute;
+  inset: 10px -10px -10px 10px;
+  z-index: -1;
+  border: var(--cw-retro-rule);
+  border-radius: inherit;
+  background: rgba(0, 143, 77, 0.16);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-note {
+  display: inline-block;
+  padding: 6px 10px;
+  border-bottom: 2px solid var(--cw-retro-line);
+  color: var(--cw-retro-red);
+  font-family: var(--cw-retro-note-font);
+  font-size: 18px;
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="media-block"] {
+  position: relative;
+  padding: 14px;
+  border: var(--cw-retro-rule);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(244, 239, 230, 0.72), rgba(244, 239, 230, 0.94)),
+    var(--cw-retro-paper);
+  box-shadow: 8px 8px 0 var(--cw-retro-shadow);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="media-block"]::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 22px;
+  width: 72px;
+  height: 22px;
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  background: rgba(244, 239, 230, 0.48);
+  transform: rotate(-6deg);
+  pointer-events: none;
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="media-block"] img,
+[data-cw-template="retro-zine"] [data-cw-role="media-block"] svg,
+[data-cw-template="retro-zine"] [data-cw-role="media-block"] canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="button-skin"],
+[data-cw-template="retro-zine"] .cw-retro-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 2px solid var(--cw-retro-line);
+  border-radius: 999px;
+  background: var(--cw-retro-green);
+  color: var(--cw-retro-paper);
+  font-family: var(--cw-retro-body-font);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  box-shadow: 5px 5px 0 rgba(26, 26, 26, 0.18);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="button-skin"].is-ink,
+[data-cw-template="retro-zine"] .cw-retro-btn--ink {
+  background: var(--cw-retro-ink);
+  color: var(--cw-retro-paper);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="button-skin"].is-paper,
+[data-cw-template="retro-zine"] .cw-retro-btn--paper {
+  background: var(--cw-retro-paper);
+  color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="feedback-layer"],
+[data-cw-template="retro-zine"] .cw-retro-feedback {
+  border: var(--cw-retro-rule);
+  border-radius: 16px;
+  padding: 14px 16px;
+  background:
+    linear-gradient(90deg, rgba(0, 143, 77, 0.12), transparent 42%),
+    var(--cw-retro-paper);
+  color: var(--cw-retro-ink);
+  box-shadow: 8px 8px 0 var(--cw-retro-shadow);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-feedback[data-state="correct"] {
+  border-color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-feedback[data-state="wrong"] {
+  border-color: var(--cw-retro-red);
+}
+
+[data-cw-template="retro-zine"] ul,
+[data-cw-template="retro-zine"] ol {
+  margin: 0;
+  padding-left: 1.3em;
+}
+
+[data-cw-template="retro-zine"] p,
+[data-cw-template="retro-zine"] li {
+  font-family: var(--cw-retro-body-font);
+  line-height: 1.65;
+}

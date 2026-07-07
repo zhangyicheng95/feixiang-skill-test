@@ -1,0 +1,151 @@
+/* Retro Zine safe shared theme layer
+ * Paste after retro-zine/tokens.css inside the single page-shared style block.
+ * This layer is intentionally color-first. It must not rebuild lesson
+ * components, insert labels, resize controls, or change event-bearing DOM.
+ */
+
+[data-cw-template="retro-zine"] {
+  position: relative;
+  min-height: 100%;
+  color: var(--cw-retro-ink);
+  font-family: var(--cw-retro-body-font);
+  background:
+    linear-gradient(180deg, rgba(244, 239, 230, 0.34) 0%, rgba(244, 239, 230, 0) 26%),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), rgba(0, 143, 77, 0) 42%),
+    var(--cw-retro-bg);
+  overflow: visible;
+}
+
+[data-cw-template="retro-zine"]::before,
+[data-cw-template="retro-zine"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+[data-cw-template="retro-zine"]::before {
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 78% 80%, rgba(26, 26, 26, 0.08) 0 1px, transparent 1px);
+  background-size: 18px 18px, 22px 22px, 24px 24px;
+}
+
+[data-cw-template="retro-zine"]::after {
+  opacity: 0.05;
+  background:
+    linear-gradient(0deg, rgba(26, 26, 26, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 26, 26, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+[data-cw-template="retro-zine"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="title-block"] h1,
+[data-cw-template="retro-zine"] [data-cw-role="title-block"] h2,
+[data-cw-template="retro-zine"] .cw-retro-title {
+  color: var(--cw-retro-ink);
+  font-family: var(--cw-retro-title-font);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-hero-title,
+[data-cw-template="retro-zine"][data-cw-variant="hero-cover"] [data-cw-role="title-block"] h1,
+[data-cw-template="retro-zine"][data-cw-variant="closing"] [data-cw-role="title-block"] h1 {
+  color: var(--cw-retro-green);
+  font-family: var(--cw-retro-display-font);
+}
+
+[data-cw-template="retro-zine"] p,
+[data-cw-template="retro-zine"] li {
+  color: inherit;
+  font-family: var(--cw-retro-body-font);
+}
+
+/* Existing component color adaptation only. Do not add geometry here. */
+[data-cw-template="retro-zine"] [data-cw-role="component-shell"],
+[data-cw-template="retro-zine"] [data-cw-role="media-block"],
+[data-cw-template="retro-zine"] [data-cw-role="feedback-layer"],
+[data-cw-template="retro-zine"] .cw-retro-card,
+[data-cw-template="retro-zine"] .cw-retro-feedback {
+  color: var(--cw-retro-ink);
+  background-color: rgba(244, 239, 230, 0.86);
+  border-color: var(--cw-retro-line);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="button-skin"],
+[data-cw-template="retro-zine"] .cw-retro-btn {
+  color: var(--cw-retro-paper);
+  background-color: var(--cw-retro-green);
+  border-color: var(--cw-retro-line);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="button-skin"].is-ink,
+[data-cw-template="retro-zine"] .cw-retro-btn--ink {
+  background-color: var(--cw-retro-ink);
+  color: var(--cw-retro-paper);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="button-skin"].is-paper,
+[data-cw-template="retro-zine"] .cw-retro-btn--paper {
+  background-color: var(--cw-retro-paper);
+  color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="feedback-layer"][data-state="correct"],
+[data-cw-template="retro-zine"] .cw-retro-feedback[data-state="correct"] {
+  border-color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"] [data-cw-role="feedback-layer"][data-state="wrong"],
+[data-cw-template="retro-zine"] .cw-retro-feedback[data-state="wrong"] {
+  border-color: var(--cw-retro-red);
+}
+
+/* Visual variant system: variants choose page atmosphere only. */
+[data-cw-template="retro-zine"][data-cw-variant="hero-cover"],
+[data-cw-template="retro-zine"][data-cw-variant="closing"] {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(0, 143, 77, 0.12), transparent 22%),
+    radial-gradient(circle at 84% 76%, rgba(244, 239, 230, 0.26), transparent 28%),
+    var(--cw-retro-bg);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="statement-focus"] [data-cw-role="title-block"] h1,
+[data-cw-template="retro-zine"][data-cw-variant="statement-focus"] [data-cw-role="title-block"] h2 {
+  color: var(--cw-retro-ink);
+  font-family: var(--cw-retro-display-font);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="info-grid"] [data-cw-role="component-shell"],
+[data-cw-template="retro-zine"][data-cw-variant="numbered-points"] [data-cw-role="component-shell"] {
+  background-color: rgba(244, 239, 230, 0.76);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-number,
+[data-cw-template="retro-zine"] .cw-retro-note,
+[data-cw-template="retro-zine"] .cw-retro-form-line {
+  color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="collage"] [data-cw-role="component-shell"] {
+  border-color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="visual-feature"] [data-cw-role="media-block"] {
+  border-color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="form-note"] [data-cw-role="component-shell"] {
+  background-color: var(--cw-retro-paper);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="native-interaction-shell"] {
+  background:
+    linear-gradient(135deg, rgba(0, 143, 77, 0.12), rgba(0, 143, 77, 0) 38%),
+    var(--cw-retro-bg);
+}

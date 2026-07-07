@@ -1,0 +1,136 @@
+<!--
+  Feixiang-Laoshi · Drop-in Chinese Stroke-Order Template (v10.6 · two-tier confidence)
+  ─────────────────────────────────────────────
+  Tier confidence:
+    - textbook (2,865 chars: textbook writeable / recognition + OVERRIDE + textbook-patch-v1):
+      reviewed in 3 curriculum rounds, 100% reliable.
+    - extended (4,953 chars: dictionary expansion):
+      auto-mapping + heuristics, ≥98% accurate, not fully reviewed.
+
+  UI policy:
+    - textbook chars: normal display (red "X strokes" highlight).
+    - extended chars: still displayed but with a "to be verified" mark (grey badge),
+      prompting the user to double-check.
+    - Recommended for primary-school Chinese scenarios: use textbook chars only.
+
+  Taboos (inherited from v10):
+    - Do NOT hard-code any stroke array.
+    - Do NOT import cnchar / HanziWriter.
+    - When data.source !== 'db', show "no data" — do not guess.
+-->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Stroke-Order Example v10.6 (two-tier confidence)</title>
+<style>
+  body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; padding: 24px; background: #f7f8fa; }
+  .stroke-card {
+    display: inline-block;
+    margin: 8px;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    min-width: 220px;
+    vertical-align: top;
+    position: relative;
+  }
+  .stroke-card.tier-extended { border: 1px dashed #bdc3c7; }
+  .stroke-char { font-size: 48px; font-weight: bold; color: #2c3e50; margin-bottom: 8px; }
+  .stroke-count { color: #e74c3c; font-size: 14px; margin-bottom: 8px; font-weight: 600; }
+  .stroke-count.tier-extended { color: #7f8c8d; }
+  .tier-badge { position: absolute; top: 8px; right: 10px; font-size: 11px;
+                padding: 2px 8px; border-radius: 12px; font-weight: normal; }
+  .tier-badge.textbook { background: #d5f5e3; color: #27ae60; }
+  .tier-badge.extended { background: #f4f6f6; color: #7f8c8d; border: 1px solid #d5dbdb; }
+  .stroke-seq { line-height: 1.8; color: #34495e; font-size: 14px; }
+  .stroke-seq .step { display: inline-block; margin: 2px 4px; padding: 2px 8px;
+                       background: #ecf0f1; border-radius: 4px; font-size: 13px; }
+  .err { color: #95a5a6; font-style: italic; }
+  .tip { background: #fffbeb; border-left: 3px solid #f39c12;
+         padding: 8px 12px; margin: 6px 0; font-size: 12px; color: #7f6300; }
+</style>
+
+<!-- Loader (required — do NOT change the URL) -->
+<script src="https://musk-test.fbcontent.cn/pub-musk-ai-studio/skills/stroke-order/v59/templates/stroke-loader.js"></script>
+</head>
+
+<body>
+
+<h1>Chinese Stroke-Order Teaching Example (v10.6 two-tier confidence)</h1>
+<div id="stats"></div>
+<div id="app">Loading stroke-order data...</div>
+
+<script>
+// Character array filled in by the LLM — must NOT include any stroke data.
+var chars = ['学', '写', '字', '彭', '窿', '铅', '曼', '丁', '孛'];
+
+window.addEventListener('stroke-data-ready', function (ev) {
+  var stats = document.getElementById('stats');
+  if (ev.detail && ev.detail.status === 'error') {
+    stats.innerHTML = '<p class="err">Load failed: ' + ev.detail.error + '</p>';
+    return;
+  }
+  stats.innerHTML = '<p class="tip">Database: ' + ev.detail.total + ' chars (textbook ' +
+    window._strokeLoader.getTextbookTotal() + ' high-confidence / extended ' +
+    window._strokeLoader.getExtendedTotal() + ' to be verified)</p>';
+
+  var app = document.getElementById('app');
+  app.innerHTML = '';
+  chars.forEach(function (ch) {
+    app.appendChild(renderCard(ch, window.getStrokeData(ch)));
+  });
+});
+
+function renderCard(ch, d) {
+  var card = document.createElement('div');
+  card.className = 'stroke-card' + (d.tier === 'extended' ? ' tier-extended' : '');
+
+  // Tier badge
+  if (d.source === 'db') {
+    var badge = document.createElement('span');
+    badge.className = 'tier-badge ' + d.tier;
+    badge.textContent = d.tier === 'textbook' ? '✓ Textbook authoritative' : '⚠ To be verified';
+    card.appendChild(badge);
+  }
+
+  var chDiv = document.createElement('div');
+  chDiv.className = 'stroke-char';
+  chDiv.textContent = ch;
+  card.appendChild(chDiv);
+
+  if (d.source === 'db') {
+    var cntDiv = document.createElement('div');
+    cntDiv.className = 'stroke-count' + (d.tier === 'extended' ? ' tier-extended' : '');
+    cntDiv.textContent = d.count + ' strokes';
+    card.appendChild(cntDiv);
+
+    var seqDiv = document.createElement('div');
+    seqDiv.className = 'stroke-seq';
+    d.strokes.forEach(function (name, i) {
+      var span = document.createElement('span');
+      span.className = 'step';
+      span.textContent = (i + 1) + '. ' + name;
+      seqDiv.appendChild(span);
+    });
+    card.appendChild(seqDiv);
+  } else {
+    var errDiv = document.createElement('div');
+    errDiv.className = 'err';
+    if (d.source === 'missing') {
+      errDiv.textContent = 'This character is not yet covered (the authoritative library covers 7,818 characters: primary-school textbook + general-standard characters)';
+    } else if (d.source === 'loading') {
+      errDiv.textContent = 'Loading...';
+    } else {
+      errDiv.textContent = 'Data error: ' + (d.error || d.source);
+    }
+    card.appendChild(errDiv);
+  }
+  return card;
+}
+</script>
+
+</body>
+</html>

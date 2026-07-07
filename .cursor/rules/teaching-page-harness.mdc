@@ -1,0 +1,34 @@
+---
+description: >-
+  K12 教学页面 MVP：teaching-page-v2 三步流程（素材→生成→验收）。
+  规范全部在 teaching-page-v2/ 目录内，不引用仓库外 Skill。
+globs: pages/**/*.html
+alwaysApply: true
+---
+
+# Teaching Page Harness
+
+## 何时启用
+
+教学页面、互动课件、单页游戏/答题、多页 PPT 课件、在 `pages/` 下新建/修改 HTML。
+
+## 执行
+
+```
+Read teaching-page-v2/SKILL.md
+  ① assets/SKILL.md
+  ② html-authoring/SKILL.md      （single）
+     courseware-generator/SKILL.md （multi）
+  ③ test-html/SKILL.md
+```
+
+**禁止** Read 本目录（teaching-page-v2）外的 Skill 文件。
+
+## 范围
+
+- **single**：`pages/<slug>/index.html`
+- **multi**：`pages/<slug>/index.html` + `courseware-shell.js`
+
+## 何时不要启用
+
+架构讨论、非教学 HTML、与 pages 无关的通用前端任务。

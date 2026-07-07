@@ -1,0 +1,47 @@
+/* 8-Bit Orbit tokens
+ * Adapted from the source template's pixel-neon arcade system.
+ * Usage:
+ * 1. Copy these variables before 8-bit-orbit/page-shared.css in <template class="page-shared"><style>...</style></template>.
+ * 2. Add data-cw-template="8-bit-orbit" to each page-root that should use this template.
+ */
+
+[data-cw-template="8-bit-orbit"] {
+  --cw-orbit-void: #0a0e27;
+  --cw-orbit-navy: #0f1b3d;
+  --cw-orbit-cyan: #5edcf4;
+  --cw-orbit-pink: #f0a6ca;
+  --cw-orbit-yellow: #f4d03f;
+  --cw-orbit-lavender: #e2d5f2;
+  --cw-orbit-white: #ffffff;
+  --cw-orbit-border: rgba(94, 220, 244, 0.34);
+  --cw-orbit-glass: rgba(255, 255, 255, 0.08);
+  --cw-orbit-glow: rgba(94, 220, 244, 0.2);
+  --cw-orbit-display-font:
+    "Tektur", "Chakra Petch", "Source Han Sans SC", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  --cw-orbit-body-font:
+    "Chakra Petch", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  --cw-orbit-mono-font:
+    "Space Mono", "JetBrains Mono", "SFMono-Regular", monospace;
+  --cw-orbit-radius: 16px;
+  --cw-orbit-gap: 16px;
+  --cw-orbit-pixel-stack-cyan-yellow:
+    4px 0 0 0 var(--cw-orbit-navy),
+    0 4px 0 0 var(--cw-orbit-navy),
+    4px 4px 0 0 var(--cw-orbit-navy),
+    8px 4px 0 0 var(--cw-orbit-yellow),
+    4px 8px 0 0 var(--cw-orbit-yellow),
+    8px 8px 0 0 var(--cw-orbit-yellow);
+  --cw-orbit-pixel-stack-pink-cyan:
+    4px 0 0 0 var(--cw-orbit-navy),
+    0 4px 0 0 var(--cw-orbit-navy),
+    4px 4px 0 0 var(--cw-orbit-navy),
+    8px 4px 0 0 var(--cw-orbit-cyan),
+    4px 8px 0 0 var(--cw-orbit-cyan),
+    8px 8px 0 0 var(--cw-orbit-cyan);
+  --cw-orbit-hero-text-shadow:
+    4px 4px 0 var(--cw-orbit-yellow),
+    8px 8px 0 var(--cw-orbit-navy);
+  --cw-orbit-title-text-shadow: 3px 3px 0 var(--cw-orbit-navy);
+}

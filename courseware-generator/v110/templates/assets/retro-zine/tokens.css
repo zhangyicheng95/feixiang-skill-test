@@ -1,0 +1,31 @@
+/* Retro Zine tokens
+ * Adapted from the source template's warm paper, forest green, and editorial-zine rhythm.
+ * Usage:
+ * 1. Copy these variables before retro-zine/page-shared.css in <template class="page-shared"><style>...</style></template>.
+ * 2. Add data-cw-template="retro-zine" to each page-root that should use this template.
+ */
+
+[data-cw-template="retro-zine"] {
+  --cw-retro-bg: #c8b99a;
+  --cw-retro-bg-dark: #b8a98a;
+  --cw-retro-ink: #1a1a1a;
+  --cw-retro-paper: #f4efe6;
+  --cw-retro-green: #008f4d;
+  --cw-retro-green-light: #00a85d;
+  --cw-retro-red: #8a3f2d;
+  --cw-retro-muted: #746858;
+  --cw-retro-line: #1a1a1a;
+  --cw-retro-shadow: rgba(26, 26, 26, 0.16);
+  --cw-retro-overlay: rgba(244, 239, 230, 0.24);
+  --cw-retro-title-font:
+    "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", serif;
+  --cw-retro-body-font:
+    "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  --cw-retro-note-font: "Kaiti SC", "STKaiti", "KaiTi", cursive;
+  --cw-retro-display-font:
+    "Bebas Neue", "Oswald", "Arial Narrow", var(--cw-retro-body-font);
+  --cw-retro-radius: 18px;
+  --cw-retro-gap: 18px;
+  --cw-retro-rule: 3px solid var(--cw-retro-line);
+}

@@ -1,0 +1,46 @@
+/* Retro Zine safe shared theme layer
+ * Append after retro-zine/tokens.css inside the existing single page-shared
+ * style block. Never replace or delete the original courseware CSS.
+ * This layer is intentionally page-level and variable-first. It must not
+ * rebuild lesson components, insert labels, resize controls, restyle media
+ * frames, or change event-bearing DOM.
+ */
+
+[data-cw-template="retro-zine"] {
+  --primary-color: var(--cw-retro-green);
+  --accent-color: var(--cw-retro-red);
+  color: var(--cw-retro-ink);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 78% 80%, rgba(26, 26, 26, 0.08) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgba(244, 239, 230, 0.34) 0%, rgba(244, 239, 230, 0) 26%),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.08), rgba(0, 143, 77, 0) 42%),
+    var(--cw-retro-bg);
+  background-size: 18px 18px, 22px 22px, 24px 24px, auto, auto, auto;
+}
+
+/* Visual variant system: variants choose page atmosphere only. */
+[data-cw-template="retro-zine"][data-cw-variant="hero-cover"],
+[data-cw-template="retro-zine"][data-cw-variant="closing"] {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 18% 22%, rgba(0, 143, 77, 0.12), transparent 22%),
+    radial-gradient(circle at 84% 76%, rgba(244, 239, 230, 0.26), transparent 28%),
+    var(--cw-retro-bg);
+}
+
+[data-cw-template="retro-zine"] .cw-retro-number,
+[data-cw-template="retro-zine"] .cw-retro-note,
+[data-cw-template="retro-zine"] .cw-retro-form-line {
+  color: var(--cw-retro-green);
+}
+
+[data-cw-template="retro-zine"][data-cw-variant="native-interaction-shell"] {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(26, 26, 26, 0.12) 0 1px, transparent 1px),
+    radial-gradient(circle at 64% 42%, rgba(26, 26, 26, 0.1) 0 1px, transparent 1px),
+    linear-gradient(135deg, rgba(0, 143, 77, 0.12), rgba(0, 143, 77, 0) 38%),
+    var(--cw-retro-bg);
+}
