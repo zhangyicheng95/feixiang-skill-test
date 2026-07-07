@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>初中英语·现在完成时</title>
+  <!-- spec: requirements=完整初中英语课件,单选10题同页逐题,多选题; core-loop=P8选题→确认→解析→下一题×10→结果;P9多选→提交→解析 -->
+  <!-- fx-style: palette=FX-蓝(B-20); radius=20; keyword=现在完成时; source=hash -->
+</head>
+<body>
+
+<div id="cw-loading">加载课件中...</div>
+
+<template class="page-shared">
+  <style>
+    :root {
+      --bg: #DFEDFF;
+      --text: #0F2336;
+      --primary: #278DEA;
+      --accent: #40A10B;
+      --card: #FFFFFF;
+      --card-border: rgba(15, 35, 54, 0.30);
+      --demo-bg: #FFFFFF;
+      --demo-border: rgba(15, 35, 54, 0.30);
+      --demo-grid: #F1F5FB;
+      --btn-bg: #278DEA;
+      --btn-fg: #FFFFFF;
+      --btn-2nd-bg: #DFEDFF;
+      --btn-2nd-fg: #0F2336;
+      --success: #40A10B;
+      --error: #E05A5A;
+      --radius: 20px;
+      --font: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      --canvas-bg: #eef1f5;
+      --stage-base: #eef1f5;
+      --canvas-bg: color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+    }
+    html, body {
+      font-family: var(--font); color: var(--text);
+      background: var(--canvas-bg); margin: 0;
+    }
+    .page-container {
+      height: 100%; max-height: 100%; min-height: 0;
+      padding: 26px 36px; display: flex; flex-direction: column;
+      box-sizing: border-box; overflow-y: auto;
+      background: var(--canvas-bg);
+    }
+    .page-title {
+      font-size: 28px; font-weight: 700; color: var(--primary);
+      margin-bottom: 14px; padding-left: 14px;
+      border-left: 6px solid var(--primary); line-height: 1.2; flex-shrink: 0;
+    }
+    .card {
+      background: var(--card); border: 2px solid var(--card-border);
+      border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
+    }
+    .btn {
+      padding: 9px 16px; border-radius: var(--radius); font-weight: 600;
+      cursor: pointer; border: 2px solid var(--card-border);
+      font-size: 14px; font-family: inherit;
+    }
+    .btn-primary { background: var(--btn-bg); color: var(--btn-fg); border-color: var(--primary); }
+    .btn-2nd { background: var(--btn-2nd-bg); color: var(--btn-2nd-fg); }
+    .tip {
+      background: #F0FFF0; border: 2px solid var(--accent);
+      border-radius: var(--radius); padding: 10px 14px; font-size: 14px; line-height: 1.55;
+    }
+    .en { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+    ul.compact { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.75; }
+    .tag-pill {
+      display: inline-block; padding: 4px 12px; border: 2px solid var(--primary);
+      border-radius: 999px; font-size: 13px; background: var(--bg); margin-right: 6px;
+    }
+  </style>
+</template>
+
+<!-- P1 封面 -->
+<template class="page-data" data-id="1" data-name="封面">
+  <style>
+    .cover {
+      height: 100%; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; background: #278DEA; color: #fff; text-align: center; padding: 36px; box-sizing: border-box;
+    }
+    .cover h1 { font-size: 42px; margin: 0 0 12px; font-weight: 800; }
+    .cover .sub { font-size: 18px; margin: 0 0 20px; opacity: 0.95; line-height: 1.6; }
+    .cover .meta {
+      font-size: 16px; background: #83FE91; color: #232323;
+      border: 2px solid #0F2336; padding: 10px 24px; border-radius: var(--radius);
+    }
+  </style>
+  <div class="cover">
+    <h1 class="en">Present Perfect Tense</h1>
+    <p class="sub">现在完成时 · 语法精讲与练习</p>
+    <div class="meta">初中英语 · 八年级 · 人教版 Go for it!</div>
+  </div>
+</template>
+
+<!-- P2 目录 -->
+<template class="page-data" data-id="2" data-name="目录">
+  <style>
+    .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .toc-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      background: var(--card); border: 2px solid var(--card-border); border-radius: var(--radius);
+    }
+    .toc-num {
+      width: 32px; height: 32px; background: var(--primary); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .toc-text { font-size: 15px; line-height: 1.4; }
+    .toc-text small { color: #64748b; font-size: 12px; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">本课目录</div>
+    <div class="toc">
+      <div class="toc-item"><span class="toc-num">1</span><span class="toc-text">语法结构<br><small>Structure</small></span></div>
+      <div class="toc-item"><span class="toc-num">2</span><span class="toc-text">核心用法<br><small>Usage</small></span></div>
+      <div class="toc-item"><span class="toc-num">3</span><span class="toc-text">时态对比<br><small>Comparison</small></span></div>
+      <div class="toc-item"><span class="toc-num">4</span><span class="toc-text">例题精讲<br><small>Example</small></span></div>
+      <div class="toc-item"><span class="toc-num">5</span><span class="toc-text">拖拽练习<br><small>Drag &amp; Drop</small></span></div>
+      <div class="toc-item"><span class="toc-num">6</span><span class="toc-text">单选题<br><small>Single Choice</small></span></div>
+      <div class="toc-item"><span class="toc-num">7</span><span class="toc-text">多选题<br><small>Multiple Choice</small></span></div>
+      <div class="toc-item"><span class="toc-num">8</span><span class="toc-text">课堂小结<br><small>Summary</small></span></div>
+    </div>
+    <div class="tip" style="margin-top:12px;">第 8 页单选共 10 题，同页逐题切换，每题确认后出解析；第 9 页为多选题。</div>
+  </div>
+</template>
+
+<!-- P3 讲解：结构 -->
+<template class="page-data" data-id="3" data-name="语法结构">
+  <div class="page-container">
+    <div class="page-title">讲解：现在完成时的结构</div>
+    <div class="card en" style="font-size:17px;font-weight:700;color:var(--primary);text-align:center;">
+      Subject + have/has + past participle (V3)
+    </div>
+    <div class="card">
+      <p style="margin:0 0 8px;font-size:15px;"><strong>定义：</strong>现在完成时表示<strong>过去发生的动作</strong>与<strong>现在有联系</strong>，或动作从过去持续到现在。</p>
+      <ul class="compact">
+        <li><span class="tag-pill">肯定</span> <span class="en">I <strong>have finished</strong> my homework.</span></li>
+        <li><span class="tag-pill">否定</span> <span class="en">She <strong>has not (hasn't) seen</strong> the film.</span></li>
+        <li><span class="tag-pill">疑问</span> <span class="en"><strong>Have</strong> you <strong>ever been</strong> to Beijing?</span></li>
+        <li><span class="tag-pill">规则</span> 第三人称单数用 <span class="en">has</span>，其余用 <span class="en">have</span></li>
+      </ul>
+    </div>
+    <div class="tip"><strong>记忆：</strong>have/has 是助动词，后面必须接<strong>过去分词</strong>，不是原形动词。</div>
+  </div>
+</template>
+
+<!-- P4 讲解：用法 -->
+<template class="page-data" data-id="4" data-name="核心用法">
+  <style>
+    .usage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .usage-card h4 { margin: 0 0 6px; color: var(--primary); font-size: 15px; }
+    .usage-card p { margin: 0; font-size: 14px; line-height: 1.55; }
+    .usage-card .ex { margin-top: 6px; font-size: 13px; color: var(--accent); }
+  </style>
+  <div class="page-container">
+    <div class="page-title">讲解：三大核心用法</div>
+    <div class="usage-grid">
+      <div class="card usage-card">
+        <h4>1. 经历（Experience）</h4>
+        <p>表示人生经历，常与 <span class="en">ever / never</span> 连用。</p>
+        <p class="ex en">I have never tried sushi.</p>
+      </div>
+      <div class="card usage-card">
+        <h4>2. 结果（Result）</h4>
+        <p>过去动作对现在造成结果，常与 <span class="en">just / already</span> 连用。</p>
+        <p class="ex en">He has already left. (He isn't here now.)</p>
+      </div>
+      <div class="card usage-card">
+        <h4>3. 持续（Duration）</h4>
+        <p>从过去持续到现在，与 <span class="en">for / since</span> 连用。</p>
+        <p class="ex en">We have lived here for ten years.</p>
+      </div>
+      <div class="card usage-card">
+        <h4>4. 标志词</h4>
+        <p><span class="en">already, yet, ever, never, just, for, since, so far</span></p>
+        <p class="ex">见到这些词优先考虑现在完成时。</p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- P5 分析/讨论 -->
+<template class="page-data" data-id="5" data-name="时态对比">
+  <style>
+    table.cmp { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.cmp th, table.cmp td { border: 2px solid var(--card-border); padding: 8px 10px; text-align: left; }
+    table.cmp th { background: var(--primary); color: #fff; }
+    .discuss { font-size: 14px; line-height: 1.6; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">分析：现在完成时 vs 一般过去时</div>
+    <table class="cmp">
+      <tr><th>对比项</th><th class="en">Present Perfect</th><th class="en">Past Simple</th></tr>
+      <tr><td>时间焦点</td><td class="en">与现在有关</td><td class="en">过去某一时刻</td></tr>
+      <tr><td>典型标志</td><td class="en">for / since / already</td><td class="en">yesterday / last week / in 2020</td></tr>
+      <tr><td>例句</td><td class="en">I have lost my key.</td><td class="en">I lost my key yesterday.</td></tr>
+    </table>
+    <div class="card discuss" style="margin-top:10px;">
+      <p style="margin:0 0 6px;"><strong>讨论 1：</strong>为什么 “I have seen the movie” 不能和 “last night” 连用？</p>
+      <p style="margin:0 0 8px;"><strong>讨论 2：</strong>“How long have you learned English?” 句中为何用完成时？</p>
+      <p style="margin:0;font-size:13px;color:var(--accent);">提示：看动作是否强调对现在的影响或持续至今。</p>
+    </div>
+  </div>
+</template>
+
+<!-- P6 例题 -->
+<template class="page-data" data-id="6" data-name="例题精讲">
+  <style>
+    .step { font-size: 14px; line-height: 1.65; margin-bottom: 8px; padding-left: 12px; border-left: 4px solid var(--accent); }
+    .wrong { color: var(--error); text-decoration: line-through; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">例题精讲</div>
+    <div class="card en" style="font-size:15px;">
+      <strong>题目：</strong> — _____ you ever _____ (visit) the Great Wall?<br>
+      — Yes, I _____ (visit) it twice.
+    </div>
+    <div class="card">
+      <p style="margin:0 0 8px;font-weight:700;">解答过程：</p>
+      <div class="step"><strong>Step 1</strong> 见 <span class="en">ever</span> → 问句用 <span class="en">Have ... ever + V3</span></div>
+      <div class="step"><strong>Step 2</strong> 答句无过去具体时间 → 用 <span class="en">have visited</span> 表经历</div>
+      <div class="step"><strong>Step 3</strong> 填空：<span class="en">Have, visited, have visited</span></div>
+      <p style="margin:8px 0 0;font-size:13px;"><strong>易错点：</strong><span class="wrong en">Did you ever visit</span> 只强调过去动作，不符合 “ever” 的经历用法。</p>
+    </div>
+    <div class="tip en"><strong>Answer:</strong> Have; visited; have visited</div>
+  </div>
+</template>
+
+<!-- P7 拖拽练习 -->
+<template class="page-data" data-id="7" data-name="拖拽练习">
+  <style>
+    .drag-area { display: flex; gap: 10px; flex: 1; min-height: 0; }
+    .pool {
+      width: 200px; display: flex; flex-direction: column; gap: 6px;
+      padding: 10px; background: var(--demo-bg); border: 2px dashed var(--demo-border);
+      border-radius: var(--radius); min-height: 180px;
+    }
+    .pool-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+    .drop-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .drop-zone {
+      flex: 1; min-height: 72px; padding: 8px;
+      border: 2px solid var(--card-border); border-radius: var(--radius);
+      background: var(--bg); display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start;
+    }
+    .drop-zone.over { border-color: var(--primary); background: #fff; }
+    .drop-zone h4 { width: 100%; margin: 0 0 4px; font-size: 13px; color: var(--primary); }
+    .chip {
+      padding: 6px 10px; font-size: 13px; background: #83FE91; color: #232323;
+      border: 2px solid #0F2336; border-radius: var(--radius); cursor: grab;
+      user-select: none; touch-action: none;
+    }
+    .chip.dragging { opacity: 0.6; cursor: grabbing; }
+    .chip.correct { background: #C8F7C5; border-color: var(--success); }
+    .chip.wrong { background: #FFE0E0; border-color: var(--error); }
+    .drag-foot { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-shrink: 0; }
+    #dragMsg { flex: 1; font-size: 14px; font-weight: 600; color: var(--primary); }
+  </style>
+  <div class="page-container">
+    <div class="page-title">练习：拖拽分类</div>
+    <p style="margin:0 0 8px;font-size:14px;">将时间标志词拖到正确时态栏，完成后点「检查答案」。</p>
+    <div class="drag-area">
+      <div class="pool" id="chipPool" data-interactive>
+        <div class="pool-title">词卡（拖拽）</div>
+      </div>
+      <div class="drop-col">
+        <div class="drop-zone" data-zone="pp" data-interactive>
+          <h4 class="en">Present Perfect</h4>
+        </div>
+        <div class="drop-zone" data-zone="ps" data-interactive>
+          <h4 class="en">Past Simple</h4>
+        </div>
+      </div>
+    </div>
+    <div class="drag-foot">
+      <span id="dragMsg">请把 6 张词卡全部拖入栏中</span>
+      <button type="button" class="btn btn-2nd" id="dragReset" data-interactive>重置</button>
+      <button type="button" class="btn btn-primary" id="dragCheck" data-interactive>检查答案</button>
+    </div>
+    <div class="tip" style="margin-top:6px;font-size:13px;">
+      <strong>解析：</strong><span class="en">for three years / since 2020 / already</span> 常接完成时；
+      <span class="en">yesterday / last Sunday / in 2019</span> 常接一般过去时。
+    </div>
+  </div>
+  <script>
+    (function () {
+      var ITEMS = [
+        { id: 'a', text: 'for three years', ans: 'pp' },
+        { id: 'b', text: 'yesterday', ans: 'ps' },
+        { id: 'c', text: 'since 2020', ans: 'pp' },
+        { id: 'd', text: 'last Sunday', ans: 'ps' },
+        { id: 'e', text: 'already', ans: 'pp' },
+        { id: 'f', text: 'in 2019', ans: 'ps' }
+      ];
+      var pool = document.getElementById('chipPool');
+      var msg = document.getElementById('dragMsg');
+      var checked = false;
+      var dragEl = null, ox = 0, oy = 0;
+
+      function save() {
+        var placement = {};
+        document.querySelectorAll('.chip').forEach(function (c) {
+          var p = c.parentElement;
+          var z = p && p.dataset.zone ? p.dataset.zone : 'pool';
+          placement[c.dataset.id] = z;
+        });
+        window.parent.postMessage({ type: 'saveState', state: { placement: placement, checked: checked } }, '*');
+      }
+
+      function makeChip(item) {
+        var el = document.createElement('div');
+        el.className = 'chip en';
+        el.textContent = item.text;
+        el.dataset.id = item.id;
+        el.dataset.ans = item.ans;
+        el.addEventListener('mousedown', startDrag);
+        el.addEventListener('touchstart', startDrag, { passive: false });
+        return el;
+      }
+
+      function startDrag(e) {
+        if (checked) return;
+        e.preventDefault();
+        dragEl = e.currentTarget;
+        dragEl.classList.add('dragging');
+        var r = dragEl.getBoundingClientRect();
+        var cx = e.touches ? e.touches[0].clientX : e.clientX;
+        var cy = e.touches ? e.touches[0].clientY : e.clientY;
+        ox = cx - r.left; oy = cy - r.top;
+        dragEl.style.position = 'fixed';
+        dragEl.style.zIndex = '9999';
+        dragEl.style.width = r.width + 'px';
+        moveDrag(cx, cy);
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', endDrag);
+      }
+
+      function onMove(e) {
+        if (!dragEl) return;
+        e.preventDefault();
+        var cx = e.touches ? e.touches[0].clientX : e.clientX;
+        var cy = e.touches ? e.touches[0].clientY : e.clientY;
+        moveDrag(cx, cy);
+        document.querySelectorAll('.drop-zone').forEach(function (z) {
+          var rect = z.getBoundingClientRect();
+          if (cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom) z.classList.add('over');
+          else z.classList.remove('over');
+        });
+      }
+
+      function moveDrag(cx, cy) {
+        dragEl.style.left = (cx - ox) + 'px';
+        dragEl.style.top = (cy - oy) + 'px';
+      }
+
+      function endDrag(e) {
+        if (!dragEl) return;
+        var cx = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        var cy = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+        var target = null;
+        document.querySelectorAll('.drop-zone').forEach(function (z) {
+          z.classList.remove('over');
+          var rect = z.getBoundingClientRect();
+          if (cx >= rect.left && cx <= rect.right && cy >= rect.top && cy <= rect.bottom) target = z;
+        });
+        dragEl.classList.remove('dragging');
+        dragEl.style.position = '';
+        dragEl.style.left = '';
+        dragEl.style.top = '';
+        dragEl.style.zIndex = '';
+        dragEl.style.width = '';
+        (target || pool).appendChild(dragEl);
+        dragEl = null;
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('touchmove', onMove);
+        document.removeEventListener('touchend', endDrag);
+        save();
+      }
+
+      function initPool() {
+        while (pool.children.length > 1) pool.removeChild(pool.lastChild);
+        ITEMS.forEach(function (it) { pool.appendChild(makeChip(it)); });
+      }
+
+      function check() {
+        var chips = document.querySelectorAll('.chip');
+        if (chips.length < 6) { msg.textContent = '请拖完 6 张词卡'; return; }
+        var inZone = 0, ok = 0;
+        chips.forEach(function (c) {
+          var p = c.parentElement;
+          if (p && p.dataset.zone) {
+            inZone++;
+            if (p.dataset.zone === c.dataset.ans) { c.classList.add('correct'); c.classList.remove('wrong'); ok++; }
+            else { c.classList.add('wrong'); c.classList.remove('correct'); }
+          } else { c.classList.remove('correct', 'wrong'); }
+        });
+        if (inZone < 6) { msg.textContent = '还有词卡在左侧，请全部拖入栏中'; return; }
+        checked = true;
+        msg.textContent = ok === 6 ? '全部正确！' : '得分 ' + ok + ' / 6，请根据提示修改';
+        save();
+      }
+
+      function reset() {
+        checked = false;
+        msg.textContent = '请把 6 张词卡全部拖入栏中';
+        document.querySelectorAll('.drop-zone .chip').forEach(function (c) { pool.appendChild(c); });
+        document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('correct', 'wrong'); });
+        save();
+      }
+
+      document.getElementById('dragCheck').addEventListener('click', check);
+      document.getElementById('dragReset').addEventListener('click', reset);
+
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state && e.data.state.placement) {
+          var pl = e.data.state.placement;
+          checked = !!e.data.state.checked;
+          Object.keys(pl).forEach(function (id) {
+            var chip = document.querySelector('.chip[data-id="' + id + '"]');
+            if (!chip) return;
+            var zone = pl[id];
+            if (zone === 'pool') pool.appendChild(chip);
+            else {
+              var z = document.querySelector('.drop-zone[data-zone="' + zone + '"]');
+              if (z) z.appendChild(chip);
+            }
+          });
+          if (checked) check();
+        }
+      });
+
+      initPool();
+    })();
+  </script>
+</template>
+
+<!-- P8 单选题（10 题 · 同页逐题切换） -->
+<template class="page-data" data-id="8" data-name="单选题">
+  <style>
+    .quiz-step { display: flex; flex-direction: column; min-height: 0; }
+    .quiz-step .prog {
+      font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px;
+    }
+    .quiz-step .bar {
+      height: 8px; background: #E2E8F0; border-radius: 999px; overflow: hidden; margin-bottom: 12px;
+    }
+    .quiz-step .bar i {
+      display: block; height: 100%; background: var(--primary); width: 10%; transition: width 0.2s;
+    }
+    #scStage { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .quiz-step .q {
+      font-size: 15px; font-weight: 700; margin: 0 0 10px; line-height: 1.45;
+    }
+    .quiz-step .opt {
+      display: block; width: 100%; text-align: left; margin: 5px 0; padding: 9px 12px;
+      border: 2px solid var(--card-border); border-radius: var(--radius);
+      background: #fff; cursor: pointer; font-size: 14px; font-family: inherit;
+    }
+    .quiz-step .opt.picked { border-color: var(--primary); background: #F0F7FF; }
+    .quiz-step .opt.correct { border-color: var(--success); color: var(--success); }
+    .quiz-step .opt.wrong { border-color: var(--error); color: var(--error); }
+    .quiz-step .opt:disabled { cursor: default; opacity: 1; }
+    .quiz-step .explain {
+      margin-top: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.55;
+      border-radius: var(--radius); flex-shrink: 0;
+    }
+    .quiz-step .explain.ok {
+      background: #F0FFF0; border: 2px solid var(--success);
+    }
+    .quiz-step .explain.no {
+      background: #FFF5F5; border: 2px solid var(--error);
+    }
+    .quiz-step .explain strong { color: var(--primary); }
+    .quiz-step .result {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 12px;
+    }
+    .quiz-step .result .score { font-size: 36px; font-weight: 800; color: var(--primary); margin: 8px 0; }
+    .quiz-step .foot {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-shrink: 0;
+    }
+    #scMsg { flex: 1; font-size: 13px; color: var(--primary); font-weight: 600; }
+  </style>
+  <div class="page-container quiz-step">
+    <div class="page-title">练习：单选题</div>
+    <div class="prog">第 <span id="scIdx">1</span> / 10 题 · 每题只选一个</div>
+    <div class="bar"><i id="scBar"></i></div>
+    <div id="scStage" data-interactive></div>
+    <div class="foot">
+      <button type="button" class="btn btn-2nd" id="scPrev" data-interactive>上一题</button>
+      <span id="scMsg">请选择答案</span>
+      <button type="button" class="btn btn-primary" id="scNext" data-interactive disabled>确认答案</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var QS = [
+        { stem: '1. She _____ in London for five years. (live)', opts: [['A', 'lives'], ['B', 'has lived'], ['C', 'lived']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">for five years</span> 表持续时长，用现在完成时 <span class="en">has lived</span>。' },
+        { stem: '2. I _____ him yesterday.', opts: [['A', 'have seen'], ['B', 'saw'], ['C', 'have saw']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">yesterday</span> 是过去时间点，用一般过去时 <span class="en">saw</span>。' },
+        { stem: '3. _____ you ever _____ (be) to Shanghai?', opts: [['A', 'Did ... go'], ['B', 'Have ... been'], ['C', 'Do ... go']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">ever</span> 常与现在完成时连用，结构为 <span class="en">Have you ever been</span>。' },
+        { stem: '4. We have known each other _____ 2018.', opts: [['A', 'for'], ['B', 'since'], ['C', 'in']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">since</span> 接起点时间；<span class="en">for</span> 接时间段。' },
+        { stem: '5. He has _____ finished his homework.', opts: [['A', 'yet'], ['B', 'already'], ['C', 'yesterday']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">already</span> 表「已经」，用于完成时肯定句；<span class="en">yet</span> 多用于疑问/否定。' },
+        { stem: '6. They _____ (live) here for ten years.', opts: [['A', 'live'], ['B', 'lived'], ['C', 'have lived']], ans: 'C',
+          explain: '<strong>答案 C。</strong> <span class="en">for ten years</span> 表持续至今，用 <span class="en">have lived</span>。' },
+        { stem: '7. Which is WRONG?', opts: [['A', 'I have lost my key.'], ['B', 'I have seen the film.'], ['C', 'I have went there.']], ans: 'C',
+          explain: '<strong>答案 C。</strong> 完成时后接过去分词，<span class="en">go</span> 的过去分词是 <span class="en">gone</span>，不能说 <span class="en">have went</span>。' },
+        { stem: '8. How long _____ you _____ English?', opts: [['A', 'did ... learn'], ['B', 'have ... learned'], ['C', 'do ... learn']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">How long</span> 问持续多久，常用现在完成时 <span class="en">have ... learned</span>。' },
+        { stem: '9. She has never _____ sushi.', opts: [['A', 'eat'], ['B', 'ate'], ['C', 'eaten']], ans: 'C',
+          explain: '<strong>答案 C。</strong> <span class="en">has never</span> 后接过去分词 <span class="en">eaten</span>。' },
+        { stem: '10. I _____ (visit) the museum last Sunday.', opts: [['A', 'have visited'], ['B', 'visited'], ['C', 'have visit']], ans: 'B',
+          explain: '<strong>答案 B。</strong> <span class="en">last Sunday</span> 是具体过去时间，用一般过去时 <span class="en">visited</span>。' }
+      ];
+      var idx = 0, phase = 'quiz', answers = {}, revealed = {};
+      var stage = document.getElementById('scStage');
+      var idxEl = document.getElementById('scIdx');
+      var bar = document.getElementById('scBar');
+      var msg = document.getElementById('scMsg');
+      var btnPrev = document.getElementById('scPrev');
+      var btnNext = document.getElementById('scNext');
+
+      function save() {
+        window.parent.postMessage({ type: 'saveState', state: { idx: idx, phase: phase, answers: answers, revealed: revealed } }, '*');
+      }
+
+      function updateNextBtn() {
+        if (revealed[idx]) {
+          btnNext.textContent = idx === QS.length - 1 ? '查看结果' : '下一题';
+        } else {
+          btnNext.textContent = '确认答案';
+        }
+        btnNext.disabled = !answers[idx];
+      }
+
+      function showExplain(q, isOk) {
+        var box = document.createElement('div');
+        box.className = 'explain ' + (isOk ? 'ok' : 'no');
+        box.innerHTML = (isOk ? '回答正确。' : '回答错误。') + ' ' + q.explain;
+        stage.appendChild(box);
+      }
+
+      function applyReveal(q) {
+        stage.querySelectorAll('.opt').forEach(function (b) {
+          b.disabled = true;
+          var v = b.dataset.v;
+          b.classList.remove('picked');
+          if (v === q.ans) b.classList.add('correct');
+          else if (v === answers[idx]) b.classList.add('wrong');
+        });
+        showExplain(q, answers[idx] === q.ans);
+        msg.textContent = answers[idx] === q.ans ? '回答正确，可点下一题' : '请看解析，可点下一题';
+        updateNextBtn();
+      }
+
+      function renderQuiz() {
+        btnPrev.style.display = idx > 0 ? '' : 'none';
+        idxEl.textContent = String(idx + 1);
+        bar.style.width = ((idx + 1) / QS.length * 100) + '%';
+        var q = QS[idx];
+        var isRev = !!revealed[idx];
+        stage.innerHTML = '<p class="q en">' + q.stem + '</p>';
+        q.opts.forEach(function (o) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'opt en';
+          b.textContent = o[0] + '. ' + o[1];
+          b.dataset.v = o[0];
+          if (answers[idx] === o[0] && !isRev) b.classList.add('picked');
+          if (!isRev) {
+            b.addEventListener('click', function () {
+              answers[idx] = o[0];
+              stage.querySelectorAll('.opt').forEach(function (x) { x.classList.remove('picked'); });
+              b.classList.add('picked');
+              btnNext.disabled = false;
+              msg.textContent = '已选择 ' + o[0] + '，请点确认答案';
+              save();
+            });
+          }
+          stage.appendChild(b);
+        });
+        if (isRev) applyReveal(q);
+        else {
+          msg.textContent = answers[idx] ? '已选择，请点确认答案' : '请选择答案';
+          updateNextBtn();
+        }
+        save();
+      }
+
+      function score() {
+        var ok = 0;
+        for (var i = 0; i < QS.length; i++) if (answers[i] === QS[i].ans) ok++;
+        return ok;
+      }
+
+      function renderResult() {
+        stage.innerHTML = '';
+        var ok = score();
+        var box = document.createElement('div');
+        box.className = 'result';
+        box.innerHTML =
+          '<p style="margin:0;font-size:16px;">答题完成</p>' +
+          '<p class="score">' + ok + ' / ' + QS.length + '</p>' +
+          '<p style="margin:0;font-size:14px;line-height:1.6;">' +
+          (ok >= 8 ? '很棒！现在完成时掌握不错。' : '建议回顾 for/since、ever 与过去时间状语的区别。') +
+          '</p>' +
+          '<button type="button" class="btn btn-primary" id="scRetry" style="margin-top:14px;">重新作答</button>';
+        stage.appendChild(box);
+        btnPrev.style.display = 'none';
+        btnNext.style.display = 'none';
+        msg.textContent = '可点「重新作答」再练一遍';
+        document.getElementById('scRetry').addEventListener('click', reset);
+        save();
+      }
+
+      function reset() {
+        idx = 0; phase = 'quiz'; answers = {}; revealed = {};
+        btnNext.style.display = '';
+        renderQuiz();
+      }
+
+      btnPrev.addEventListener('click', function () {
+        if (phase !== 'quiz' || idx <= 0) return;
+        idx--;
+        renderQuiz();
+      });
+
+      btnNext.addEventListener('click', function () {
+        if (phase !== 'quiz' || !answers[idx]) return;
+        if (!revealed[idx]) {
+          revealed[idx] = true;
+          applyReveal(QS[idx]);
+          save();
+          return;
+        }
+        if (idx < QS.length - 1) {
+          idx++;
+          renderQuiz();
+        } else {
+          phase = 'result';
+          renderResult();
+        }
+      });
+
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          idx = e.data.state.idx || 0;
+          phase = e.data.state.phase || 'quiz';
+          answers = e.data.state.answers || {};
+          revealed = e.data.state.revealed || {};
+          if (phase === 'result') renderResult();
+          else renderQuiz();
+        }
+      });
+
+      renderQuiz();
+    })();
+  </script>
+</template>
+
+<!-- P9 多选题 -->
+<template class="page-data" data-id="9" data-name="多选题">
+  <style>
+    .mc .q { font-size: 14px; font-weight: 700; margin: 0 0 6px; line-height: 1.45; }
+    .mc .type { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+    .mc-opt {
+      display: block; width: 100%; text-align: left; margin: 4px 0; padding: 8px 12px;
+      border: 2px solid var(--card-border); border-radius: var(--radius);
+      background: #fff; cursor: pointer; font-size: 13px; font-family: inherit;
+    }
+    .mc-opt.picked { border-color: var(--primary); background: #F0F7FF; }
+    .mc-opt.correct { border-color: var(--success); background: #F0FFF0; }
+    .mc-opt.wrong { border-color: var(--error); background: #FFF5F5; }
+    .mc-opt.missed { border-color: var(--accent); border-style: dashed; }
+    .mc-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+    #mcMsg { flex: 1; font-size: 13px; font-weight: 700; color: var(--primary); }
+  </style>
+  <div class="page-container mc">
+    <div class="page-title">练习：多选题</div>
+    <p class="type">可选多个答案，选完后点「提交」</p>
+    <p class="q en">Which time expressions often go with the <strong>Present Perfect</strong>? (Choose all that apply.)</p>
+    <button type="button" class="mc-opt en" data-interactive data-v="A">A. for three years</button>
+    <button type="button" class="mc-opt en" data-interactive data-v="B">B. yesterday</button>
+    <button type="button" class="mc-opt en" data-interactive data-v="C">C. since 2020</button>
+    <button type="button" class="mc-opt en" data-interactive data-v="D">D. last week</button>
+    <button type="button" class="mc-opt en" data-interactive data-v="E">E. already</button>
+    <div class="mc-foot">
+      <span id="mcMsg">已选 0 项，请至少选 2 项再提交</span>
+      <button type="button" class="btn btn-2nd" id="mcReset" data-interactive>重做</button>
+      <button type="button" class="btn btn-primary" id="mcSubmit" data-interactive>提交</button>
+    </div>
+    <div class="tip" id="mcExplain" style="margin-top:8px;font-size:12px;display:none;">解析：<span class="en">for / since / already</span> 常接完成时；<span class="en">yesterday / last week</span> 常接过去时。</div>
+  </div>
+  <script>
+    (function () {
+      var CORRECT = { A: true, C: true, E: true };
+      var picked = {};
+      var done = false;
+      var msg = document.getElementById('mcMsg');
+      function countPicked() {
+        return Object.keys(picked).filter(function (k) { return picked[k]; }).length;
+      }
+      function save() {
+        window.parent.postMessage({ type: 'saveState', state: { picked: picked, done: done } }, '*');
+      }
+      function updateMsg() {
+        if (done) return;
+        var n = countPicked();
+        msg.textContent = '已选 ' + n + ' 项，请至少选 2 项再提交';
+      }
+      document.querySelectorAll('.mc-opt').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (done) return;
+          var v = b.dataset.v;
+          picked[v] = !picked[v];
+          b.classList.toggle('picked', !!picked[v]);
+          updateMsg(); save();
+        });
+      });
+      function grade() {
+        var n = countPicked();
+        if (n < 2) { msg.textContent = '多选题请至少选择 2 项'; return; }
+        done = true;
+        var ok = 0, total = 3;
+        document.querySelectorAll('.mc-opt').forEach(function (b) {
+          b.disabled = true;
+          var v = b.dataset.v;
+          var should = !!CORRECT[v];
+          var isOn = !!picked[v];
+          b.classList.remove('picked', 'correct', 'wrong', 'missed');
+          if (should && isOn) { b.classList.add('correct'); ok++; }
+          else if (should && !isOn) { b.classList.add('missed'); }
+          else if (!should && isOn) { b.classList.add('wrong'); }
+        });
+        msg.textContent = ok === total ? '全部正确！A、C、E 常与现在完成时连用' : '正确 ' + ok + '/' + total + '，绿框为应选项';
+        document.getElementById('mcExplain').style.display = '';
+        save();
+      }
+      document.getElementById('mcSubmit').addEventListener('click', grade);
+      document.getElementById('mcReset').addEventListener('click', function () {
+        done = false; picked = {};
+        document.querySelectorAll('.mc-opt').forEach(function (b) {
+          b.disabled = false; b.classList.remove('picked', 'correct', 'wrong', 'missed');
+        });
+        document.getElementById('mcExplain').style.display = 'none';
+        updateMsg(); save();
+      });
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          picked = e.data.state.picked || {};
+          done = !!e.data.state.done;
+          document.querySelectorAll('.mc-opt').forEach(function (b) {
+            b.classList.toggle('picked', !!picked[b.dataset.v]);
+          });
+          if (done) grade(); else updateMsg();
+        }
+      });
+      updateMsg();
+    })();
+  </script>
+</template>
+
+<!-- P10 小结 -->
+<template class="page-data" data-id="10" data-name="课堂小结">
+  <style>
+    .sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .sum-card h4 { margin: 0 0 8px; color: var(--primary); font-size: 16px; }
+    .sum-card ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.7; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">课堂小结</div>
+    <div class="sum-grid">
+      <div class="card sum-card">
+        <h4>语法要点回顾</h4>
+        <ul>
+          <li>结构：<span class="en">have/has + past participle</span></li>
+          <li>表经历、结果、持续三种意义</li>
+          <li><span class="en">for/since/already</span> 等标志词</li>
+        </ul>
+      </div>
+      <div class="card sum-card">
+        <h4>学习建议</h4>
+        <ul>
+          <li>有具体过去时间 → 一般过去时</li>
+          <li>强调与现在关联 → 现在完成时</li>
+          <li>多做分类与造句练习巩固</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:14px;text-align:center;font-size:16px;">
+      <strong>Well done!</strong> 下节课我们将学习现在完成时的特殊疑问句。
+    </div>
+  </div>
+</template>
+
+<script src="./courseware-shell.js"></script>
+</body>
+</html>

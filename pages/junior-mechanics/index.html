@@ -31,11 +31,15 @@
       --error: #DF9012;
       --radius: 0px;
       --font: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+      --canvas-bg: #eef1f5;
+      --stage-base: #eef1f5;
+      /* --bg 为白，用 card 青绿着色 */
+      --canvas-bg: color-mix(in srgb, var(--card) 42%, var(--stage-base) 58%);
     }
-    body {
+    html, body {
       font-family: var(--font);
       color: var(--text);
-      background: #eef1f5;
+      background: var(--canvas-bg);
       margin: 0;
     }
     .page-container {
@@ -47,6 +51,7 @@
       flex-direction: column;
       box-sizing: border-box;
       overflow-y: auto;
+      background: var(--canvas-bg);
     }
     .page-title {
       font-size: 30px;

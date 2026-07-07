@@ -133,6 +133,14 @@ hash = (keyword 首字符 codepoint + keyword 末字符 codepoint + 页数) mod 
 以下 class 应写入 `page-shared`，各页复用。**这是飞象观感的核心**。
 
 ```css
+/* 画布底色：stage 灰 + 色板色调（约半混，可见但不抢眼） */
+:root{
+  --stage-base:#eef1f5;
+  --canvas-bg:var(--stage-base);
+  --canvas-bg:color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+}
+html,body,.page-container{ background:var(--canvas-bg); }
+
 /* 卡片：纯色 + 描边，无阴影 */
 .fx-card{
   background:var(--card);
@@ -266,6 +274,20 @@ hash = (keyword 首字符 codepoint + keyword 末字符 codepoint + 页数) mod 
 **生成物**：`.page-container` + `.page-title` + `.card` + `.tip`；封面用全屏 `.cover` 特例。
 
 **画布底色**：子页 **960×540 与壳舞台同色 `#eef1f5`**（无白底、无外框阴影）；白卡片仅 `.card` 等组件自带。
+
+**`--canvas-bg`（page-shared 必写）**：
+```css
+:root{
+  --stage-base:#eef1f5;
+  --canvas-bg:var(--stage-base);
+  --canvas-bg:color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+}
+html,body,.page-container{ background:var(--canvas-bg); }
+```
+- 基底 `#eef1f5` 与 `courseware-shell.js` 舞台一致。
+- 与色板 `--bg` **各半混合（约 50%）**，学科色调应能看出来，但仍比整页铺满 `--bg` 低调。
+- **`--bg` 为白/近白时**（如 FX-青），改用卡片色：`color-mix(in srgb, var(--card) 42%, var(--stage-base) 58%)`。
+- 禁止把 `html`/`body`/`.page-container` 设为纯白；白色留给 `.card`、选项块、演示区。
 
 **滚动契约**：壳固定 `body` 为 960×540 且 `overflow:hidden`；`.page-container` 必须 `height:100%; max-height:100%; overflow-y:auto`，长内容在容器内滚动，禁止用 `min-height:100%` 撑高 body。
 

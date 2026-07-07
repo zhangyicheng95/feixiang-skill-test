@@ -11,6 +11,7 @@ description: >-
 > - [guide.md](guide.md)
 > - [content-guide.md](content-guide.md)
 > - [style-guide.md](style-guide.md)
+> - 含选择题时：[quiz-patterns.md](quiz-patterns.md)
 >
 > 大纲已在 ① 步：`pages/<slug>/outline.md`
 
@@ -36,6 +37,7 @@ description: >-
 - `<template class="page-data">`；`data-id` 从 1 连续
 - 视口 960×540；壳：`<script src="./courseware-shell.js"></script>`
 - 素材 URL 来自 manifest；禁止 base64
+- 练习页须含互动闭环；**同页多题须逐题切换、禁止滚动堆题**，见 [quiz-patterns.md](quiz-patterns.md)
 
 ## 本地壳
 
@@ -44,6 +46,8 @@ Read  ../assets/courseware-shell.js
 Write pages/<slug>/courseware-shell.js
 ```
 
+下载按钮会打包为**单文件 HTML**（导出模式：**无顶栏**，**保留缩略图侧栏**），双击即可播放。
+
 ## 补充自检
 
 ```
@@ -51,6 +55,7 @@ Write pages/<slug>/courseware-shell.js
 □ 逐页对照 outline，无遗漏
 □ index.html 与 courseware-shell.js 同目录
 □ 互动页 postMessage 状态已接
+□ 若有单选/多选：符合 quiz-patterns.md 提交与重做闭环
 ```
 
 ## 下一步

@@ -137,6 +137,10 @@
   };
 
   CoursewareShell.prototype.mount = function () {
+    if (window.__CW_EXPORT_MODE__) {
+      this.mountExport();
+      return;
+    }
     var loading = document.getElementById('cw-loading');
     if (loading) loading.remove();
 
@@ -232,6 +236,81 @@
     document.addEventListener('webkitfullscreenchange', function () {
       if (self._isFullscreen()) self._focusFs();
       self._fitMain();
+    });
+
+    this._renderThumbs();
+    this.show(0, 'forward');
+  };
+
+  /** 下载/导出模式：无顶栏，保留缩略图侧栏 + 画布 + 底部分页 */
+  CoursewareShell.prototype.mountExport = function () {
+    var loading = document.getElementById('cw-loading');
+    if (loading) loading.remove();
+
+    document.body.innerHTML = '';
+    document.head.appendChild(this._shellStyles());
+    var exportFix = document.createElement('style');
+    exportFix.textContent =
+      '.cw-export-root{height:100vh;display:flex;flex-direction:column;background:#fff}' +
+      '.cw-export-root .cw-body{flex:1;min-height:0}';
+    document.head.appendChild(exportFix);
+
+    var root = document.createElement('div');
+    root.className = 'cw-export-root';
+
+    var body = document.createElement('div');
+    body.className = 'cw-body';
+    this.bodyEl = body;
+
+    this.thumbList = document.createElement('aside');
+    this.thumbList.className = 'cw-thumbs';
+    this.thumbList.id = 'cw-thumb-list';
+
+    this.stageEl = document.createElement('main');
+    this.stageEl.className = 'cw-stage';
+
+    this.frameWrap = document.createElement('div');
+    this.frameWrap.className = 'cw-stage-frame';
+
+    this.mainIframe = document.createElement('iframe');
+    this.mainIframe.className = 'cw-main-iframe';
+    this.mainIframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    this.frameWrap.appendChild(this.mainIframe);
+    this.stageEl.appendChild(this.frameWrap);
+
+    body.appendChild(this.thumbList);
+    body.appendChild(this.stageEl);
+
+    var footer = document.createElement('footer');
+    footer.className = 'cw-footer';
+    this.pageLabel = document.createElement('span');
+    this.pageLabel.className = 'cw-footer-label';
+    footer.appendChild(this.pageLabel);
+
+    root.appendChild(body);
+    root.appendChild(footer);
+    document.body.appendChild(root);
+
+    this.titleEl = null;
+
+    var self = this;
+    window.addEventListener('message', function (e) {
+      if (!e.data || !e.data.type) return;
+      if (e.data.type === 'cwNav') {
+        if (e.data.dir === 'next') self.next();
+        else if (e.data.dir === 'prev') self.prev();
+      } else if (e.data.type === 'saveState') {
+        var page = self.pages[self.index];
+        if (page) self.pageStates[page.id] = e.data.state;
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      self._fitMain();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      self._handleNavKey(e);
     });
 
     this._renderThumbs();
@@ -346,6 +425,7 @@
   };
 
   CoursewareShell.prototype._updateThumbActive = function () {
+    if (!this.thumbList) return;
     var items = this.thumbList.querySelectorAll('.cw-thumb');
     for (var i = 0; i < items.length; i++) {
       items[i].classList.toggle('cw-thumb--on', i === this.index);
@@ -391,22 +471,124 @@
     this.frameWrap.style.transform = Math.abs(scale - 1) < 0.001 ? '' : 'scale(' + scale + ')';
   };
 
-  CoursewareShell.prototype._download = function () {
+  function captureSourceHtml() {
+    var headBits = [];
+    var hi;
+    for (hi = 0; hi < document.head.childNodes.length; hi++) {
+      var hn = document.head.childNodes[hi];
+      if (hn.nodeType === 8) headBits.push('<!--' + hn.textContent + '-->');
+      else if (hn.nodeType === 1) headBits.push(hn.outerHTML);
+    }
+    var bodyBits = [];
+    var loading = document.getElementById('cw-loading');
+    if (loading) bodyBits.push(loading.outerHTML);
+    document.querySelectorAll('template').forEach(function (t) {
+      bodyBits.push(t.outerHTML);
+    });
+    bodyBits.push('<script src="./courseware-shell.js"><\/script>');
+    return (
+      '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n' +
+      headBits.join('\n') +
+      '\n</head>\n<body>\n' +
+      bodyBits.join('\n') +
+      '\n</body>\n</html>'
+    );
+  }
+
+  function bundleHtml(sourceHtml, shellCode) {
+    return sourceHtml.replace(
+      /<script\s+src=["']\.\/courseware-shell\.js["']\s*><\/script>/i,
+      '<script>window.__CW_EXPORT_MODE__=true;<\/script>\n<script>\n' + shellCode + '\n<\/script>'
+    );
+  }
+
+  function triggerDownload(html, filename) {
+    var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
     var a = document.createElement('a');
-    a.href = window.location.href;
-    a.download = (document.title || 'courseware') + '.html';
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+  }
+
+  var SOURCE_HTML = captureSourceHtml();
+  var FILE_TITLE = (document.querySelector('title') && document.querySelector('title').textContent) || 'courseware';
+  var SHELL_SOURCE = null;
+
+  function getInlineShellSource() {
+    var scripts = document.getElementsByTagName('script');
+    var i;
+    for (i = scripts.length - 1; i >= 0; i--) {
+      if (!scripts[i].src && scripts[i].textContent.indexOf('CoursewareShell') !== -1) {
+        return scripts[i].textContent;
+      }
+    }
+    return null;
+  }
+
+  function fetchShellSource() {
+    if (SHELL_SOURCE) return Promise.resolve(SHELL_SOURCE);
+    var inline = getInlineShellSource();
+    if (inline) {
+      SHELL_SOURCE = inline;
+      return Promise.resolve(inline);
+    }
+    if (typeof fetch !== 'function') return Promise.reject(new Error('no fetch'));
+    return fetch('./courseware-shell.js')
+      .then(function (r) {
+        if (!r.ok) throw new Error('shell fetch failed');
+        return r.text();
+      })
+      .then(function (t) {
+        SHELL_SOURCE = t;
+        return t;
+      });
+  }
+
+  fetchShellSource().catch(function () {});
+
+  CoursewareShell.prototype._download = function () {
+    var name = (FILE_TITLE || 'courseware').replace(/\.html$/i, '') + '.html';
+    var btn = document.querySelector('[data-action="download"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '打包中…';
+    }
+    fetchShellSource()
+      .then(function (shellCode) {
+        triggerDownload(bundleHtml(SOURCE_HTML, shellCode), name);
+      })
+      .catch(function () {
+        window.alert(
+          '无法打包单文件课件。请将 index.html 与 courseware-shell.js 放在同一文件夹后双击打开，或通过本地服务器访问。'
+        );
+      })
+      .finally(function () {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '下载';
+        }
+      });
   };
 
   CoursewareShell.prototype.show = function (index, direction) {
     if (index < 0 || index >= this.pages.length) return;
     this.index = index;
     var page = this.pages[index];
-    var fileTitle = document.querySelector('title')?.textContent || '课件.html';
-    document.title = page.name;
-    this.titleEl.textContent = fileTitle.indexOf('.') > -1 ? fileTitle : fileTitle + '.html';
-    this.pageLabel.textContent =
-      '第 ' + (index + 1) + ' / ' + this.pages.length + ' 页 · ' + page.name;
+    if (this.titleEl) {
+      var fileTitle = document.querySelector('title')?.textContent || '课件.html';
+      document.title = page.name;
+      this.titleEl.textContent = fileTitle.indexOf('.') > -1 ? fileTitle : fileTitle + '.html';
+    } else if (window.__CW_EXPORT_MODE__) {
+      document.title = (FILE_TITLE || page.name || '课件').replace(/\.html$/i, '');
+    }
+    if (this.pageLabel) {
+      this.pageLabel.textContent =
+        '第 ' + (index + 1) + ' / ' + this.pages.length + ' 页 · ' + page.name +
+        (window.__CW_EXPORT_MODE__ ? '（← → 翻页）' : '');
+    }
 
     var saved = direction === 'back' ? this.pageStates[page.id] : undefined;
     this.mainIframe.srcdoc = buildSrcdoc(
