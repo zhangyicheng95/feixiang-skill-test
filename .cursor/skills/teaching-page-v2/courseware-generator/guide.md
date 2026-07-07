@@ -5,6 +5,8 @@ description: 生成多页PPT式教学课件（HTML格式）。当用户提出课
 
 更新时间：2026-03-12
 
+> **teaching-page-v2 本地副本**。编排入口见 [SKILL.md](SKILL.md)；壳脚本用本地 `./courseware-shell.js`（见 [../assets/courseware-shell.js](../assets/courseware-shell.js)）。
+
 # 多页课件生成技能
 
 本技能指导 AI 完成多页 PPT 式教学课件的完整生成流程：先通过专业教研流程生成高质量课件大纲，经用户确认后，再将大纲转化为 HTML 多页课件。

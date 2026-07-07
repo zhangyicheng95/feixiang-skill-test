@@ -11,7 +11,7 @@ description: >-
 >
 > 数学附件（仅数学路由）：[math-design/](math-design/)
 >
-> 视觉补充：[../feixiang-style.md](../feixiang-style.md) · 环境：[../local-harness.md](../local-harness.md)
+> 视觉补充：[../feixiang-style.md](../feixiang-style.md)
 
 ## 前置
 

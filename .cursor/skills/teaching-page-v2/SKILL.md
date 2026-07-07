@@ -45,7 +45,10 @@ description: >-
 | ② multi | [courseware-generator/SKILL.md](courseware-generator/SKILL.md) | [guide.md](courseware-generator/guide.md)、outline / content / style |
 | ③ 验收 | [test-html/SKILL.md](test-html/SKILL.md) | [test-html/guide.md](test-html/guide.md) |
 | 视觉 | [feixiang-style.md](feixiang-style.md) | 飞象平涂描边风 |
-| 环境 | [local-harness.md](local-harness.md) | Cursor 工具映射 |
+
+## Cursor 工具
+
+`create_file`/`edit_file` → `Write`/`StrReplace`；`test_html` → 浏览器手测；multi 壳从 [assets/courseware-shell.js](assets/courseware-shell.js) 复制。
 
 ## 产物目录
 
@@ -67,8 +70,6 @@ pages/<slug>/
 □ 已告知浏览器打开方式
 ```
 
-## 附加参考
+## 版本记录
 
-- [workflow.md](workflow.md) — 逐步细节
-- [local-harness.md](local-harness.md) — Cursor 适配
-- [../VERSIONS.md](../VERSIONS.md) — 版本记录
+[../VERSIONS.md](../VERSIONS.md)

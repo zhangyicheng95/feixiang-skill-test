@@ -1,7 +1,7 @@
 # 飞象视觉样式规范（Feixiang Style System）
 
 > 目标：让本 harness 生成物**高度接近飞象老师课件**的视觉观感。
-> 依据：项目内飞象原始 skill 文件 `html-authoring/color-palettes-*`、`html-authoring/v5/references/visual-impact.md`、`courseware-generator/v18/html-guide.md`。
+> 本文件已纳入 `teaching-page-v2/`，Agent 只 Read 本目录内规范。
 > 生成教学 HTML 时，**样式必须遵循本文件**，覆盖任何"通用好看"的默认审美。
 
 ---

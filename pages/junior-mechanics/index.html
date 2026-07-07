@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>初中物理·力学</title>
+  <!-- spec: requirements=初中物理力学课件,含3D演示; require=封面,力的三要素,重力弹力摩擦力,互动弹簧测力计,3D受力演示,二力平衡,课堂测验; forbid=emoji,外链大图; core-loop=P5调拉力→示数变化→重置;P6开始→3D运动/受力→暂停重置;P8选题→提交→反馈 -->
+  <!-- fx-style: palette=FX-青(B-08); radius=0; keyword=力学; source=hash -->
+</head>
+<body>
+
+<div id="cw-loading">加载课件中...</div>
+
+<template class="page-shared">
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --text: #00404D;
+      --primary: #00404D;
+      --accent: #137F8B;
+      --card: #D3F6F4;
+      --card-border: rgba(0, 64, 77, 0.30);
+      --demo-bg: #D3F6F4;
+      --demo-border: #93BFC2;
+      --demo-grid: #DBF1F0;
+      --btn-bg: #00404D;
+      --btn-fg: #FFFFFF;
+      --btn-2nd-bg: #ECFCFB;
+      --btn-2nd-fg: #00404D;
+      --success: #137F8B;
+      --error: #DF9012;
+      --radius: 0px;
+      --font: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+    }
+    body {
+      font-family: var(--font);
+      color: var(--text);
+      background: #eef1f5;
+      margin: 0;
+    }
+    .page-container {
+      height: 100%;
+      max-height: 100%;
+      min-height: 0;
+      padding: 28px 36px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .page-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 18px;
+      padding-left: 14px;
+      border-left: 6px solid var(--primary);
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+    .card {
+      background: var(--card);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .btn {
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--card-border);
+      font-size: 15px;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--btn-bg);
+      color: var(--btn-fg);
+      border-color: var(--primary);
+    }
+    .btn-2nd {
+      background: var(--btn-2nd-bg);
+      color: var(--btn-2nd-fg);
+    }
+    .tip {
+      background: #ECFCFB;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .demo-stage {
+      background: var(--demo-bg);
+      border: 2px solid var(--demo-border);
+      background-image:
+        linear-gradient(var(--demo-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--demo-grid) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+  </style>
+</template>
+
+<!-- 第 1 页：封面 -->
+<template class="page-data" data-id="1" data-name="封面">
+  <style>
+    .cover {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #00404D;
+      color: #ECFCFB;
+      text-align: center;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+    .cover h1 {
+      font-size: 46px;
+      margin: 0 0 14px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+    .cover .sub {
+      font-size: 20px;
+      margin: 0 0 24px;
+      opacity: 0.92;
+      line-height: 1.6;
+    }
+    .cover .tag {
+      font-size: 16px;
+      background: #137F8B;
+      border: 2px solid #35E9FE;
+      padding: 10px 28px;
+      color: #fff;
+    }
+    .cover .deco {
+      margin-top: 32px;
+      display: flex;
+      gap: 16px;
+    }
+    .cover .deco span {
+      width: 48px;
+      height: 48px;
+      border: 2px solid #35E9FE;
+      background: #137F8B;
+    }
+  </style>
+  <div class="cover">
+    <h1>初中物理 · 力学</h1>
+    <p class="sub">力的认识 · 常见力 · 二力平衡</p>
+    <div class="tag">八年级 · 人教版</div>
+    <div class="deco" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</template>
+
+<!-- 第 2 页：学习目标 -->
+<template class="page-data" data-id="2" data-name="学习目标">
+  <div class="page-container">
+    <div class="page-title">本课学习目标</div>
+    <div class="card">
+      <p style="margin:0 0 10px;font-size:17px;font-weight:700;color:var(--accent);">学完本课，你将能够：</p>
+      <ul style="margin:0;padding-left:22px;font-size:16px;line-height:2;">
+        <li>说出<strong>力</strong>的含义，并指出力的<strong>三要素</strong></li>
+        <li>区分<strong>重力、弹力、摩擦力</strong>的产生与方向</li>
+        <li>用弹簧测力计模型理解<strong>拉力与形变</strong>的关系</li>
+        <li>用<strong>3D 模型</strong>观察木块在重力、支持力与推力下的运动</li>
+        <li>归纳<strong>二力平衡</strong>的条件并应用于判断</li>
+      </ul>
+    </div>
+    <div class="tip"><strong>学习提示：</strong>力学是物理学的起点，注意联系生活实例（提书包、推桌子、刹车等）。</div>
+  </div>
+</template>
+
+<!-- 第 3 页：力的概念 -->
+<template class="page-data" data-id="3" data-name="认识力">
+  <style>
+    .row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-height: 0; }
+    .factor { text-align: center; padding: 12px; }
+    .factor h4 { margin: 8px 0 4px; color: var(--primary); font-size: 16px; }
+    .factor p { margin: 0; font-size: 14px; line-height: 1.5; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">认识力</div>
+    <p style="margin:0 0 12px;font-size:16px;line-height:1.7;">
+      <strong>力</strong>是物体对物体的作用。力的作用效果：①使物体发生形变；②改变物体的运动状态。
+    </p>
+    <div class="row3">
+      <div class="card demo-stage" style="display:flex;align-items:center;justify-content:center;padding:12px;">
+        <svg width="200" height="160" viewBox="0 0 200 160" aria-label="力的示意图">
+          <rect x="60" y="90" width="80" height="40" fill="#35E9FE" stroke="#00404D" stroke-width="2"/>
+          <line x1="100" y1="90" x2="100" y2="30" stroke="#DF9012" stroke-width="4" marker-end="url(#arr)"/>
+          <text x="108" y="55" font-size="14" fill="#00404D">F</text>
+          <circle cx="100" cy="90" r="5" fill="#DF9012" stroke="#00404D" stroke-width="1"/>
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#DF9012"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <div>
+        <div class="card factor">
+          <div style="width:36px;height:36px;margin:0 auto;background:#35E9FE;border:2px solid #00404D;"></div>
+          <h4>大小</h4>
+          <p>用牛顿（N）表示，需用测力计测量</p>
+        </div>
+        <div class="card factor">
+          <div style="width:0;height:0;margin:0 auto;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:32px solid #DF9012;"></div>
+          <h4>方向</h4>
+          <p>力是矢量，必须说明方向</p>
+        </div>
+        <div class="card factor">
+          <div style="width:14px;height:14px;margin:0 auto;background:#DF9012;border:2px solid #00404D;border-radius:50%;"></div>
+          <h4>作用点</h4>
+          <p>力作用在物体上的位置</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- 第 4 页：三种常见力 -->
+<template class="page-data" data-id="4" data-name="常见力">
+  <style>
+    .force-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .force-card { cursor: pointer; transition: border-color 0.2s; }
+    .force-card.active { border-color: var(--accent); background: #ECFCFB; }
+    .force-card h4 { margin: 0 0 6px; font-size: 17px; color: var(--primary); }
+    .force-card .brief { margin: 0; font-size: 14px; line-height: 1.5; }
+    .detail { margin-top: 12px; min-height: 72px; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">三种常见力</div>
+    <p style="margin:0 0 10px;font-size:15px;">点击卡片查看要点：</p>
+    <div class="force-grid">
+      <div class="card force-card" data-interactive data-key="g">
+        <h4>重力 G</h4>
+        <p class="brief">地球吸引</p>
+      </div>
+      <div class="card force-card" data-interactive data-key="e">
+        <h4>弹力 N</h4>
+        <p class="brief">形变产生</p>
+      </div>
+      <div class="card force-card" data-interactive data-key="f">
+        <h4>摩擦力 f</h4>
+        <p class="brief">阻碍运动</p>
+      </div>
+    </div>
+    <div class="card detail" id="forceDetail">请点击上方卡片</div>
+  </div>
+  <script>
+    (function () {
+      var DETAIL = {
+        g: '<strong>重力</strong>：地球对物体的吸引。方向竖直向下。大小 G=mg（g≈9.8 N/kg）。',
+        e: '<strong>弹力</strong>：物体发生弹性形变时产生的力。如支持力、拉力，方向垂直接触面。',
+        f: '<strong>摩擦力</strong>：阻碍相对运动的力。静摩擦与运动方向相反；大小与压力、接触面粗糙程度有关。'
+      };
+      var box = document.getElementById('forceDetail');
+      var cards = document.querySelectorAll('.force-card');
+      var active = null;
+      function save() {
+        window.parent.postMessage({ type: 'saveState', state: { active: active } }, '*');
+      }
+      cards.forEach(function (c) {
+        c.addEventListener('click', function () {
+          active = c.dataset.key;
+          cards.forEach(function (x) { x.classList.remove('active'); });
+          c.classList.add('active');
+          box.innerHTML = DETAIL[active];
+          save();
+        });
+      });
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state && e.data.state.active) {
+          var k = e.data.state.active;
+          cards.forEach(function (c) {
+            if (c.dataset.key === k) c.click();
+          });
+        }
+      });
+    })();
+  </script>
+</template>
+
+<!-- 第 5 页：弹簧测力计互动 -->
+<template class="page-data" data-id="5" data-name="弹簧测力计">
+  <style>
+    .lab { display: flex; gap: 20px; flex: 1; min-height: 0; align-items: stretch; }
+    .lab-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      padding: 16px;
+    }
+    .lab-ctrl {
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+    }
+    .readout {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      text-align: center;
+      border: 2px solid var(--demo-border);
+      background: #fff;
+      padding: 12px;
+    }
+    .readout small { font-size: 16px; font-weight: 600; }
+    .ctrl-row { display: flex; gap: 8px; }
+    .ctrl-row .btn { flex: 1; }
+    input[type=range] { width: 100%; accent-color: var(--primary); }
+    .status { font-size: 14px; color: var(--accent); text-align: center; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">互动：弹簧测力计</div>
+    <p style="margin:0 0 10px;font-size:15px;">调节拉力，观察弹簧伸长与示数（单位：N）</p>
+    <div class="lab">
+      <div class="demo-stage lab-stage" data-interactive>
+        <svg id="springSvg" width="120" height="220" viewBox="0 0 120 220">
+          <rect x="45" y="0" width="30" height="16" fill="#00404D"/>
+          <line id="springTop" x1="60" y1="16" x2="60" y2="40" stroke="#137F8B" stroke-width="3"/>
+          <path id="springCoil" d="M50,40 Q70,55 50,70 Q70,85 50,100 Q70,115 50,130" fill="none" stroke="#137F8B" stroke-width="3"/>
+          <line id="springBot" x1="60" y1="130" x2="60" y2="160" stroke="#137F8B" stroke-width="3"/>
+          <rect id="weight" x="40" y="160" width="40" height="36" fill="#35E9FE" stroke="#00404D" stroke-width="2"/>
+          <text x="60" y="183" text-anchor="middle" font-size="13" fill="#00404D">m</text>
+        </svg>
+      </div>
+      <div class="lab-ctrl">
+        <div class="readout" id="readout">0.0 <small>N</small></div>
+        <label style="font-size:14px;">拉力 F</label>
+        <input type="range" id="forceRng" data-interactive min="0" max="10" step="0.5" value="0">
+        <div class="status" id="statusTxt">状态：静止</div>
+        <div class="ctrl-row">
+          <button type="button" class="btn btn-primary" id="btnStart" data-interactive>开始</button>
+          <button type="button" class="btn btn-2nd" id="btnReset" data-interactive>重置</button>
+        </div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:10px;">胡克定律（弹性限度内）：弹力大小与伸长量成正比。</div>
+  </div>
+  <script>
+    (function () {
+      var rng = document.getElementById('forceRng');
+      var readout = document.getElementById('readout');
+      var statusTxt = document.getElementById('statusTxt');
+      var coil = document.getElementById('springCoil');
+      var bot = document.getElementById('springBot');
+      var weight = document.getElementById('weight');
+      var running = false;
+      var baseD = 'M50,40 Q70,55 50,70 Q70,85 50,100 Q70,115 50,130';
+
+      function render(f, skipSave) {
+        var extend = f * 4;
+        var y2 = 130 + extend;
+        var yW = 160 + extend;
+        coil.setAttribute('d', baseD + ' Q70,' + (115 + extend * 0.5) + ' 50,' + y2);
+        bot.setAttribute('y1', y2);
+        bot.setAttribute('y2', yW);
+        weight.setAttribute('y', yW);
+        readout.innerHTML = f.toFixed(1) + ' <small>N</small>';
+        statusTxt.textContent = running ? '状态：测量中' : '状态：静止';
+        if (!skipSave) {
+          window.parent.postMessage({ type: 'saveState', state: { f: f, running: running } }, '*');
+        }
+      }
+
+      rng.addEventListener('input', function () {
+        if (!running) return;
+        render(parseFloat(rng.value));
+      });
+      document.getElementById('btnStart').addEventListener('click', function () {
+        running = true;
+        render(parseFloat(rng.value));
+      });
+      document.getElementById('btnReset').addEventListener('click', function () {
+        running = false;
+        rng.value = '0';
+        render(0);
+      });
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          running = !!e.data.state.running;
+          rng.value = String(e.data.state.f != null ? e.data.state.f : 0);
+          render(parseFloat(rng.value), true);
+        }
+      });
+      render(0, true);
+    })();
+  </script>
+</template>
+
+<!-- 第 6 页：3D 受力演示 -->
+<template class="page-data" data-id="6" data-name="3D受力演示">
+  <style>
+    .t3d-wrap { display: flex; gap: 14px; flex: 1; min-height: 0; }
+    .t3d-canvas-box {
+      flex: 1; min-width: 0; height: 280px;
+      border: 2px solid var(--demo-border); background: var(--demo-bg);
+      position: relative; overflow: hidden;
+    }
+    #t3dCanvas { width: 100%; height: 100%; display: block; }
+    .t3d-side { width: 200px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+    .t3d-legend { display: flex; align-items: center; gap: 6px; margin: 2px 0; }
+    .t3d-legend i { width: 14px; height: 14px; border: 2px solid var(--primary); flex-shrink: 0; }
+    .t3d-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+    .t3d-btns .btn { flex: 1; min-width: 58px; padding: 8px 6px; font-size: 13px; }
+    .t3d-info { font-size: 13px; line-height: 1.5; color: var(--accent); min-height: 40px; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">3D 演示：木块受力</div>
+    <p style="margin:0 0 8px;font-size:14px;">拖动旋转视角；调节水平推力，观察重力 G、支持力 N 与摩擦力 f。</p>
+    <div class="t3d-wrap">
+      <div class="t3d-canvas-box demo-stage" data-interactive>
+        <canvas id="t3dCanvas"></canvas>
+      </div>
+      <div class="t3d-side">
+        <div class="card" style="margin:0;padding:10px;">
+          <div class="t3d-legend"><i style="background:#DF9012;"></i> G 重力</div>
+          <div class="t3d-legend"><i style="background:#137F8B;"></i> N 支持力</div>
+          <div class="t3d-legend"><i style="background:#35E9FE;"></i> F 推力</div>
+          <div class="t3d-legend"><i style="background:#00404D;"></i> f 摩擦力</div>
+        </div>
+        <label style="font-size:13px;">水平推力 F (N)</label>
+        <input type="range" id="t3dPush" data-interactive min="0" max="12" step="1" value="0">
+        <div class="t3d-info" id="t3dInfo">状态：静止平衡</div>
+        <div class="t3d-btns">
+          <button type="button" class="btn btn-primary" id="t3dStart" data-interactive>开始</button>
+          <button type="button" class="btn btn-2nd" id="t3dPause" data-interactive>暂停</button>
+          <button type="button" class="btn btn-2nd" id="t3dReset" data-interactive>重置</button>
+        </div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:8px;font-size:14px;">当 F &gt; f 时木块加速运动；F = f 时匀速；F &lt; f 时静止。</div>
+  </div>
+  <script>
+    (function () {
+      var canvas = document.getElementById('t3dCanvas');
+      var pushRng = document.getElementById('t3dPush');
+      var info = document.getElementById('t3dInfo');
+      var running = false, paused = false, blockX = 0, vel = 0;
+      var renderer, scene, camera, controls, block, arrows = {};
+      var animId = null;
+      var MU = 0.35, MASS = 2;
+
+      function save() {
+        window.parent.postMessage({
+          type: 'saveState',
+          state: { running: running, paused: paused, push: +pushRng.value, blockX: blockX, vel: vel }
+        }, '*');
+      }
+
+      function loadScripts(seq, i) {
+        if (i >= seq.length) { init3d(); return; }
+        var s = document.createElement('script');
+        s.src = seq[i];
+        s.onload = function () { loadScripts(seq, i + 1); };
+        s.onerror = function () { info.textContent = '3D 库加载失败'; };
+        document.head.appendChild(s);
+      }
+
+      function makeArrow(dir, len, color, origin) {
+        var o = origin || new THREE.Vector3(0, 0.55, 0);
+        return new THREE.ArrowHelper(dir.clone().normalize(), o, len, color, len * 0.22, len * 0.14);
+      }
+
+      function init3d() {
+        var THREE = window.THREE;
+        var w = canvas.clientWidth || 480, h = canvas.clientHeight || 280;
+        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+        renderer.setSize(w, h, false);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xD3F6F4);
+
+        camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
+        camera.position.set(4.2, 3.2, 5.5);
+        camera.lookAt(0, 0.4, 0);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+        var dl = new THREE.DirectionalLight(0xffffff, 0.85);
+        dl.position.set(5, 8, 4);
+        scene.add(dl);
+
+        var grid = new THREE.GridHelper(8, 16, 0x93BFC2, 0xDBF1F0);
+        grid.position.y = 0;
+        scene.add(grid);
+
+        var floor = new THREE.Mesh(
+          new THREE.BoxGeometry(8, 0.08, 4),
+          new THREE.MeshBasicMaterial({ color: 0xECFCFB })
+        );
+        floor.position.y = -0.04;
+        scene.add(floor);
+
+        block = new THREE.Mesh(
+          new THREE.BoxGeometry(0.9, 0.9, 0.9),
+          new THREE.MeshLambertMaterial({ color: 0x35E9FE })
+        );
+        block.position.set(0, 0.45, 0);
+        var edge = new THREE.LineSegments(
+          new THREE.EdgesGeometry(block.geometry),
+          new THREE.LineBasicMaterial({ color: 0x00404D })
+        );
+        block.add(edge);
+        scene.add(block);
+
+        arrows.g = makeArrow(new THREE.Vector3(0, -1, 0), 1.1, 0xDF9012);
+        arrows.n = makeArrow(new THREE.Vector3(0, 1, 0), 1.1, 0x137F8B);
+        arrows.f = makeArrow(new THREE.Vector3(1, 0, 0), 0.9, 0x35E9FE);
+        arrows.fr = makeArrow(new THREE.Vector3(-1, 0, 0), 0.7, 0x00404D);
+        Object.keys(arrows).forEach(function (k) { scene.add(arrows[k]); });
+
+        if (THREE.OrbitControls) {
+          controls = new THREE.OrbitControls(camera, canvas);
+          controls.enableDamping = true;
+          controls.target.set(0, 0.4, 0);
+          controls.maxPolarAngle = Math.PI * 0.48;
+        }
+
+        updateArrows();
+        loop();
+        window.addEventListener('resize', onResize);
+      }
+
+      function onResize() {
+        if (!renderer) return;
+        var w = canvas.clientWidth, h = canvas.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h, false);
+      }
+
+      function frictionForce() { return MU * MASS * 9.8; }
+
+      function updateArrows() {
+        var F = +pushRng.value;
+        var fmax = frictionForce();
+        var origin = block.position.clone();
+        origin.y = 0.45;
+        arrows.g.position.copy(origin);
+        arrows.n.position.copy(origin);
+        arrows.f.position.copy(origin);
+        arrows.fr.position.copy(origin);
+        var fShow = running ? Math.min(F, fmax) : (F > 0 ? Math.min(F, fmax) : 0);
+        arrows.f.setLength(Math.max(0.25, F * 0.08), F * 0.08 * 0.22, F * 0.08 * 0.14);
+        arrows.fr.setLength(Math.max(0.2, fShow * 0.08), fShow * 0.08 * 0.22, fShow * 0.08 * 0.14);
+        arrows.f.visible = F > 0.1;
+        arrows.fr.visible = F > 0.1;
+      }
+
+      function updateInfo() {
+        var F = +pushRng.value, f = frictionForce();
+        if (!running) {
+          if (F < 0.5) info.textContent = '状态：静止平衡';
+          else if (F < f) info.textContent = '状态：静止（F < f，未滑动）';
+          else info.textContent = '状态：可运动，点击「开始」';
+          return;
+        }
+        if (paused) { info.textContent = '状态：已暂停'; return; }
+        if (F > f + 0.5) info.textContent = '状态：加速运动（F > f）';
+        else if (Math.abs(F - f) < 0.6) info.textContent = '状态：匀速或平衡';
+        else info.textContent = '状态：减速至停止';
+      }
+
+      function physics(dt) {
+        if (!running || paused) return;
+        var F = +pushRng.value, f = frictionForce();
+        var net = F - f;
+        if (Math.abs(vel) < 0.01 && net <= 0) { vel = 0; return; }
+        var acc = net / MASS;
+        vel += acc * dt;
+        vel *= 0.985;
+        blockX += vel * dt;
+        if (blockX > 3) { blockX = 3; vel = 0; }
+        if (blockX < -3) { blockX = -3; vel = 0; }
+        block.position.x = blockX;
+        updateArrows();
+        updateInfo();
+      }
+
+      var last = 0;
+      function loop(t) {
+        animId = requestAnimationFrame(loop);
+        var dt = last ? Math.min((t - last) / 1000, 0.05) : 0;
+        last = t;
+        physics(dt);
+        if (controls) controls.update();
+        if (renderer) renderer.render(scene, camera);
+      }
+
+      document.getElementById('t3dStart').addEventListener('click', function () {
+        running = true; paused = false; updateInfo(); save();
+      });
+      document.getElementById('t3dPause').addEventListener('click', function () {
+        if (!running) return;
+        paused = !paused; updateInfo(); save();
+      });
+      document.getElementById('t3dReset').addEventListener('click', function () {
+        running = false; paused = false; blockX = 0; vel = 0;
+        pushRng.value = '0';
+        block.position.x = 0;
+        updateArrows(); updateInfo(); save();
+      });
+      pushRng.addEventListener('input', function () {
+        updateArrows(); updateInfo(); save();
+      });
+
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          var st = e.data.state;
+          running = !!st.running; paused = !!st.paused;
+          pushRng.value = String(st.push != null ? st.push : 0);
+          blockX = st.blockX || 0; vel = st.vel || 0;
+          if (block) block.position.x = blockX;
+          updateArrows(); updateInfo();
+        }
+      });
+
+      loadScripts([
+        'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js',
+        'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js'
+      ], 0);
+    })();
+  </script>
+</template>
+
+<!-- 第 7 页：二力平衡 -->
+<template class="page-data" data-id="7" data-name="二力平衡">
+  <style>
+    .bal-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+    .cond li { margin-bottom: 8px; font-size: 16px; line-height: 1.6; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">二力平衡</div>
+    <div class="bal-wrap">
+      <div class="card demo-stage" style="display:flex;align-items:center;justify-content:center;">
+        <svg width="220" height="140" viewBox="0 0 220 140">
+          <rect x="70" y="55" width="80" height="36" fill="#35E9FE" stroke="#00404D" stroke-width="2"/>
+          <line x1="110" y1="55" x2="110" y2="15" stroke="#DF9012" stroke-width="3"/>
+          <polygon points="110,10 105,20 115,20" fill="#DF9012"/>
+          <text x="118" y="28" font-size="13" fill="#00404D">F1</text>
+          <line x1="110" y1="91" x2="110" y2="125" stroke="#137F8B" stroke-width="3"/>
+          <polygon points="110,130 105,120 115,120" fill="#137F8B"/>
+          <text x="118" y="118" font-size="13" fill="#00404D">F2</text>
+        </svg>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 10px;font-size:16px;">物体在<strong>两个力</strong>作用下保持静止或匀速直线运动，称二力平衡。</p>
+        <p style="margin:0 0 8px;font-weight:700;color:var(--accent);">条件（四要素）：</p>
+        <ul class="cond" style="margin:0;padding-left:20px;">
+          <li>同体：作用在<strong>同一物体</strong>上</li>
+          <li>等大：大小<strong>相等</strong></li>
+          <li>反向：方向<strong>相反</strong></li>
+          <li>共线：作用在<strong>同一直线</strong>上</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:12px;"><strong>口诀：</strong>同体等大反向共线 — 缺一不可。</div>
+  </div>
+</template>
+
+<!-- 第 8 页：课堂测验 -->
+<template class="page-data" data-id="8" data-name="课堂测验">
+  <style>
+    .quiz .q { font-size: 15px; font-weight: 700; margin: 10px 0 6px; }
+    .opt {
+      display: block; width: 100%; text-align: left; margin: 4px 0; padding: 8px 12px;
+      border: 2px solid var(--card-border); border-radius: var(--radius);
+      background: #fff; cursor: pointer; font-size: 14px; font-family: inherit;
+    }
+    .opt.picked { border-color: var(--primary); background: #ECFCFB; }
+    .opt.correct { border-color: var(--success); color: var(--success); }
+    .opt.wrong { border-color: var(--error); color: var(--error); }
+    .foot { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-shrink: 0; }
+    #score { flex: 1; font-weight: 700; color: var(--primary); font-size: 15px; }
+  </style>
+  <div class="page-container quiz">
+    <div class="page-title">课堂测验</div>
+    <p class="q">1. 力的三要素不包括下列哪一项？</p>
+    <button type="button" class="opt" data-interactive data-q="0" data-v="A">A. 大小</button>
+    <button type="button" class="opt" data-interactive data-q="0" data-v="B">B. 方向</button>
+    <button type="button" class="opt" data-interactive data-q="0" data-v="C">C. 作用点</button>
+    <button type="button" class="opt" data-interactive data-q="0" data-v="D">D. 速度</button>
+    <p class="q">2. 重力的方向总是？</p>
+    <button type="button" class="opt" data-interactive data-q="1" data-v="A">A. 竖直向下</button>
+    <button type="button" class="opt" data-interactive data-q="1" data-v="B">B. 竖直向上</button>
+    <button type="button" class="opt" data-interactive data-q="1" data-v="C">C. 水平向前</button>
+    <p class="q">3. 二力平衡时，两个力必须？</p>
+    <button type="button" class="opt" data-interactive data-q="2" data-v="A">A. 作用在同一物体上，等大反向共线</button>
+    <button type="button" class="opt" data-interactive data-q="2" data-v="B">B. 作用在两个物体上</button>
+    <button type="button" class="opt" data-interactive data-q="2" data-v="C">C. 大小不等但方向相反</button>
+    <div class="foot">
+      <span id="score">请完成 3 题后提交</span>
+      <button type="button" class="btn btn-2nd" id="retry" data-interactive>重做</button>
+      <button type="button" class="btn btn-primary" id="submit" data-interactive>提交</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var ANS = { 0: 'D', 1: 'A', 2: 'A' };
+      var pick = { 0: null, 1: null, 2: null };
+      var done = false;
+      var s = document.getElementById('score');
+
+      function save() {
+        window.parent.postMessage({ type: 'saveState', state: { pick: pick, done: done } }, '*');
+      }
+
+      document.querySelectorAll('.opt').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (done) return;
+          pick[b.dataset.q] = b.dataset.v;
+          document.querySelectorAll('.opt[data-q="' + b.dataset.q + '"]').forEach(function (x) {
+            x.classList.remove('picked');
+          });
+          b.classList.add('picked');
+          save();
+        });
+      });
+
+      function grade() {
+        if (!pick[0] || !pick[1] || !pick[2]) {
+          s.textContent = '请完成全部 3 题';
+          return;
+        }
+        done = true;
+        var ok = [0, 1, 2].filter(function (i) { return pick[i] === ANS[i]; }).length;
+        document.querySelectorAll('.opt').forEach(function (b) {
+          b.disabled = true;
+          var q = b.dataset.q, v = b.dataset.v;
+          if (v === ANS[q]) b.classList.add('correct');
+          else if (v === pick[q]) b.classList.add('wrong');
+        });
+        s.textContent = '得分：' + ok + ' / 3' + (ok === 3 ? '，全部正确！' : '，请查看错题');
+        save();
+      }
+
+      document.getElementById('submit').addEventListener('click', grade);
+      document.getElementById('retry').addEventListener('click', function () {
+        done = false;
+        pick = { 0: null, 1: null, 2: null };
+        document.querySelectorAll('.opt').forEach(function (b) {
+          b.disabled = false;
+          b.classList.remove('picked', 'correct', 'wrong');
+        });
+        s.textContent = '请完成 3 题后提交';
+        save();
+      });
+
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          pick = e.data.state.pick || pick;
+          done = !!e.data.state.done;
+          document.querySelectorAll('.opt').forEach(function (b) {
+            if (pick[b.dataset.q] === b.dataset.v) b.classList.add('picked');
+          });
+          if (done) grade();
+        }
+      });
+    })();
+  </script>
+</template>
+
+<script src="./courseware-shell.js"></script>
+</body>
+</html>

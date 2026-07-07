@@ -3,10 +3,8 @@
 ## 当前架构（v2 · MVP · 自包含）
 
 ```
-teaching-page-v2/                 # 全部规范在此目录，不引用仓库外 Skill
+teaching-page-v2/
 ├── SKILL.md
-├── workflow.md
-├── local-harness.md
 ├── feixiang-style.md
 ├── assets/
 │   ├── SKILL.md                  ①

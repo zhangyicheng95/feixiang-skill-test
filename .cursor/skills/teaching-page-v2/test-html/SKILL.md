@@ -7,11 +7,9 @@ description: >-
 
 # 第 ③ 步：测试与验收
 
-> **详细纪律**：[guide.md](guide.md)（must-cover、失败处理）
+> **详细纪律**：[guide.md](guide.md)
 >
 > 断言模板（按需）：[references/test-templates.md](references/test-templates.md)
->
-> 环境：[../local-harness.md](../local-harness.md)
 
 ## 何时执行
 

@@ -5,6 +5,8 @@ description: 用 test_html 对 HTML 做 Playwright 单测的指南：must-cover 
 
 更新时间：2026-06-16
 
+> **teaching-page-v2 本地副本**。MVP 用浏览器手测替代 `test_html` 云函数；见 [SKILL.md](SKILL.md)。
+
 # test_html 使用指南
 
 > 本文是「纪律与决策」主干。**详细代码模板、致命写法清单、完整示例、反面教材**都在
