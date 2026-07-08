@@ -38,6 +38,8 @@ description: >-
 - 视口 960×540；壳：`<script src="./courseware-shell.js"></script>`
 - 素材 URL 来自 manifest；禁止 base64
 - 练习页须含互动闭环；**同页多题须逐题切换、禁止滚动堆题**，见 [quiz-patterns.md](quiz-patterns.md)
+- `page-shared` 须声明 `--canvas-bg` 画布底色（见 [feixiang-style.md](../feixiang-style.md) §4.6、[style-guide.md](style-guide.md) §4.1）
+- 选择题：**选题 → 确认答案 → 对错 + 解析 → 下一题**（`explain` 字段 + `revealed` 状态）
 
 ## 本地壳
 
@@ -55,7 +57,8 @@ Write pages/<slug>/courseware-shell.js
 □ 逐页对照 outline，无遗漏
 □ index.html 与 courseware-shell.js 同目录
 □ 互动页 postMessage 状态已接
-□ 若有单选/多选：符合 quiz-patterns.md 提交与重做闭环
+□ 若有单选/多选：符合 quiz-patterns.md（逐题、确认出解析、saveState）
+□ page-shared 含 --canvas-bg，html/body/.page-container 已应用
 ```
 
 ## 下一步
