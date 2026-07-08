@@ -188,3 +188,35 @@ pages/<slug>/
 cd pages/<slug> && python3 -m http.server 8765
 # → http://127.0.0.1:8765/index.html
 ```
+
+---
+
+## SCORM 2004 部署（壳内置，无需逐课件开发）
+
+预览壳顶栏提供 **「SCORM 包」** 按钮：纯前端打包出 `<课件名>-scorm2004.zip`（含
+`index.html` 单文件 SCO + `imsmanifest.xml`，SCORM 2004 4th Edition），可直接上传到
+Moodle / SCORM Cloud 等 LMS。`file://` 双击打开也能打包（store 方式 zip，仅依赖 TextEncoder）。
+
+**自动上报（导出的 HTML 内置运行时，检测到 `API_1484_11` 才激活；普通打开时静默无副作用）**：
+
+| CMI 字段 | 含义 | 规则 |
+|----------|------|------|
+| `cmi.session_time` | 学习时长 | 进入到退出的累计时长（ISO8601 `PT#H#M#S`） |
+| `cmi.progress_measure` | 学习进度 | 已看页 / 总页（0–1） |
+| `cmi.completion_status` | 完成状态 | 全部页看完 → `completed`，否则 `incomplete` |
+| `cmi.location` + `cmi.suspend_data` | 断点续学 | 记录当前页与已看页集合；重进 LMS 从上次页恢复 |
+| `cmi.score.*` + `cmi.success_status` | 成绩 | 练习页 `postMessage({type:'cwScore',id,raw,max})`；壳按 id 聚合总分，≥0.6 记 passed |
+
+**壳无需为 SCORM 写代码**——按 Step 2 原样复制 `courseware-shell.js` 即可上报时长/进度/完成/断点。
+**唯一需要课件配合的是成绩**：练习页判分后按 `quiz-patterns.md` 发送
+`{type:'cwScore', id, raw, max}`，壳会自动聚合写入 `cmi.score.*` 与 `cmi.success_status`。
+
+**可靠性要点（已内置）**：
+- 学习时长按 SCORM 规范只在 `Terminate()` 时并入 `total_time`；壳在 `pagehide`/
+  `beforeunload`/`unload` 触发 `Terminate`，并**每 10 秒保活提交一次**，降低真实 LMS
+  退出时异步保存被取消导致的丢时长。
+- `cmi.exit` 仅在退出时置位：学完 `normal`（让 LMS 归档完成），未学完 `suspend`（保断点）。
+- 完成状态在"看完最后一页"即写入 `completed` 并提交，不依赖退出时机。
+- SCO 向控制台打印 `[SCORM]` 生命周期日志（Initialize/Terminate/被拒绝的 SetValue）；
+  某 LMS 仍不记录时，开该 LMS 开发者控制台看 `[SCORM]` 报错定位。详细日志设
+  `window.__CW_SCORM_DEBUG__=true`。

@@ -134,13 +134,28 @@
       民族危机加深 + 清政府腐朽无能 → 资产阶级革命思想传播
     </div>
     <div class="card">
-      <p style="margin:0 0 8px;font-size:15px;"><strong>时代背景：</strong>甲午战争失败、《辛丑条约》签订后，中国<strong>完全沦为半殖民地半封建社会</strong>，民族危机空前严重。</p>
-      <ul class="compact">
-        <li><span class="tag-pill">1894</span> 孙中山在檀香山创立<strong>兴中会</strong>，提出「驱除鞑虏，恢复中国，创立合众政府」</li>
-        <li><span class="tag-pill">1905</span> 孙中山在日本东京成立<strong>中国同盟会</strong>，纲领为「驱除鞑虏，恢复中华，创立民国，平均地权」</li>
-        <li><span class="tag-pill">三民主义</span> 民族主义、民权主义、民生主义，是孙中山领导革命的<strong>指导思想</strong></li>
-        <li><span class="tag-pill">武装起义</span> 广州起义、黄花岗起义等多次起义虽失败，但动摇了清朝统治根基</li>
-      </ul>
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="flex:1;min-width:0;">
+          <p style="margin:0 0 8px;font-size:15px;"><strong>时代背景：</strong>甲午战争失败、《辛丑条约》签订后，中国<strong>完全沦为半殖民地半封建社会</strong>，民族危机空前严重。</p>
+          <ul class="compact">
+            <li><span class="tag-pill">1894</span> 孙中山在檀香山创立<strong>兴中会</strong>，提出「驱除鞑虏，恢复中国，创立合众政府」</li>
+            <li><span class="tag-pill">1905</span> 孙中山在日本东京成立<strong>中国同盟会</strong>，纲领为「驱除鞑虏，恢复中华，创立民国，平均地权」</li>
+            <li><span class="tag-pill">三民主义</span> 民族主义、民权主义、民生主义，是孙中山领导革命的<strong>指导思想</strong></li>
+            <li><span class="tag-pill">武装起义</span> 广州起义、黄花岗起义等多次起义虽失败，但动摇了清朝统治根基</li>
+          </ul>
+        </div>
+        <figure style="margin:0;flex:0 0 176px;text-align:center;">
+          <img
+            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80"
+            alt="公网图片联网测试"
+            loading="lazy"
+            style="width:176px;height:120px;object-fit:cover;display:block;border:3px solid var(--accent);border-radius:8px;background:#f5efe6;"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          />
+          <div style="display:none;width:176px;height:120px;border:3px dashed var(--error);border-radius:8px;align-items:center;justify-content:center;color:var(--error);font-size:13px;font-weight:800;line-height:1.5;background:#fff5f5;">图片未加载<br>（外链被拦）</div>
+          <figcaption style="font-size:12px;color:var(--accent);margin-top:5px;font-weight:700;">示例图片 · 公网链接联网测试</figcaption>
+        </figure>
+      </div>
     </div>
     <div class="tip"><strong>记忆要点：</strong>同盟会是第一个全国规模的资产阶级革命政党；革命派与维新派、洋务派的根本分歧在于是否推翻清朝、建立共和。</div>
   </div>
@@ -631,6 +646,7 @@
       function renderResult() {
         stage.innerHTML = '';
         var ok = score();
+        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 8, raw: ok, max: QS.length }, '*');
         var box = document.createElement('div');
         box.className = 'result';
         box.innerHTML =
@@ -769,6 +785,7 @@
         });
         msg.textContent = ok === total ? '全部正确！A、B、D、E 均为正确表述' : '正确 ' + ok + '/' + total + '，绿框为应选项';
         document.getElementById('mcExplain').style.display = '';
+        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 9, raw: ok, max: total }, '*');
         save();
       }
       document.getElementById('mcSubmit').addEventListener('click', grade);

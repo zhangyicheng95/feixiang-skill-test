@@ -112,6 +112,7 @@ window.__CW_SHELL_MAIN__ = function () {
     this.titleEl = null;
     this.pageLabel = null;
     this.thumbIframes = [];
+    this.scorm = null;
   }
 
   CoursewareShell.prototype._handleNavKey = function (e) {
@@ -161,6 +162,7 @@ window.__CW_SHELL_MAIN__ = function () {
       '<button type="button" class="cw-action" data-action="edit">编辑</button>' +
       '<button type="button" class="cw-action" data-action="fullscreen">全屏预览</button>' +
       '<button type="button" class="cw-action" data-action="download">下载</button>' +
+      '<button type="button" class="cw-action" data-action="scorm">SCORM 包</button>' +
       '<button type="button" class="cw-action cw-action--icon" data-action="close" aria-label="关闭">×</button>' +
       '</div>';
     this.titleEl = header.querySelector('.cw-title');
@@ -206,6 +208,7 @@ window.__CW_SHELL_MAIN__ = function () {
       var action = btn.getAttribute('data-action');
       if (action === 'fullscreen') self._toggleFullscreen();
       else if (action === 'download') self._download();
+      else if (action === 'scorm') self._downloadScorm();
       else if (action === 'close') window.history.length > 1 ? window.history.back() : null;
     });
 
@@ -302,6 +305,8 @@ window.__CW_SHELL_MAIN__ = function () {
       } else if (e.data.type === 'saveState') {
         var page = self.pages[self.index];
         if (page) self.pageStates[page.id] = e.data.state;
+      } else if (e.data.type === 'cwScore' && self.scorm) {
+        self.scorm.reportScore(e.data);
       }
     });
 
@@ -313,8 +318,28 @@ window.__CW_SHELL_MAIN__ = function () {
       self._handleNavKey(e);
     });
 
+    this.scorm = new ScormRT();
+    var start = 0;
+    if (this.scorm.init(this.pages.length)) {
+      var loc = this.scorm.bookmark();
+      if (loc >= 0 && loc < this.pages.length) start = loc;
+      var finish = function () {
+        self.scorm.finish();
+      };
+      window.addEventListener('pagehide', finish);
+      window.addEventListener('beforeunload', finish);
+      window.addEventListener('unload', finish);
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden') self.scorm.suspend();
+        else self.scorm.resume();
+      });
+      this.scorm.keepAlive = setInterval(function () {
+        self.scorm.tick();
+      }, 10000);
+    }
+
     this._renderThumbs();
-    this.show(0, 'forward');
+    this.show(start, 'forward');
   };
 
   CoursewareShell.prototype._shellStyles = function () {
@@ -502,8 +527,7 @@ window.__CW_SHELL_MAIN__ = function () {
     );
   }
 
-  function triggerDownload(html, filename) {
-    var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  function triggerBlobDownload(blob, filename) {
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = filename;
@@ -511,6 +535,367 @@ window.__CW_SHELL_MAIN__ = function () {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(a.href);
+  }
+
+  function triggerDownload(html, filename) {
+    triggerBlobDownload(new Blob([html], { type: 'text/html;charset=utf-8' }), filename);
+  }
+
+  /* ============================ SCORM 2004 运行时 ============================
+   * 导出的单文件 HTML 内置本运行时。放入 LMS（可发现 API_1484_11）时自动上报；
+   * 作为普通文件打开（无 API）时静默无副作用。
+   * 上报：session_time（时长）、progress_measure（进度）、completion_status、
+   *       location + suspend_data（断点续学）、score（测验页可选上报）。
+   * ========================================================================== */
+
+  function scormFindAPI(win) {
+    var tries = 0;
+    while (win && tries < 20) {
+      try {
+        if (win.API_1484_11) return win.API_1484_11;
+      } catch (e) {}
+      if (win.parent === win) break;
+      win = win.parent;
+      tries++;
+    }
+    return null;
+  }
+
+  function scormGetAPI() {
+    var api = scormFindAPI(window);
+    if (!api && window.opener) {
+      try {
+        api = scormFindAPI(window.opener);
+      } catch (e) {}
+    }
+    return api;
+  }
+
+  function scormDuration(ms) {
+    var s = Math.max(0, ms / 1000);
+    var h = Math.floor(s / 3600);
+    s -= h * 3600;
+    var m = Math.floor(s / 60);
+    s -= m * 60;
+    var sec = Math.round(s * 100) / 100;
+    return 'PT' + h + 'H' + m + 'M' + sec + 'S';
+  }
+
+  function ScormRT() {
+    this.api = null;
+    this.active = false;
+    this.terminated = false;
+    this.enterTime = 0;
+    this.accumMs = 0;
+    this.visited = {};
+    this.total = 0;
+    this.completed = false;
+    this.scores = {};
+    this.keepAlive = null;
+  }
+
+  ScormRT.prototype._ok = function (v) {
+    return v === 'true' || v === true;
+  };
+  ScormRT.prototype._log = function () {
+    if (window.__CW_SCORM_DEBUG__ && window.console) {
+      try {
+        console.log.apply(console, ['[SCORM]'].concat([].slice.call(arguments)));
+      } catch (e) {}
+    }
+  };
+  ScormRT.prototype._warn = function () {
+    if (window.console) {
+      try {
+        console.log.apply(console, ['[SCORM]'].concat([].slice.call(arguments)));
+      } catch (e) {}
+    }
+  };
+  ScormRT.prototype.get = function (k) {
+    if (!this.active) return '';
+    return this.api.GetValue(k);
+  };
+  ScormRT.prototype.set = function (k, v) {
+    if (!this.active) return false;
+    var ok = this._ok(this.api.SetValue(k, String(v)));
+    if (!ok) {
+      var err = '';
+      try {
+        err = this.api.GetLastError() + ' ' + this.api.GetErrorString(this.api.GetLastError());
+      } catch (e) {}
+      this._warn('SetValue 被拒绝:', k, '=', v, '错误:', err);
+    } else {
+      this._log('SetValue', k, '=', v);
+    }
+    return ok;
+  };
+  ScormRT.prototype.commit = function () {
+    if (this.active) this.api.Commit('');
+  };
+
+  /** 当前会话累计时长（毫秒），跨可见性切换累加 */
+  ScormRT.prototype._elapsedMs = function () {
+    var live = this.enterTime ? Date.now() - this.enterTime : 0;
+    return this.accumMs + live;
+  };
+  ScormRT.prototype._pushTime = function () {
+    this.set('cmi.session_time', scormDuration(this._elapsedMs()));
+  };
+  ScormRT.prototype.pause = function () {
+    if (this.enterTime) {
+      this.accumMs += Date.now() - this.enterTime;
+      this.enterTime = 0;
+    }
+  };
+  ScormRT.prototype.resume = function () {
+    if (!this.enterTime) this.enterTime = Date.now();
+  };
+
+  ScormRT.prototype.init = function (total) {
+    this.api = scormGetAPI();
+    if (!this.api) return false;
+    if (!this._ok(this.api.Initialize(''))) {
+      this.api = null;
+      return false;
+    }
+    this.active = true;
+    this.total = total;
+    this.enterTime = Date.now();
+    this.accumMs = 0;
+
+    var suspend = this.get('cmi.suspend_data');
+    if (suspend) {
+      try {
+        var d = JSON.parse(suspend);
+        if (d && d.visited) this.visited = d.visited;
+        if (d && d.scores) this.scores = d.scores;
+      } catch (e) {}
+    }
+    var cs = this.get('cmi.completion_status');
+    this.completed = cs === 'completed';
+    if (!cs || cs === 'unknown' || cs === 'not attempted') {
+      this.set('cmi.completion_status', 'incomplete');
+    }
+    this.commit();
+    this._warn('Initialize 成功，total=', total, '，已恢复已看页=', Object.keys(this.visited).length);
+    return true;
+  };
+
+  ScormRT.prototype._persist = function () {
+    this.set('cmi.suspend_data', JSON.stringify({ visited: this.visited, scores: this.scores }));
+  };
+
+  /** 保活：定时刷新时长并提交，降低真实 LMS 退出时异步保存被取消导致的数据丢失 */
+  ScormRT.prototype.tick = function () {
+    if (!this.active || this.terminated) return;
+    this._pushTime();
+    this.commit();
+  };
+
+  ScormRT.prototype.bookmark = function () {
+    if (!this.active) return -1;
+    var loc = parseInt(this.get('cmi.location'), 10);
+    return isNaN(loc) ? -1 : loc;
+  };
+
+  ScormRT.prototype.visit = function (index) {
+    if (!this.active) return;
+    this.visited[index] = 1;
+    var count = 0;
+    for (var k in this.visited) if (this.visited.hasOwnProperty(k)) count++;
+    var pm = this.total ? Math.min(1, count / this.total) : 0;
+    this.set('cmi.progress_measure', pm.toFixed(4));
+    this.set('cmi.location', String(index));
+    if (count >= this.total && this.total > 0) {
+      this.completed = true;
+      this.set('cmi.completion_status', 'completed');
+    } else {
+      this.set('cmi.completion_status', 'incomplete');
+    }
+    this._persist();
+    // 每次翻页也刷新一次时长并提交，降低 Terminate 未触发时的时长丢失
+    this._pushTime();
+    this.commit();
+  };
+
+  /** 接收答题页上报的成绩，聚合为整课分数写入 cmi.score / success_status */
+  ScormRT.prototype.reportScore = function (data) {
+    if (!this.active || !data) return;
+    var id = data.id != null ? String(data.id) : 'q';
+    var raw = Number(data.raw);
+    var max = Number(data.max);
+    if (!isNaN(raw) && !isNaN(max) && max > 0) {
+      this.scores[id] = { raw: raw, max: max };
+    } else if (typeof data.scaled === 'number') {
+      this.scores[id] = { raw: data.scaled, max: 1 };
+    } else {
+      return;
+    }
+    var sr = 0;
+    var sm = 0;
+    for (var k in this.scores) {
+      if (this.scores.hasOwnProperty(k)) {
+        sr += this.scores[k].raw;
+        sm += this.scores[k].max;
+      }
+    }
+    var scaled = sm > 0 ? Math.max(0, Math.min(1, sr / sm)) : 0;
+    this.set('cmi.score.min', '0');
+    this.set('cmi.score.max', String(sm));
+    this.set('cmi.score.raw', String(sr));
+    this.set('cmi.score.scaled', scaled.toFixed(4));
+    this.set('cmi.success_status', scaled >= 0.6 ? 'passed' : 'failed');
+    this._persist();
+    this._pushTime();
+    this.commit();
+    this._warn('成绩上报 raw/max=', sr + '/' + sm, ' scaled=', scaled.toFixed(4));
+  };
+
+  /** 页面隐藏（切标签/最小化）：暂停计时并提交，不结束会话 */
+  ScormRT.prototype.suspend = function () {
+    if (!this.active || this.terminated) return;
+    this._pushTime();
+    this.pause();
+    this.commit();
+  };
+
+  ScormRT.prototype.finish = function () {
+    if (!this.active || this.terminated) return;
+    this.terminated = true;
+    if (this.keepAlive) {
+      clearInterval(this.keepAlive);
+      this.keepAlive = null;
+    }
+    this._pushTime();
+    this.set('cmi.exit', this.completed ? 'normal' : 'suspend');
+    this.commit();
+    var res = '';
+    try {
+      res = this.api.Terminate('');
+    } catch (e) {}
+    this._warn('Terminate 结果:', res, '，本次时长:', scormDuration(this._elapsedMs()), '，完成状态:', this.completed ? 'completed' : 'incomplete');
+    this.active = false;
+  };
+
+  /* ============================ 纯前端 ZIP 打包 ============================
+   * store 方式（无压缩，合法 zip）。file:// 下也可用。仅依赖 TextEncoder。
+   * ======================================================================== */
+
+  function utf8Bytes(str) {
+    if (typeof TextEncoder !== 'undefined') return new TextEncoder().encode(str);
+    var u = unescape(encodeURIComponent(str));
+    var arr = new Uint8Array(u.length);
+    for (var i = 0; i < u.length; i++) arr[i] = u.charCodeAt(i);
+    return arr;
+  }
+
+  var CRC_TABLE = null;
+  function crc32(bytes) {
+    if (!CRC_TABLE) {
+      CRC_TABLE = [];
+      for (var n = 0; n < 256; n++) {
+        var c = n;
+        for (var k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+        CRC_TABLE[n] = c >>> 0;
+      }
+    }
+    var crc = 0xffffffff;
+    for (var i = 0; i < bytes.length; i++) crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ bytes[i]) & 0xff];
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+
+  function makeZip(files) {
+    function u16(n) {
+      return [n & 0xff, (n >> 8) & 0xff];
+    }
+    function u32(n) {
+      return [n & 0xff, (n >> 8) & 0xff, (n >> 16) & 0xff, (n >> 24) & 0xff];
+    }
+    var parts = [];
+    var central = [];
+    var offset = 0;
+    files.forEach(function (f) {
+      var nameBytes = utf8Bytes(f.name);
+      var data = utf8Bytes(f.str);
+      var crc = crc32(data);
+      var local = new Uint8Array(
+        [].concat(
+          u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+          u32(crc), u32(data.length), u32(data.length),
+          u16(nameBytes.length), u16(0)
+        )
+      );
+      parts.push(local, nameBytes, data);
+      var cen = new Uint8Array(
+        [].concat(
+          u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0),
+          u32(crc), u32(data.length), u32(data.length),
+          u16(nameBytes.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset)
+        )
+      );
+      central.push(cen, nameBytes);
+      offset += local.length + nameBytes.length + data.length;
+    });
+    var centralSize = 0;
+    central.forEach(function (c) {
+      centralSize += c.length;
+    });
+    var end = new Uint8Array(
+      [].concat(
+        u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length),
+        u32(centralSize), u32(offset), u16(0)
+      )
+    );
+    return new Blob(parts.concat(central, [end]), { type: 'application/zip' });
+  }
+
+  function xmlEscape(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function buildManifest(title) {
+    var id = 'CW-' + Date.now().toString(36);
+    var t = xmlEscape(title || '课件');
+    return (
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<manifest identifier="MANIFEST-' + id + '" version="1"\n' +
+      '  xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"\n' +
+      '  xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3"\n' +
+      '  xmlns:adlseq="http://www.adlnet.org/xsd/adlseq_v1p3"\n' +
+      '  xmlns:adlnav="http://www.adlnet.org/xsd/adlnav_v1p3"\n' +
+      '  xmlns:imsss="http://www.imsglobal.org/xsd/imsss"\n' +
+      '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' +
+      '  xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd\n' +
+      '    http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd\n' +
+      '    http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd\n' +
+      '    http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd\n' +
+      '    http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd">\n' +
+      '  <metadata>\n' +
+      '    <schema>ADL SCORM</schema>\n' +
+      '    <schemaversion>2004 4th Edition</schemaversion>\n' +
+      '  </metadata>\n' +
+      '  <organizations default="ORG-1">\n' +
+      '    <organization identifier="ORG-1">\n' +
+      '      <title>' + t + '</title>\n' +
+      '      <item identifier="ITEM-1" identifierref="RES-1" isvisible="true">\n' +
+      '        <title>' + t + '</title>\n' +
+      '        <imsss:sequencing>\n' +
+      '          <imsss:deliveryControls completionSetByContent="true" objectiveSetByContent="true"/>\n' +
+      '        </imsss:sequencing>\n' +
+      '      </item>\n' +
+      '    </organization>\n' +
+      '  </organizations>\n' +
+      '  <resources>\n' +
+      '    <resource identifier="RES-1" type="webcontent" adlcp:scormType="sco" href="index.html">\n' +
+      '      <file href="index.html"/>\n' +
+      '    </resource>\n' +
+      '  </resources>\n' +
+      '</manifest>\n'
+    );
   }
 
   var SOURCE_HTML = captureSourceHtml();
@@ -590,6 +975,37 @@ window.__CW_SHELL_MAIN__ = function () {
       });
   };
 
+  CoursewareShell.prototype._downloadScorm = function () {
+    var base = (FILE_TITLE || 'courseware').replace(/\.html$/i, '');
+    var btn = document.querySelector('[data-action="scorm"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = '打包中…';
+    }
+    fetchShellSource()
+      .then(function (shellCode) {
+        var html = bundleHtml(SOURCE_HTML, shellCode);
+        var zip = makeZip([
+          { name: 'index.html', str: html },
+          { name: 'imsmanifest.xml', str: buildManifest(base) },
+        ]);
+        triggerBlobDownload(zip, base + '-scorm2004.zip');
+      })
+      .catch(function () {
+        var hint =
+          window.location.protocol === 'file:'
+            ? '无法生成 SCORM 包。请确认 courseware-shell.js 与 index.html 在同一文件夹；若仍失败，请在本文件夹运行：python3 -m http.server 8765，再用浏览器打开后重试。'
+            : '无法生成 SCORM 包。请确认通过 http:// 访问本页后再重试。';
+        window.alert(hint);
+      })
+      .finally(function () {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'SCORM 包';
+        }
+      });
+  };
+
   CoursewareShell.prototype.show = function (index, direction) {
     if (index < 0 || index >= this.pages.length) return;
     this.index = index;
@@ -632,6 +1048,8 @@ window.__CW_SHELL_MAIN__ = function () {
     window.addEventListener('message', onReady);
     this._updateThumbActive();
     this._fitMain();
+
+    if (this.scorm) this.scorm.visit(index);
   };
 
   CoursewareShell.prototype.next = function () {

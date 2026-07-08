@@ -46,6 +46,26 @@
 }
 ```
 
+## 成绩上报 SCORM（`cwScore`）
+
+练习页判分后，除 `saveState` 外**必须**再向 `window.parent` 发一条 `cwScore`，
+壳会聚合各练习页成绩写入 `cmi.score.*` 与 `cmi.success_status`（部署到 LMS 时自动上报；
+普通打开时无副作用）。
+
+```javascript
+// 判分得到 ok（答对数）/ total（总题数）后：
+window.parent.postMessage({
+  type: 'cwScore',
+  id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 0, // 本练习页 id，用于跨页聚合
+  raw: ok,
+  max: total
+}, '*');
+```
+
+- 每个练习页用**各自的 `id`**上报，壳按 id 聚合：总分 = Σraw / Σmax。
+- 单选卷在进入结果页时报一次；多选卷在提交判分后报一次。
+- 重做后可再次上报（同 id 覆盖）。
+
 ## 共用纪律
 
 ```
@@ -54,6 +74,7 @@
 □ 每个选项有 click，选中后 UI 变化
 □ 上一题 / 下一题 / 重做
 □ saveState / restoreState
+□ 判分后发送 cwScore（id + raw + max）供 SCORM 成绩上报
 □ 结果页含得分与简要总结（逐题解析已在答题时出现）
 ```
 
