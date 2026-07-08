@@ -1,5 +1,7 @@
 # 选择题互动模板（单选 / 多选）
 
+> 本文件路径：`courseware-generator/quiz-patterns.md`
+
 课件「练习」页含选择题时，须实现完整闭环并 `postMessage` 保存状态。
 
 ## 核心规则：同页逐题，禁止滚动堆题

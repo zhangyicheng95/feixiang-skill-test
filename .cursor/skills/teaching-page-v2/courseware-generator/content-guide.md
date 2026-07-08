@@ -4,7 +4,8 @@
 
 ## 一、工作流总览
 
-> 本文件是 courseware-generator 技能的 Phase 4 子流程。进入本流程时，课件大纲已由 Phase 1（outline-guidance.md）生成并经 Phase 2 用户确认，所需素材已由 Phase 3 准备完毕。
+> 本文件路径：`courseware-generator/content-guide.md`  
+> Phase 4 子流程；大纲来自 `assets/outline-guidance.md`；素材来自 `pages/<slug>/assets-manifest.md`。
 
 ```
 步骤 0  复杂度评估：根据已确认大纲，评估各页生成复杂度权重
@@ -22,7 +23,7 @@
 
 ## 二、步骤 0 —— 复杂度评估（基于已确认大纲）
 
-进入本流程时，对话历史中已包含经用户确认的完整课件大纲（由 outline-guidance.md 生成）。大纲中包含逐页设计表格，每页有页码、页面类型、教学内容、教学活动设计、交互设计等信息。
+进入本流程时，`pages/<slug>/outline.md` 已由 assets Phase 1 生成并经用户确认；`pages/<slug>/assets-manifest.md` 已由 Phase 3 准备完毕。
 
 ### 0.1 从大纲中提取关键信息
 

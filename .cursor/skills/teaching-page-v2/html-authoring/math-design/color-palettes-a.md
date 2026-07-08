@@ -1,6 +1,7 @@
 ## 五、 色彩方案配置 (Color Palettes)
 
-> 本文件为 html-authoring 数学子链路专用。按 workflow.md Phase 3 选定的 **1 个编号** 读取对应段落，禁止遍历全部 31 套。
+> 本文件路径：`html-authoring/math-design/color-palettes-a.md`  
+> 按 `html-authoring/math-design/workflow.md` Phase 3 选定的 **1 个编号** 读取对应段落。
 
 **抽选规则（强约束）：**
 - 11 套**全部参与抽选**：`A-01, A-02, A-03, A-04, A-05, A-06, A-07, A-08, A-09, A-10, A-11`

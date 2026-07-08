@@ -2,7 +2,7 @@
  * 飞象风课件预览壳 — 对齐飞象老师产物预览 UI
  * 外框 100%（顶栏 + 缩略图栏 + 浅灰舞台）；主区居中固定 960×540 画布
  */
-(function () {
+window.__CW_SHELL_MAIN__ = function () {
   'use strict';
 
   var CANVAS_W = 960;
@@ -517,6 +517,21 @@
   var FILE_TITLE = (document.querySelector('title') && document.querySelector('title').textContent) || 'courseware';
   var SHELL_SOURCE = null;
 
+  /**
+   * 重建壳脚本源码。首选用 window.__CW_SHELL_MAIN__.toString() 自我序列化，
+   * 无需读取任何外部文件 —— file:// 双击打开时也能打包。
+   */
+  function getSelfSource() {
+    var fn = window.__CW_SHELL_MAIN__;
+    if (typeof fn === 'function') {
+      var body = fn.toString();
+      if (body && body.indexOf('CoursewareShell') !== -1) {
+        return '(' + body + ')();';
+      }
+    }
+    return null;
+  }
+
   function getInlineShellSource() {
     var scripts = document.getElementsByTagName('script');
     var i;
@@ -530,10 +545,10 @@
 
   function fetchShellSource() {
     if (SHELL_SOURCE) return Promise.resolve(SHELL_SOURCE);
-    var inline = getInlineShellSource();
-    if (inline) {
-      SHELL_SOURCE = inline;
-      return Promise.resolve(inline);
+    var self = getSelfSource() || getInlineShellSource();
+    if (self) {
+      SHELL_SOURCE = self;
+      return Promise.resolve(self);
     }
     if (typeof fetch !== 'function') return Promise.reject(new Error('no fetch'));
     return fetch('./courseware-shell.js')
@@ -561,9 +576,11 @@
         triggerDownload(bundleHtml(SOURCE_HTML, shellCode), name);
       })
       .catch(function () {
-        window.alert(
-          '无法打包单文件课件。请将 index.html 与 courseware-shell.js 放在同一文件夹后双击打开，或通过本地服务器访问。'
-        );
+        var hint =
+          window.location.protocol === 'file:'
+            ? '无法读取 courseware-shell.js。请确认它与 index.html 在同一文件夹；若仍失败，请在本文件夹运行：python3 -m http.server 8765，再用浏览器打开 http://127.0.0.1:8765/index.html 后下载。'
+            : '无法打包单文件课件。请确认 index.html 与 courseware-shell.js 在同一目录，且通过 http:// 访问本页后再点下载。';
+        window.alert(hint);
       })
       .finally(function () {
         if (btn) {
@@ -636,4 +653,5 @@
   }
 
   new CoursewareShell(pages, parseShared()).mount();
-})();
+};
+window.__CW_SHELL_MAIN__();

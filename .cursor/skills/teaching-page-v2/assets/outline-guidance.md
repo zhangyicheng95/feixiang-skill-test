@@ -2,7 +2,8 @@
 
 本文件指导 AI 完成课件大纲的完整生成流程：从信息确认到逐页课件大纲输出。执行本流程时，AI 应以课件大纲设计专家的视角工作，精通课程标准、核心素养与课堂实施，擅长将教学内容合理分配到课件页面并输出结构化的逐页设计方案。
 
-> 本文件路径：`courseware-generator/outline-guidance.md`（参考副本；执行大纲流程以 assets 目录下同名文件为准）。
+> 本文件路径：`assets/outline-guidance.md`  
+> Phase 1 子流程；大纲完成后交还 `assets/SKILL.md`。
 
 ---
 
@@ -341,7 +342,7 @@ call: courseware_design_expertthinking
 
 当 SOP 所有步骤执行完毕后：
 1. 调用 `create_lesson_design` 输出课件大纲交付物。
-2. **⚠️ 禁止调用 terminate**。大纲输出后 → `assets/SKILL.md`。
+2. **⚠️ 禁止调用 terminate**。大纲输出后，交还 `assets/SKILL.md` Phase 2（大纲确认）。
 3. 若在 Phase 2 中用户要求修改大纲，根据反馈调整后重新调用 `create_lesson_design`。
 
 ---

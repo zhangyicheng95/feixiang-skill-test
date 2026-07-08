@@ -1,44 +1,27 @@
 # Teaching Page Harness 版本
 
-## 当前架构（v2 · MVP · 自包含）
+## 当前架构（teaching-page-v2 · 平级 Skill）
+
+物理位置：`.cursor/skills/teaching-page-v2/`  
+**文内引用**只写 v2 根之后的路径，如 `html-authoring/SKILL.md`。
 
 ```
 teaching-page-v2/
-├── SKILL.md
-├── feixiang-style.md
 ├── assets/
-│   ├── SKILL.md                  ①
-│   └── courseware-shell.js
 ├── html-authoring/
-│   ├── SKILL.md                  ② single
-│   ├── guide.md
-│   └── math-design/
 ├── courseware-generator/
-│   ├── SKILL.md                  ② multi
-│   ├── guide.md
-│   ├── outline-guidance.md
-│   ├── content-guide.md
-│   └── style-guide.md
 └── test-html/
-    ├── SKILL.md                  ③
-    ├── guide.md
-    └── references/
 
-pages/<slug>/                     产物
+pages/<slug>/                  产物（仓库根相对路径）
 ```
 
-## Workflow
-
-```
-① assets → ② html-authoring | courseware-generator → ③ test-html
-```
+编排见 `.cursor/rules/teaching-page-harness.mdc`。
 
 ## 变更
 
-- **2026-07-07**：v2 自包含，规范迁入 teaching-page-v2/，不再 Read 仓库根目录 Skill
-- **2026-07-07**：MVP 三步编排 + 多页/单页
-- **2026-07-07**：v1 冻结
+- **2026-07-08**：`html-authoring` / `courseware-generator` SKILL 内嵌完整三步（素材→内容→test）；`assets` / `test-html` 改为细则引用
+- **2026-07-07**：v2 自包含规范；MVP 三步工作流
 
 ## v1
 
-`teaching-page-v1/` 冻结归档，v2 不再依赖。
+`teaching-page-v1/` 冻结归档。

@@ -5,7 +5,7 @@ description: 生成多页PPT式教学课件（HTML格式）。当用户提出课
 
 更新时间：2026-03-12
 
-> **teaching-page-v2 本地副本**。编排入口见 [SKILL.md](SKILL.md)；壳脚本用本地 `./courseware-shell.js`（见 [../assets/courseware-shell.js](../assets/courseware-shell.js)）。
+> 入口 `courseware-generator/SKILL.md`；壳脚本 `courseware-generator/courseware-shell.js` 复制到 `pages/<slug>/courseware-shell.js`。
 
 # 多页课件生成技能
 
@@ -17,12 +17,15 @@ description: 生成多页PPT式教学课件（HTML格式）。当用户提出课
 
 本技能由四个文件组成，请按流程顺序读取：
 
-| 文件 | 用途 | 何时读取 |
+| 文件 | 路径 | 何时读取 |
 |------|------|----------|
-| **SKILL.md**（本文件） | 总览与导航，说明整体流程和文件职责 | 首先读取 |
-| **[outline-guidance.md](outline-guidance.md)** | 课件**大纲**生成指南：信息确认→课标研读→教材梳理→学情分析→目标拟定→逐页大纲设计 | Phase 1 执行，生成专业教学大纲 |
-| **[content-guide.md](content-guide.md)** | 课件**HTML内容**生成指南：基于已有大纲，创建骨架→分批生成页面→验收交付 | Phase 4 执行，将大纲转化为 HTML |
-| **[style-guide.md](style-guide.md)** | 课件**HTML格式与样式**规范：`<template>` 标签用法、960×540 画布规则、壳框架约束、互动状态管理等 | Phase 4 编写 HTML 时同时参考 |
+| SKILL.md | `courseware-generator/SKILL.md` | 首先读取 |
+| outline-guidance.md | `assets/outline-guidance.md` | Phase 1（由 assets Skill 执行） |
+| content-guide.md | `courseware-generator/content-guide.md` | Phase 4，HTML 内容 |
+| style-guide.md | `courseware-generator/style-guide.md` | Phase 4，格式样式 |
+| feixiang-style.md | `courseware-generator/feixiang-style.md` | Phase 4，视觉 |
+| quiz-patterns.md | `courseware-generator/quiz-patterns.md` | 含选择题时 |
+| courseware-shell.js | `courseware-generator/courseware-shell.js` | 复制到产物 |
 
 ---
 
@@ -30,7 +33,7 @@ description: 生成多页PPT式教学课件（HTML格式）。当用户提出课
 
 ```
 Phase 1: 大纲生成
-  读取 outline-guidance.md → 按其工作流执行：
+  Read `assets/outline-guidance.md` → 按其工作流执行：
   信息确认 → SOP获取 → 课标研读 → 教材梳理 → 学情分析 → 目标拟定 → 逐页大纲设计
   → 调用 create_lesson_design 输出课件大纲
      ↓
@@ -44,7 +47,8 @@ Phase 3: 素材准备
   图片（picture_gen）→ 音频（voice_gen）→ 知识搜索（knowledge_search）等
      ↓
 Phase 4: HTML 课件生成
-  读取 content-guide.md + style-guide.md → 基于已确认的大纲和素材：
+  Read `courseware-generator/content-guide.md`
+  + `courseware-generator/style-guide.md` → 基于已确认的大纲和素材：
   评估各页生成复杂度 → 创建 HTML 骨架 → 按复杂度分批生成页面 → 逐批注入骨架
      ↓
 Phase 5: 验收与交付
@@ -55,10 +59,10 @@ Phase 5: 验收与交付
 
 ## Phase 1 详细说明：大纲生成
 
-1. 读取 **outline-guidance.md**，按其定义的完整工作流执行。
+1. Read `assets/outline-guidance.md`，按其定义的完整工作流执行。
 2. 该流程包含信息确认机制（8 项字段）、SOP 获取、专家推理等步骤，生成专业的逐页课件大纲。
 3. 流程结束时调用 `create_lesson_design` 输出大纲。
-4. **⚠️ 重要变更**：outline-guidance.md 原始流程中的 `terminate` 调用在本技能中**不执行**。`create_lesson_design` 完成后，直接进入 Phase 2，不终止任务。
+4. **⚠️ 重要变更**：`outline-guidance.md` 原始流程中的 `terminate` 调用在本技能中**不执行**。`create_lesson_design` 完成后，直接进入 Phase 2，不终止任务。
 
 ---
 
@@ -114,20 +118,20 @@ create_lesson_design → continue_ask → 有修改？
 
 ## Phase 4 详细说明：HTML 课件生成
 
-1. 读取 **content-guide.md** 和 **style-guide.md**。
-2. content-guide.md 中原来的参数确认、检索、大纲规划步骤**全部跳过**——这些工作已由 Phase 1 完成。
-3. 从 content-guide.md 的**步骤 0（复杂度评估）**开始执行：
+1. Read `courseware-generator/content-guide.md` 和 `courseware-generator/style-guide.md`。
+2. `content-guide.md` 中原来的参数确认、检索、大纲规划步骤**全部跳过**——这些工作已由 Phase 1 完成。
+3. 从 `content-guide.md` 的**步骤 0（复杂度评估）**开始执行：
    - 首先根据已确认大纲中各页的页面类型和交互设计，评估每页的**生成复杂度权重**（轻量1/中等2/重量4/超重6）
    - 然后按权重进行分批装箱
    - 创建 HTML 骨架 → 分批生成 → 逐批注入
 4. **使用 Phase 3 中准备的素材 URL**：生成 HTML 时，将图片和音频的 URL 嵌入对应页面，不要自行创建 base64 内容。
-5. style-guide.md 负责 HTML 的编写规范（`<template>` 结构、画布尺寸、壳框架等）。
+5. `courseware-generator/style-guide.md` 负责 HTML 的编写规范（`<template>` 结构、画布尺寸、壳框架等）。
 
 ---
 
 ## Phase 5 详细说明：验收与交付
 
-按 content-guide.md 步骤 2 的验收流程执行：逐页核对大纲 → 交付最终 `.html` 文件。
+按 `courseware-generator/content-guide.md` 步骤 2 验收；逐页核对 `pages/<slug>/outline.md` → 交付 `pages/<slug>/index.html` → `test-html/SKILL.md`。
 
 ---
 
@@ -145,8 +149,8 @@ create_lesson_design → continue_ask → 有修改？
 ## 使用说明
 
 1. 收到课件生成需求后，按 Phase 1 → 2 → 3 → 4 → 5 顺序执行。
-2. outline-guidance.md 负责「教什么」——通过专业教研流程确定教学内容和页面规划（Phase 1）。
-3. Phase 3 负责「用什么」——根据大纲准备图片、音频、题目等素材。
-4. content-guide.md 负责「怎么做」——将大纲和素材转化为 HTML 页面（Phase 4）。
-5. style-guide.md 负责「怎么写」——HTML 代码的格式与样式规范（Phase 4 同时参考）。
+2. `assets/outline-guidance.md` 负责「教什么」——Phase 1 由 assets Skill 执行。
+3. Phase 3 负责「用什么」——Write `pages/<slug>/assets-manifest.md`。
+4. `courseware-generator/content-guide.md` 负责「怎么做」——Phase 4 HTML 生成。
+5. `courseware-generator/style-guide.md` 负责「怎么写」——Phase 4 格式样式。
 6. 各指南须**同时遵守**。

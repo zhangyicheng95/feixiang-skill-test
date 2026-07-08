@@ -1,66 +1,190 @@
 ---
-name: teaching-page-v2-courseware-generator
+name: teaching-page-courseware-generator
 description: >-
-  Teaching Page v2 第 ② 步（多页）：生成本目录规范下的多页 PPT 式课件。
-  multi 模式路由后调用。
+  K12 多页课件 HTML 全流程：① 素材（spec/outline/manifest）→ ② 生成 index.html+壳
+  → ③ test 验收。飞象风、960×540、逐题测验。单页见 html-authoring/SKILL.md。
 ---
 
-# 第 ② 步（multi）：多页课件生成
+# 多页课件 HTML（完整流程）
 
-> **规范（生成前必读）**：
-> - [guide.md](guide.md)
-> - [content-guide.md](content-guide.md)
-> - [style-guide.md](style-guide.md)
-> - 含选择题时：[quiz-patterns.md](quiz-patterns.md)
->
-> 大纲已在 ① 步：`pages/<slug>/outline.md`
+**Skill**：`courseware-generator/`  
+**模式**：`multi`  
+**产物**：`pages/<slug>/index.html` + `pages/<slug>/courseware-shell.js`
 
-## 前置
+> 本 Skill 含 **素材 → 内容 → 验收** 三步，须按序执行完毕再交付。  
+> 细则：`assets/SKILL.md`（素材）、`test-html/SKILL.md`（验收）。
 
-- ① 步完成：`outline.md`（已确认）、`assets-manifest.md`
-- `mode: multi`
+---
 
-## 执行顺序
+## 总流程
 
 ```
-1. Read guide.md
-2. Read content-guide.md — 从「步骤 0 复杂度评估」起
-3. Read style-guide.md — 编写时对照
-4. Read outline.md + assets-manifest.md
-5. Write pages/<slug>/index.html（骨架 → 分批注入）
-6. 复制 ../assets/courseware-shell.js → pages/<slug>/
-7. → test-html 验收
+Step 1  生成素材   spec + outline.md + assets-manifest.md
+   ↓
+Step 2  生成内容   index.html + courseware-shell.js
+   ↓
+Step 3  进行 test  浏览器手测 + 验证结论卡
 ```
 
-## HTML 要点
+**禁止**：跳过 Step 1 直接写 HTML；未通过 Step 3 即宣称交付。
 
-- `<template class="page-data">`；`data-id` 从 1 连续
-- 视口 960×540；壳：`<script src="./courseware-shell.js"></script>`
-- 素材 URL 来自 manifest；禁止 base64
-- 练习页须含互动闭环；**同页多题须逐题切换、禁止滚动堆题**，见 [quiz-patterns.md](quiz-patterns.md)
-- `page-shared` 须声明 `--canvas-bg` 画布底色（见 [feixiang-style.md](../feixiang-style.md) §4.6、[style-guide.md](style-guide.md) §4.1）
-- 选择题：**选题 → 确认答案 → 对错 + 解析 → 下一题**（`explain` 字段 + `revealed` 状态）
+---
 
-## 本地壳
+## Step 1：生成素材
 
-```
-Read  ../assets/courseware-shell.js
-Write pages/<slug>/courseware-shell.js
-```
+### 1.1 确认模式
 
-下载按钮会打包为**单文件 HTML**（导出模式：**无顶栏**，**保留缩略图侧栏**），双击即可播放。
+- 用户要 **多页 / 课件 / PPT / 翻页 / 缩略图** → 本 Skill，`mode: multi`
+- 用户要 **单页** → 改走 `html-authoring/SKILL.md`
 
-## 补充自检
+### 1.2 解析需求 → spec
 
 ```
-□ 已 Read guide + content-guide + style-guide
-□ 逐页对照 outline，无遗漏
+requirements=用户硬要求逐条
+require=必含页型/互动（封面、讲解、练习…）
+forbid=禁止项（emoji、滚动堆题…）
+core-loop=各互动页闭环（如 P8 选题→确认→解析→下一题）
+```
+
+### 1.3 大纲 outline.md
+
+```
+1. Read assets/outline-guidance.md
+2. Write pages/<slug>/outline.md
+   - 逐页表：页码 / 页类型 / 内容要点 / 交互设计
+   - 标注 core-loop 所在页
+3. 用户确认后继续（未确认不进入 Step 2）
+```
+
+**页型最低标准**：见 `courseware-generator/content-guide.md` §五。
+
+### 1.4 素材清单
+
+```
+Write pages/<slug>/assets-manifest.md
+```
+
+| 规则 | 说明 |
+|------|------|
+| 图片/音频 | 真实 URL；禁止 base64 |
+| 无外链 | 写明 CSS/SVG 自绘 |
+
+### 1.5 Step 1 自检
+
+```
+□ pages/<slug>/ 已创建
+□ spec 四字段 + 各页 core-loop 已整理
+□ outline.md 已 Write 且已确认
+□ assets-manifest.md 已 Write
+```
+
+---
+
+## Step 2：生成内容
+
+### 2.1 必读规范
+
+| 文件 | 路径 |
+|------|------|
+| 总览 | `courseware-generator/guide.md` |
+| 内容生成 | `courseware-generator/content-guide.md` |
+| 样式格式 | `courseware-generator/style-guide.md` |
+| 视觉 | `courseware-generator/feixiang-style.md` |
+| 选择题 | `courseware-generator/quiz-patterns.md` |
+| 预览壳 | `courseware-generator/courseware-shell.js` |
+
+### 2.2 执行
+
+```
+1. Read guide.md + content-guide.md（从步骤 0 起）+ style-guide.md
+2. Read pages/<slug>/outline.md + assets-manifest.md
+3. Write pages/<slug>/index.html
+   - <template class="page-shared"> 共享样式（含 --canvas-bg）
+   - <template class="page-data" data-id="1..N"> 逐页注入
+   - 严格对照 outline，不得漏页
+   - 互动页 postMessage saveState / restoreState
+4. 复制 courseware-generator/courseware-shell.js
+   → pages/<slug>/courseware-shell.js
+5. <script src="./courseware-shell.js"></script> 在 index.html 末尾
+```
+
+### 2.3 HTML 硬要点
+
+- 画布 **960×540**；`page-shared` 声明 `--canvas-bg`（`feixiang-style.md` §4.6）
+- **同页多题** = 逐题切换，禁止滚动堆题（`quiz-patterns.md`）
+- 选择题：**选题 → 确认答案 → 对错+解析 → 下一题**（`explain` + `revealed`）
+- 缩略图侧栏由壳渲染，**禁止手写壳代码**
+
+### 2.4 Step 2 自检
+
+```
+□ 逐页对照 outline.md，无遗漏
 □ index.html 与 courseware-shell.js 同目录
-□ 互动页 postMessage 状态已接
-□ 若有单选/多选：符合 quiz-patterns.md（逐题、确认出解析、saveState）
-□ page-shared 含 --canvas-bg，html/body/.page-container 已应用
+□ 单选/多选符合 quiz-patterns.md
+□ 互动页 saveState / restoreState 已接
+□ page-shared 含 --canvas-bg
 ```
 
-## 下一步
+---
 
-→ [../test-html/SKILL.md](../test-html/SKILL.md)
+## Step 3：进行 test
+
+> 细则：`test-html/guide.md`
+
+### 3.1 执行
+
+```
+1. Read test-html/guide.md
+2. 从 spec / outline / core-loop 抽 must-cover 清单
+3. browser_navigate → pages/<slug>/index.html（HTTP 服务）
+4. 手测：
+   - 壳加载、缩略图、翻页
+   - 各页 core-loop（尤其练习页）
+   - 翻页离开再回来 → 状态恢复
+5. 输出验证结论卡
+6. 未通过 → 回 Step 2 修复 → 再测
+```
+
+### 3.2 闸门
+
+- **core-loop 未测通** → 不得交付
+- **壳未加载 / 缩略图空白** → 不得交付
+- **逐题测验未出解析** → 不得交付
+
+### 3.3 验证结论卡（必填）
+
+```
+## 验证结论
+- 状态：✓ / ⚠ / ✗
+- 需求覆盖：N/M 项
+  - [1] 壳加载 + 翻页：✓ / ✗
+  - [2] <core-loop 页>：✓ / ✗
+- 下一步：修复 / 补测 / 交付
+```
+
+### 3.4 Step 3 自检
+
+```
+□ 已 Read test-html/guide.md
+□ 壳 + 翻页 + 至少一条 core-loop 已手测
+□ 验证结论卡已输出
+```
+
+---
+
+## 交付物清单
+
+```
+pages/<slug>/
+├── index.html
+├── courseware-shell.js
+├── outline.md
+└── assets-manifest.md
+```
+
+告知用户打开方式：
+
+```bash
+cd pages/<slug> && python3 -m http.server 8765
+# → http://127.0.0.1:8765/index.html
+```
