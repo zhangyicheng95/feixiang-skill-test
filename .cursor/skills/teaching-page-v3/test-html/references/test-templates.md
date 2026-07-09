@@ -1,6 +1,7 @@
 # test_html 代码模板与陷阱（按需 read_url）
 
-> 本文是 `test-html/SKILL.md` 的附件库。
+> 路径：`test-html/references/test-templates.md`  
+> 本文是 `SKILL.md` 的附件库：致命写法、各类断言模板、完整示例、反面教材。
 > 写 `playwrightCode` 前按"模板速查表"取对应片段，组合进一次调用。
 
 ## 致命写法清单（每条来自线上真实失败，写代码前过一遍）

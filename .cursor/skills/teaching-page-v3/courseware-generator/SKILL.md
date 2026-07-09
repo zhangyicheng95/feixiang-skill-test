@@ -8,8 +8,7 @@ description: >-
 # 多页课件生成
 
 **产物**：`pages/<slug>/index.html` + `courseware-shell.js`  
-**验收**：`test-html/SKILL.md`  
-**流程图**：`workflow.md`
+**验收**：`test-html/SKILL.md`
 
 ---
 
@@ -18,7 +17,6 @@ description: >-
 ```
 courseware-generator/
 ├── SKILL.md                 ← 本文件（唯一入口）
-├── workflow.md              ← 调用流程图（Read/Write/复制顺序）
 ├── manifest.md              ← Step 1：spec、素材清单规则
 ├── outline-guidance.md      ← Step 1：大纲生成（多页专用）
 ├── assets/
@@ -86,7 +84,7 @@ Read `manifest.md`，按其中流程执行：
 
 ## Step 3：验收
 
-见 `test-html/SKILL.md`（必读 `test-html/guide.md`）。未通过 core-loop / must-cover 不得宣称交付。
+见 `test-html/SKILL.md`。未通过 core-loop / must-cover 不得宣称交付。
 
 ---
 

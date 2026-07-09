@@ -132,39 +132,19 @@ core-loop=互动闭环（动词链，如：选题→提交→反馈→重置）
 
 ## Step 3：进行 test
 
-> 细则：`test-html/guide.md`
-
-### 3.1 执行
+见 `test-html/SKILL.md`。
 
 ```
-1. Read test-html/guide.md
-2. 从 spec / core-loop / forbid / require 抽 must-cover 清单
-3. browser_navigate → pages/<slug>/index.html（建议 HTTP 服务，非 file://）
-4. 逐项手测，记录 ✓/✗
-5. 输出验证结论卡（格式见 test-html/SKILL.md）
-6. 未通过 → 回 Step 2 修复 → 再测
+1. Read test-html/SKILL.md
+2. 按 must-cover 清单验证，输出验证结论卡
+3. 未通过 → 回 Step 2 修复 → 再测
 ```
 
-### 3.2 闸门
-
-- **core-loop 第一条未测通** → 不得交付
-- spec 中 `forbid` 项违反 → 不得交付
-
-### 3.3 验证结论卡（必填）
+### Step 3 自检
 
 ```
-## 验证结论
-- 状态：✓ 完全通过 / ⚠ 部分通过 / ✗ 未通过
-- 需求覆盖：N/M 项
-  - [1] <条目>：✓ / ✗
-- 下一步：修复 / 补测 / 完成交付
-```
-
-### 3.4 Step 3 自检
-
-```
-□ 已 Read test-html/guide.md
-□ core-loop 已端到端手测
+□ 已 Read test-html/SKILL.md
+□ core-loop 已验证
 □ 验证结论卡已输出
 □ 状态为 ✓ 或已说明遗留项
 ```
