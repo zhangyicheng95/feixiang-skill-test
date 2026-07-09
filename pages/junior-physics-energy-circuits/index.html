@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>初中历史·辛亥革命</title>
-  <!-- spec: requirements=完整初中历史课件,单选8题同页逐题,多选题; core-loop=P8选题→确认→解析→下一题×8→结果;P9多选→提交→解析;P7拖拽分类 -->
-  <!-- fx-style: palette=FX-橙(B-05); radius=16; keyword=辛亥革命; source=hash; version=v3 -->
+  <title>九年级物理复习：内能、热机与电路基础</title>
+  <!-- spec: requirements=九年级物理复习,内能/热机/电路; core-loop=P8拖拽;P9单选6题逐题;P10多选 -->
+  <!-- fx-style: palette=FX-青(B-08); radius=16; keyword=内能; source=理化学科; version=v3 -->
 </head>
 <body>
 
@@ -14,25 +14,28 @@
 <template class="page-shared">
   <style>
     :root {
-      --bg: #FFF3D9;
-      --text: #3D3334;
-      --primary: #F8981F;
-      --accent: #9D3E00;
-      --card: #FFFFFF;
-      --card-border: rgba(0, 0, 0, 0.30);
-      --demo-bg: #FFFFFF;
-      --demo-border: rgba(0, 0, 0, 0.30);
-      --demo-grid: #ECECEC;
-      --btn-bg: #F8981F;
-      --btn-fg: #000;
-      --btn-2nd-bg: #FFF6E3;
-      --btn-2nd-fg: #000;
-      --success: #549B22;
+      --bg: #FFFFFF;
+      --text: #00404D;
+      --primary: #00404D;
+      --accent: #137F8B;
+      --card: #D3F6F4;
+      --card-border: rgba(0, 64, 77, 0.30);
+      --demo-bg: #D3F6F4;
+      --demo-border: #93BFC2;
+      --demo-grid: #DBF1F0;
+      --btn-bg: #00404D;
+      --btn-fg: #FFFFFF;
+      --btn-2nd-bg: #ECFCFB;
+      --btn-2nd-fg: #00404D;
+      --success: #137F8B;
       --error: #C0392B;
       --radius: 16px;
       --font: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
       --stage-base: #eef1f5;
-      --canvas-bg: color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+      --canvas-bg: color-mix(in srgb, var(--card) 42%, var(--stage-base) 58%);
+      --fx-a: #35E9FE;
+      --fx-b: #DF9012;
+      --fx-c: #00404D;
     }
     html, body {
       font-family: var(--font); color: var(--text);
@@ -47,7 +50,7 @@
     .page-title {
       font-size: 28px; font-weight: 700; color: var(--primary);
       margin-bottom: 14px; padding-left: 14px;
-      border-left: 6px solid var(--primary); line-height: 1.2; flex-shrink: 0;
+      border-left: 6px solid var(--accent); line-height: 1.2; flex-shrink: 0;
     }
     .card {
       background: var(--card); border: 2px solid var(--card-border);
@@ -66,8 +69,12 @@
     }
     ul.compact { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.75; }
     .tag-pill {
-      display: inline-block; padding: 4px 12px; border: 2px solid var(--primary);
-      border-radius: var(--radius); font-size: 13px; background: var(--bg); margin-right: 6px;
+      display: inline-block; padding: 4px 12px; border: 2px solid var(--accent);
+      border-radius: var(--radius); font-size: 13px; background: var(--btn-2nd-bg); margin-right: 6px;
+    }
+    .fx-block {
+      border-radius: calc(var(--radius) / 2); border: 3px solid var(--primary);
+      padding: 10px 14px; font-size: 14px; font-weight: 600;
     }
   </style>
 </template>
@@ -77,20 +84,20 @@
   <style>
     .cover {
       height: 100%; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; background: var(--primary); color: #000; text-align: center;
+      justify-content: center; background: var(--primary); color: #fff; text-align: center;
       padding: 36px; box-sizing: border-box;
     }
-    .cover h1 { font-size: 42px; margin: 0 0 12px; font-weight: 800; }
-    .cover .sub { font-size: 18px; margin: 0 0 20px; line-height: 1.6; }
+    .cover h1 { font-size: 38px; margin: 0 0 12px; font-weight: 800; line-height: 1.25; }
+    .cover .sub { font-size: 17px; margin: 0 0 20px; line-height: 1.6; opacity: 0.9; }
     .cover .meta {
       font-size: 16px; background: var(--btn-2nd-bg); color: var(--text);
       border: 2px solid var(--accent); padding: 10px 24px; border-radius: var(--radius);
     }
   </style>
   <div class="cover">
-    <h1>辛亥革命</h1>
-    <p class="sub">推翻帝制 · 走向共和 · 近代中国的伟大转折</p>
-    <div class="meta">初中历史 · 八年级 · 人教版</div>
+    <h1>九年级物理复习</h1>
+    <p class="sub">内能 · 热机 · 电路基础</p>
+    <div class="meta">初中物理 · 九年级 · 人教版</div>
   </div>
 </template>
 
@@ -103,220 +110,231 @@
       background: var(--card); border: 2px solid var(--card-border); border-radius: var(--radius);
     }
     .toc-num {
-      width: 32px; height: 32px; background: var(--primary); color: #000;
+      width: 32px; height: 32px; background: var(--accent); color: #fff;
       border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 14px; flex-shrink: 0; border: 2px solid var(--accent);
+      font-weight: 700; font-size: 14px; flex-shrink: 0; border: 2px solid var(--primary);
     }
     .toc-text { font-size: 15px; line-height: 1.4; }
-    .toc-text small { color: #7a6a5a; font-size: 12px; }
+    .toc-text small { color: #5a8a90; font-size: 12px; }
   </style>
   <div class="page-container">
     <div class="page-title">本课目录</div>
     <div class="toc">
-      <div class="toc-item"><span class="toc-num">1</span><span class="toc-text">清末危机与革命酝酿<br><small>Background</small></span></div>
-      <div class="toc-item"><span class="toc-num">2</span><span class="toc-text">武昌起义与民国成立<br><small>Revolution</small></span></div>
-      <div class="toc-item"><span class="toc-num">3</span><span class="toc-text">历史意义与局限性<br><small>Significance</small></span></div>
-      <div class="toc-item"><span class="toc-num">4</span><span class="toc-text">史料分析例题<br><small>Example</small></span></div>
-      <div class="toc-item"><span class="toc-num">5</span><span class="toc-text">拖拽分类练习<br><small>Drag &amp; Drop</small></span></div>
-      <div class="toc-item"><span class="toc-num">6</span><span class="toc-text">单选题<br><small>Single Choice</small></span></div>
-      <div class="toc-item"><span class="toc-num">7</span><span class="toc-text">多选题<br><small>Multiple Choice</small></span></div>
-      <div class="toc-item"><span class="toc-num">8</span><span class="toc-text">课堂小结<br><small>Summary</small></span></div>
+      <div class="toc-item"><span class="toc-num">1</span><span class="toc-text">内能的概念<br><small>Internal Energy</small></span></div>
+      <div class="toc-item"><span class="toc-num">2</span><span class="toc-text">热量与比热容<br><small>Heat &amp; Specific Heat</small></span></div>
+      <div class="toc-item"><span class="toc-num">3</span><span class="toc-text">热机与效率<br><small>Heat Engine</small></span></div>
+      <div class="toc-item"><span class="toc-num">4</span><span class="toc-text">电路基础<br><small>Circuits</small></span></div>
+      <div class="toc-item"><span class="toc-num">5</span><span class="toc-text">热量计算例题<br><small>Example</small></span></div>
+      <div class="toc-item"><span class="toc-num">6</span><span class="toc-text">拖拽分类练习<br><small>Drag &amp; Drop</small></span></div>
+      <div class="toc-item"><span class="toc-num">7</span><span class="toc-text">单选题<br><small>Single Choice</small></span></div>
+      <div class="toc-item"><span class="toc-num">8</span><span class="toc-text">多选题 · 小结<br><small>Quiz &amp; Summary</small></span></div>
     </div>
-    <div class="tip" style="margin-top:12px;">第 8 页单选共 8 题，同页逐题切换，每题确认后出解析；第 9 页为多选题。</div>
+    <div class="tip" style="margin-top:12px;">第 9 页单选共 6 题，同页逐题切换；第 10 页为多选题。</div>
   </div>
 </template>
 
-<!-- P3 讲解：清末危机 -->
-<template class="page-data" data-id="3" data-name="清末危机与革命酝酿">
+<!-- P3 内能 -->
+<template class="page-data" data-id="3" data-name="内能的概念">
+  <style>
+    .dual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .dual .fx-block { text-align: center; }
+    .fx-block--a { background: var(--fx-a); border-color: var(--primary); color: var(--primary); }
+    .fx-block--b { background: var(--fx-b); border-color: var(--accent); color: #fff; }
+  </style>
   <div class="page-container">
-    <div class="page-title">讲解：清末内外危机与革命酝酿</div>
+    <div class="page-title">讲解：内能的概念</div>
     <div class="card" style="font-size:16px;font-weight:700;color:var(--accent);text-align:center;">
-      民族危机加深 + 清政府腐朽无能 → 资产阶级革命思想传播
+      内能 = 物体内所有分子热运动的动能与分子势能的总和
     </div>
     <div class="card">
-      <div style="display:flex;gap:16px;align-items:flex-start;">
-        <div style="flex:1;min-width:0;">
-          <p style="margin:0 0 8px;font-size:15px;"><strong>时代背景：</strong>甲午战争失败、《辛丑条约》签订后，中国<strong>完全沦为半殖民地半封建社会</strong>，民族危机空前严重。</p>
-          <ul class="compact">
-            <li><span class="tag-pill">1894</span> 孙中山在檀香山创立<strong>兴中会</strong>，提出「驱除鞑虏，恢复中国，创立合众政府」</li>
-            <li><span class="tag-pill">1905</span> 孙中山在日本东京成立<strong>中国同盟会</strong>，纲领为「驱除鞑虏，恢复中华，创立民国，平均地权」</li>
-            <li><span class="tag-pill">三民主义</span> 民族主义、民权主义、民生主义，是孙中山领导革命的<strong>指导思想</strong></li>
-            <li><span class="tag-pill">武装起义</span> 广州起义、黄花岗起义等多次起义虽失败，但动摇了清朝统治根基</li>
-          </ul>
-        </div>
-        <figure style="margin:0;flex:0 0 176px;text-align:center;">
-          <img
-            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80"
-            alt="公网图片联网测试"
-            loading="lazy"
-            style="width:176px;height:120px;object-fit:cover;display:block;border:3px solid var(--accent);border-radius:8px;background:#f5efe6;"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-          />
-          <div style="display:none;width:176px;height:120px;border:3px dashed var(--error);border-radius:8px;align-items:center;justify-content:center;color:var(--error);font-size:13px;font-weight:800;line-height:1.5;background:#fff5f5;">图片未加载<br>（外链被拦）</div>
-          <figcaption style="font-size:12px;color:var(--accent);margin-top:5px;font-weight:700;">示例图片 · 公网链接联网测试</figcaption>
-        </figure>
-      </div>
+      <ul class="compact">
+        <li><span class="tag-pill">定义</span> 一切物体都具有内能，<strong>温度越高</strong>，分子运动越剧烈，内能<strong>越大</strong></li>
+        <li><span class="tag-pill">单位</span> 焦耳（J），与功、热量的单位相同</li>
+        <li><span class="tag-pill">易错</span> 0℃ 的物体仍有内能；内能不能用「有无」描述，只能说「大小」</li>
+      </ul>
     </div>
-    <div class="tip"><strong>记忆要点：</strong>同盟会是第一个全国规模的资产阶级革命政党；革命派与维新派、洋务派的根本分歧在于是否推翻清朝、建立共和。</div>
+    <p style="margin:0 0 8px;font-size:14px;font-weight:700;">改变内能的两种方式（等效）：</p>
+    <div class="dual">
+      <div class="fx-block fx-block--a">做功<br><small style="font-weight:400;">如摩擦生热、压缩气体</small></div>
+      <div class="fx-block fx-block--b">热传递<br><small style="font-weight:400;">如加热、冷却</small></div>
+    </div>
+    <div class="tip" style="margin-top:10px;"><strong>记忆要点：</strong>做功和热传递在改变内能上是等效的，但做功是能量转化，热传递是能量转移。</div>
   </div>
 </template>
 
-<!-- P4 讲解：武昌起义 -->
-<template class="page-data" data-id="4" data-name="武昌起义与民国成立">
+<!-- P4 热量与比热容 -->
+<template class="page-data" data-id="4" data-name="热量与比热容">
   <style>
-    .timeline { display: flex; flex-direction: column; gap: 8px; }
-    .tl-item {
-      display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px;
+    .formula {
+      text-align: center; font-size: 22px; font-weight: 800; color: var(--primary);
+      padding: 14px; background: var(--demo-bg); border: 2px solid var(--demo-border);
+      border-radius: var(--radius); margin-bottom: 10px;
+      background-image: linear-gradient(var(--demo-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--demo-grid) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+  </style>
+  <div class="page-container">
+    <div class="page-title">讲解：热量与比热容</div>
+    <div class="formula">Q = cmΔt</div>
+    <div class="card">
+      <ul class="compact">
+        <li><strong>Q</strong> — 吸收或放出的热量（J）</li>
+        <li><strong>c</strong> — 比热容，物质的一种<strong>特性</strong>（J/(kg·℃)）</li>
+        <li><strong>m</strong> — 质量（kg）；<strong>Δt</strong> — 温度变化量（℃）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 6px;font-weight:700;color:var(--accent);">水的比热容较大：c<sub>水</sub> ≈ 4.2×10³ J/(kg·℃)</p>
+      <ul class="compact">
+        <li>相同质量的水和其他物质升高相同温度，水吸收的热量更多</li>
+        <li>应用：用水做冷却剂、沿海地区昼夜温差小</li>
+      </ul>
+    </div>
+    <div class="tip"><strong>辨析：</strong>热量是过程量，只能说物体「吸收」或「放出」热量，不能说物体「含有」热量。</div>
+  </div>
+</template>
+
+<!-- P5 热机 -->
+<template class="page-data" data-id="5" data-name="热机与效率">
+  <style>
+    .stroke-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .stroke {
+      text-align: center; padding: 10px 6px; font-size: 13px; font-weight: 700;
       background: var(--card); border: 2px solid var(--card-border); border-radius: var(--radius);
     }
-    .tl-date {
-      flex-shrink: 0; width: 110px; font-weight: 700; font-size: 13px;
-      color: var(--accent); padding-top: 2px;
-    }
-    .tl-body { font-size: 14px; line-height: 1.55; }
-    .tl-body strong { color: var(--primary); }
+    .stroke span { display: block; font-size: 11px; font-weight: 400; color: var(--accent); margin-top: 4px; }
+    .stroke--on { background: var(--fx-a); border-color: var(--primary); }
   </style>
   <div class="page-container">
-    <div class="page-title">讲解：武昌起义与中华民国成立</div>
-    <div class="timeline">
-      <div class="tl-item">
-        <div class="tl-date">1911.10.10</div>
-        <div class="tl-body"><strong>武昌起义</strong>爆发。湖北新军工程营打响第一枪，起义军迅速占领武昌，成立湖北军政府，推举黎元洪为都督。因 1911 年为农历辛亥年，故称<strong>辛亥革命</strong>。</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">1911.11—12</div>
-        <div class="tl-body">全国十余省纷纷响应，清朝统治土崩瓦解。南方革命政权与北方清政府形成对峙局面。</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">1912.1.1</div>
-        <div class="tl-body">孙中山在南京宣誓就职，<strong>中华民国临时政府</strong>成立，定都南京，改用公历，以中华民国纪年。</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">1912.3</div>
-        <div class="tl-body">临时参议院颁布<strong>《中华民国临时约法》</strong>，是中国历史上第一部具有资产阶级共和国宪法性质的重要文件。</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">1912.2.12</div>
-        <div class="tl-body">清帝溥仪退位，清朝统治结束，<strong>中国两千多年封建帝制终结</strong>。</div>
-      </div>
-    </div>
-    <div class="tip" style="margin-top:10px;"><strong>注意：</strong>武昌起义具有偶然性（原计划推迟却因意外提前），但辛亥革命的胜利具有历史必然性。</div>
-  </div>
-</template>
-
-<!-- P5 分析：意义与局限 -->
-<template class="page-data" data-id="5" data-name="历史意义与局限性">
-  <style>
-    .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .cmp-card h4 { margin: 0 0 6px; color: var(--primary); font-size: 15px; }
-    .cmp-card p, .cmp-card ul { margin: 0; font-size: 14px; line-height: 1.55; }
-    .cmp-card ul { padding-left: 18px; }
-    .discuss { font-size: 14px; line-height: 1.6; }
-  </style>
-  <div class="page-container">
-    <div class="page-title">分析：辛亥革命的历史意义与局限性</div>
-    <div class="cmp-grid">
-      <div class="card cmp-card">
-        <h4>历史意义（功绩）</h4>
-        <ul>
-          <li>推翻了清王朝，结束了两千多年封建帝制</li>
-          <li>建立了资产阶级共和国</li>
-          <li>使民主共和观念深入人心</li>
-          <li>为民族资本主义发展创造了条件</li>
-        </ul>
-      </div>
-      <div class="card cmp-card">
-        <h4>局限性（不足）</h4>
-        <ul>
-          <li>没有改变中国半殖民地半封建社会的性质</li>
-          <li>没有完成反帝反封建的历史任务</li>
-          <li>革命果实被袁世凯窃取</li>
-          <li>未充分发动和依靠广大人民群众</li>
-        </ul>
-      </div>
-    </div>
-    <div class="card discuss" style="margin-top:10px;">
-      <p style="margin:0 0 6px;"><strong>讨论 1：</strong>为什么说辛亥革命是一次「不彻底的资产阶级民主革命」？</p>
-      <p style="margin:0 0 8px;"><strong>讨论 2：</strong>孙中山说「革命尚未成功，同志仍须努力」，这句话反映了什么？</p>
-      <p style="margin:0;font-size:13px;color:var(--accent);">提示：从革命性质、革命任务是否完成、革命成果是否巩固三个角度思考。</p>
-    </div>
-  </div>
-</template>
-
-<!-- P6 例题 -->
-<template class="page-data" data-id="6" data-name="史料分析例题">
-  <style>
-    .source {
-      font-size: 14px; line-height: 1.7; font-style: italic;
-      border-left: 4px solid var(--accent); padding-left: 12px; margin-bottom: 8px;
-    }
-    .step { font-size: 14px; line-height: 1.65; margin-bottom: 8px; padding-left: 12px; border-left: 4px solid var(--primary); }
-    .wrong { color: var(--error); text-decoration: line-through; }
-  </style>
-  <div class="page-container">
-    <div class="page-title">例题精讲：史料分析</div>
+    <div class="page-title">讲解：热机与热机效率</div>
     <div class="card">
-      <p style="margin:0 0 8px;font-weight:700;">材料：</p>
-      <div class="source">「中华民国之主权，属于国民全体。」「中华民国国民一律平等，享有人身、居住、言论、出版、集会、结社等自由。」<br>——摘自《中华民国临时约法》</div>
-      <p style="margin:8px 0 0;font-size:15px;"><strong>问题：</strong>上述材料体现了什么政治思想？该文件在中国近代史上有什么地位？</p>
+      <p style="margin:0 0 8px;font-size:15px;"><strong>热机</strong>：将燃料的<strong>化学能</strong>转化为<strong>内能</strong>，再转化为<strong>机械能</strong>的装置。</p>
+      <p style="margin:0;font-size:14px;">四冲程汽油机（一个工作循环）：</p>
+    </div>
+    <div class="stroke-grid">
+      <div class="stroke">吸气冲程<span>进气门开</span></div>
+      <div class="stroke">压缩冲程<span>机械能→内能</span></div>
+      <div class="stroke stroke--on">做功冲程<span>内能→机械能</span></div>
+      <div class="stroke">排气冲程<span>排气门开</span></div>
+    </div>
+    <div class="card" style="margin-top:10px;">
+      <p style="margin:0;font-size:15px;text-align:center;font-weight:700;">η = Q<sub>有</sub> / Q<sub>放</sub> × 100%</p>
+      <p style="margin:6px 0 0;font-size:13px;">热机效率永远小于 100%，因为总有能量以废热等形式散失。</p>
+    </div>
+    <div class="tip"><strong>关键：</strong>做功冲程是燃气膨胀推动活塞，内能转化为机械能；压缩冲程相反。</div>
+  </div>
+</template>
+
+<!-- P6 电路基础 -->
+<template class="page-data" data-id="6" data-name="电路基础">
+  <style>
+    .cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cmp h4 { margin: 0 0 6px; color: var(--accent); font-size: 15px; }
+    .cmp ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; }
+    .circuit-svg { display: block; margin: 0 auto 8px; }
+  </style>
+  <div class="page-container">
+    <div class="page-title">讲解：电路基础</div>
+    <div class="card" style="text-align:center;font-weight:700;font-size:18px;">I = U / R</div>
+    <div class="cmp">
+      <div class="card" style="margin:0;">
+        <h4>串联电路</h4>
+        <ul>
+          <li>电流处处相等：I = I₁ = I₂</li>
+          <li>总电压等于各部分电压之和</li>
+          <li>总电阻等于各电阻之和</li>
+        </ul>
+      </div>
+      <div class="card" style="margin:0;">
+        <h4>并联电路</h4>
+        <ul>
+          <li>各支路电压相等：U = U₁ = U₂</li>
+          <li>总电流等于各支路电流之和</li>
+          <li>总电阻的倒数等于各电阻倒数之和</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <svg class="circuit-svg" width="280" height="80" viewBox="0 0 280 80" aria-hidden="true">
+        <rect x="10" y="30" width="50" height="24" rx="6" fill="#35E9FE" stroke="#00404D" stroke-width="2"/>
+        <text x="35" y="46" text-anchor="middle" font-size="11" fill="#00404D">电源</text>
+        <line x1="60" y1="42" x2="100" y2="42" stroke="#00404D" stroke-width="2"/>
+        <circle cx="130" cy="42" r="18" fill="#DF9012" stroke="#00404D" stroke-width="2"/>
+        <text x="130" y="46" text-anchor="middle" font-size="10" fill="#fff">L</text>
+        <line x1="148" y1="42" x2="200" y2="42" stroke="#00404D" stroke-width="2"/>
+        <line x1="200" y1="42" x2="200" y2="65" stroke="#00404D" stroke-width="2"/>
+        <line x1="200" y1="65" x2="10" y2="65" stroke="#00404D" stroke-width="2"/>
+        <line x1="10" y1="65" x2="10" y2="54" stroke="#00404D" stroke-width="2"/>
+      </svg>
+      <p style="margin:0;font-size:13px;text-align:center;color:var(--accent);">简单串联电路示意图</p>
+    </div>
+    <div class="tip"><strong>测量：</strong>电流表串联、电压表并联；注意正负接线柱与量程选择。</div>
+  </div>
+</template>
+
+<!-- P7 例题 -->
+<template class="page-data" data-id="7" data-name="热量计算例题">
+  <style>
+    .step { font-size: 14px; line-height: 1.65; margin-bottom: 8px; padding-left: 12px; border-left: 4px solid var(--accent); }
+  </style>
+  <div class="page-container">
+    <div class="page-title">例题精讲：热量计算</div>
+    <div class="card">
+      <p style="margin:0 0 8px;font-weight:700;">题目：</p>
+      <p style="margin:0;font-size:15px;">将 2 kg 的水从 20℃ 加热到 80℃，已知 c<sub>水</sub> = 4.2×10³ J/(kg·℃)，求水吸收的热量。</p>
     </div>
     <div class="card">
       <p style="margin:0 0 8px;font-weight:700;">解答过程：</p>
-      <div class="step"><strong>Step 1</strong> 抓关键词「主权属于国民全体」「一律平等」「自由」→ 体现<strong>民主共和</strong>与<strong>资产阶级民主自由</strong>思想</div>
-      <div class="step"><strong>Step 2</strong> 联系背景：1912 年中华民国成立，为巩固革命成果而颁布</div>
-      <div class="step"><strong>Step 3</strong> 定位地位：中国历史上<strong>第一部</strong>具有资产阶级共和国宪法性质的重要文件</div>
-      <p style="margin:8px 0 0;font-size:13px;"><strong>易错点：</strong><span class="wrong">《钦定宪法大纲》</span>是清末预备立宪的纲领，维护君主专制；<span class="wrong">《共同纲领》</span>是 1949 年新中国成立初期的临时宪法。</p>
+      <div class="step"><strong>已知</strong> m = 2 kg，t₁ = 20℃，t₂ = 80℃，c = 4.2×10³ J/(kg·℃)</div>
+      <div class="step"><strong>求</strong> Q<sub>吸</sub></div>
+      <div class="step"><strong>解</strong> Δt = t₂ − t₁ = 80℃ − 20℃ = 60℃</div>
+      <div class="step">Q<sub>吸</sub> = cmΔt = 4.2×10³ × 2 × 60 = <strong>5.04×10⁵ J</strong></div>
     </div>
-    <div class="tip"><strong>参考答案：</strong>体现了民主共和、主权在民的思想；它是中国历史上第一部具有资产阶级共和国宪法性质的重要文件。</div>
+    <div class="tip"><strong>答：</strong>水吸收的热量为 5.04×10⁵ J。注意 Δt 是温度变化量，不是末温度。</div>
   </div>
 </template>
 
-<!-- P7 拖拽练习 -->
-<template class="page-data" data-id="7" data-name="拖拽练习">
+<!-- P8 拖拽 -->
+<template class="page-data" data-id="8" data-name="拖拽练习">
   <style>
     .drag-area { display: flex; gap: 10px; flex: 1; min-height: 0; }
     .pool {
-      width: 160px; display: flex; flex-direction: column; gap: 6px;
+      width: 150px; display: flex; flex-direction: column; gap: 6px;
       padding: 10px; background: var(--demo-bg); border: 2px dashed var(--demo-border);
       border-radius: var(--radius); min-height: 180px;
     }
     .pool-title { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
     .drop-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
     .drop-zone {
-      flex: 1; min-height: 60px; padding: 8px;
+      flex: 1; min-height: 52px; padding: 8px;
       border: 2px solid var(--card-border); border-radius: var(--radius);
       background: var(--bg); display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start;
     }
-    .drop-zone.over { border-color: var(--primary); background: #fff; }
+    .drop-zone.over { border-color: var(--accent); background: #fff; }
     .drop-zone h4 { width: 100%; margin: 0 0 4px; font-size: 13px; color: var(--primary); }
     .chip {
-      padding: 6px 10px; font-size: 13px; background: var(--btn-2nd-bg); color: var(--text);
+      padding: 6px 10px; font-size: 12px; background: var(--btn-2nd-bg); color: var(--text);
       border: 2px solid var(--accent); border-radius: var(--radius); cursor: grab;
       user-select: none; touch-action: none;
     }
     .chip.dragging { opacity: 0.6; cursor: grabbing; }
-    .chip.correct { background: #E8F5E0; border-color: var(--success); }
+    .chip.correct { background: #D3F6F4; border-color: var(--success); }
     .chip.wrong { background: #FDE8E6; border-color: var(--error); }
     .drag-foot { display: flex; align-items: center; gap: 10px; margin-top: 8px; flex-shrink: 0; }
     #dragMsg { flex: 1; font-size: 14px; font-weight: 600; color: var(--primary); }
   </style>
   <div class="page-container">
     <div class="page-title">练习：拖拽分类</div>
-    <p style="margin:0 0 8px;font-size:14px;">将下列史实拖入对应栏目，完成后点「检查答案」。</p>
+    <p style="margin:0 0 8px;font-size:14px;">将概念或现象拖入对应栏目，完成后点「检查答案」。</p>
     <div class="drag-area">
       <div class="pool" id="chipPool" data-interactive>
-        <div class="pool-title">词卡（拖拽）</div>
+        <div class="pool-title">词卡</div>
       </div>
       <div class="drop-col">
-        <div class="drop-zone" data-zone="org" data-interactive>
-          <h4>革命组织</h4>
-        </div>
-        <div class="drop-zone" data-zone="uprising" data-interactive>
-          <h4>武装起义</h4>
-        </div>
-        <div class="drop-zone" data-zone="result" data-interactive>
-          <h4>政治成果</h4>
-        </div>
+        <div class="drop-zone" data-zone="energy" data-interactive><h4>内能</h4></div>
+        <div class="drop-zone" data-zone="engine" data-interactive><h4>热机</h4></div>
+        <div class="drop-zone" data-zone="circuit" data-interactive><h4>电路</h4></div>
       </div>
     </div>
     <div class="drag-foot">
@@ -325,18 +343,18 @@
       <button type="button" class="btn btn-primary" id="dragCheck" data-interactive>检查答案</button>
     </div>
     <div class="tip" style="margin-top:6px;font-size:13px;">
-      <strong>解析：</strong>兴中会、同盟会属于革命组织；武昌起义、黄花岗起义属于武装起义；《中华民国临时约法》、清帝退位属于政治成果。
+      <strong>解析：</strong>摩擦生热、给水加热属于内能；做功冲程、热机效率属于热机；串联电路、欧姆定律属于电路。
     </div>
   </div>
   <script>
     (function () {
       var ITEMS = [
-        { id: 'a', text: '中国同盟会', ans: 'org' },
-        { id: 'b', text: '兴中会', ans: 'org' },
-        { id: 'c', text: '武昌起义', ans: 'uprising' },
-        { id: 'd', text: '黄花岗起义', ans: 'uprising' },
-        { id: 'e', text: '《中华民国临时约法》', ans: 'result' },
-        { id: 'f', text: '清帝退位', ans: 'result' }
+        { id: 'a', text: '摩擦生热', ans: 'energy' },
+        { id: 'b', text: '给水加热', ans: 'energy' },
+        { id: 'c', text: '做功冲程', ans: 'engine' },
+        { id: 'd', text: '热机效率', ans: 'engine' },
+        { id: 'e', text: '串联电路', ans: 'circuit' },
+        { id: 'f', text: '欧姆定律', ans: 'circuit' }
       ];
       var pool = document.getElementById('chipPool');
       var msg = document.getElementById('dragMsg');
@@ -483,57 +501,41 @@
   </script>
 </template>
 
-<!-- P8 单选题（8 题 · 同页逐题切换） -->
-<template class="page-data" data-id="8" data-name="单选题">
+<!-- P9 单选题 -->
+<template class="page-data" data-id="9" data-name="单选题">
   <style>
     .quiz-step { display: flex; flex-direction: column; min-height: 0; }
-    .quiz-step .prog {
-      font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px;
-    }
+    .quiz-step .prog { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
     .quiz-step .bar {
       height: 8px; background: var(--demo-grid); border-radius: 999px; overflow: hidden; margin-bottom: 12px;
       border: 1px solid var(--card-border);
     }
-    .quiz-step .bar i {
-      display: block; height: 100%; background: var(--primary); width: 12.5%; transition: width 0.2s;
-    }
+    .quiz-step .bar i { display: block; height: 100%; background: var(--accent); width: 16.7%; transition: width 0.2s; }
     #scStage { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-    .quiz-step .q {
-      font-size: 15px; font-weight: 700; margin: 0 0 10px; line-height: 1.45;
-    }
+    .quiz-step .q { font-size: 15px; font-weight: 700; margin: 0 0 10px; line-height: 1.45; }
     .quiz-step .opt {
       display: block; width: 100%; text-align: left; margin: 5px 0; padding: 9px 12px;
       border: 2px solid var(--card-border); border-radius: var(--radius);
       background: #fff; cursor: pointer; font-size: 14px; font-family: inherit;
     }
-    .quiz-step .opt.picked { border-color: var(--primary); background: var(--btn-2nd-bg); }
+    .quiz-step .opt.picked { border-color: var(--accent); background: var(--btn-2nd-bg); }
     .quiz-step .opt.correct { border-color: var(--success); color: var(--success); }
     .quiz-step .opt.wrong { border-color: var(--error); color: var(--error); }
     .quiz-step .opt:disabled { cursor: default; opacity: 1; }
-    .quiz-step .explain {
-      margin-top: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.55;
-      border-radius: var(--radius); flex-shrink: 0;
-    }
-    .quiz-step .explain.ok {
-      background: #E8F5E0; border: 2px solid var(--success);
-    }
-    .quiz-step .explain.no {
-      background: #FDE8E6; border: 2px solid var(--error);
-    }
-    .quiz-step .explain strong { color: var(--primary); }
+    .quiz-step .explain { margin-top: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.55; border-radius: var(--radius); flex-shrink: 0; }
+    .quiz-step .explain.ok { background: #D3F6F4; border: 2px solid var(--success); }
+    .quiz-step .explain.no { background: #FDE8E6; border: 2px solid var(--error); }
     .quiz-step .result {
       flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center; padding: 12px;
     }
     .quiz-step .result .score { font-size: 36px; font-weight: 800; color: var(--primary); margin: 8px 0; }
-    .quiz-step .foot {
-      display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-shrink: 0;
-    }
+    .quiz-step .foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-shrink: 0; }
     #scMsg { flex: 1; font-size: 13px; color: var(--primary); font-weight: 600; }
   </style>
   <div class="page-container quiz-step">
     <div class="page-title">练习：单选题</div>
-    <div class="prog">第 <span id="scIdx">1</span> / 8 题 · 每题只选一个</div>
+    <div class="prog">第 <span id="scIdx">1</span> / 6 题 · 每题只选一个</div>
     <div class="bar"><i id="scBar"></i></div>
     <div id="scStage" data-interactive></div>
     <div class="foot">
@@ -545,22 +547,18 @@
   <script>
     (function () {
       var QS = [
-        { stem: '1. 辛亥革命爆发的时间是（　）', opts: [['A', '1898年'], ['B', '1911年'], ['C', '1919年']], ans: 'B',
-          explain: '<strong>答案 B。</strong>1911 年武昌起义爆发，因农历辛亥年得名辛亥革命。1898 年是戊戌变法，1919 年是五四运动。' },
-        { stem: '2. 孙中山领导的第一个革命团体是（　）', opts: [['A', '兴中会'], ['B', '中国同盟会'], ['C', '华兴会']], ans: 'A',
-          explain: '<strong>答案 A。</strong>1894 年孙中山在檀香山创立兴中会。1905 年同盟会成立，是第一个全国规模的资产阶级革命政党。' },
-        { stem: '3. 武昌起义爆发的时间是（　）', opts: [['A', '1911年10月10日'], ['B', '1912年1月1日'], ['C', '1912年2月12日']], ans: 'A',
-          explain: '<strong>答案 A。</strong>1911 年 10 月 10 日湖北新军发动武昌起义。1912 年 1 月 1 日是中华民国成立，2 月 12 日是清帝退位。' },
-        { stem: '4. 中华民国成立时，首任临时大总统是（　）', opts: [['A', '袁世凯'], ['B', '孙中山'], ['C', '黎元洪']], ans: 'B',
-          explain: '<strong>答案 B。</strong>1912 年 1 月 1 日孙中山在南京宣誓就职，任中华民国临时大总统。黎元洪是湖北军政府都督。' },
-        { stem: '5. 辛亥革命的性质是（　）', opts: [['A', '无产阶级革命'], ['B', '资产阶级民主革命'], ['C', '农民起义']], ans: 'B',
-          explain: '<strong>答案 B。</strong>辛亥革命是资产阶级领导的、反帝反封建的民主革命，目标是推翻清朝、建立资产阶级共和国。' },
-        { stem: '6. 《中华民国临时约法》的历史地位是（　）', opts: [['A', '中国第一部具有资产阶级共和国宪法性质的重要文件'], ['B', '洋务运动的行动纲领'], ['C', '维新变法的施政纲领']], ans: 'A',
-          explain: '<strong>答案 A。</strong>1912 年 3 月颁布的《临时约法》是中国历史上第一部具有资产阶级共和国宪法性质的重要文件。' },
-        { stem: '7. 辛亥革命最大的历史功绩是（　）', opts: [['A', '结束了中国两千多年的封建帝制'], ['B', '改变了半殖民地半封建社会性质'], ['C', '实现了民族独立']], ans: 'A',
-          explain: '<strong>答案 A。</strong>辛亥革命推翻了清王朝，结束了两千多年封建帝制，但未改变社会性质，也未完成反帝反封建任务。' },
-        { stem: '8. 中国同盟会成立的地点是（　）', opts: [['A', '日本东京'], ['B', '湖北武昌'], ['C', '江苏南京']], ans: 'A',
-          explain: '<strong>答案 A。</strong>1905 年 8 月，孙中山联合兴中会、华兴会等在日本东京成立中国同盟会。' }
+        { stem: '1. 改变物体内能的方式有（　）', opts: [['A', '只有做功'], ['B', '只有热传递'], ['C', '做功和热传递']], ans: 'C',
+          explain: '<strong>答案 C。</strong>改变内能的方式有两种：做功和热传递，二者等效。' },
+        { stem: '2. 下列物质中，比热容较大、常作冷却剂的是（　）', opts: [['A', '铁'], ['B', '水'], ['C', '砂石']], ans: 'B',
+          explain: '<strong>答案 B。</strong>水的比热容约为 4.2×10³ J/(kg·℃)，比大多数物质大，吸放热能力强。' },
+        { stem: '3. 四冲程汽油机中，将内能转化为机械能的是（　）', opts: [['A', '吸气冲程'], ['B', '压缩冲程'], ['C', '做功冲程']], ans: 'C',
+          explain: '<strong>答案 C。</strong>做功冲程中燃气膨胀推动活塞对外做功；压缩冲程是机械能转化为内能。' },
+        { stem: '4. 串联电路中，关于电流的说法正确的是（　）', opts: [['A', '各处电流相等'], ['B', '各处电流不等'], ['C', '越靠近电源电流越大']], ans: 'A',
+          explain: '<strong>答案 A。</strong>串联电路中电流处处相等：I = I₁ = I₂ = …' },
+        { stem: '5. 公式 Q = cmΔt 中，c 表示（　）', opts: [['A', '热量'], ['B', '比热容'], ['C', '温度']], ans: 'B',
+          explain: '<strong>答案 B。</strong>c 是比热容，表示单位质量物质升高 1℃ 所吸收的热量，是物质的一种特性。' },
+        { stem: '6. 热机效率的计算公式是（　）', opts: [['A', 'η = Q有/Q放 × 100%'], ['B', 'η = Q放/Q有 × 100%'], ['C', 'η = W/m']], ans: 'A',
+          explain: '<strong>答案 A。</strong>热机效率 = 有用功（或有用热量）与燃料完全燃烧放出的热量之比。' }
       ];
       var idx = 0, phase = 'quiz', answers = {}, revealed = {};
       var stage = document.getElementById('scStage');
@@ -646,14 +644,14 @@
       function renderResult() {
         stage.innerHTML = '';
         var ok = score();
-        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 8, raw: ok, max: QS.length }, '*');
+        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 9, raw: ok, max: QS.length }, '*');
         var box = document.createElement('div');
         box.className = 'result';
         box.innerHTML =
           '<p style="margin:0;font-size:16px;">答题完成</p>' +
           '<p class="score">' + ok + ' / ' + QS.length + '</p>' +
           '<p style="margin:0;font-size:14px;line-height:1.6;">' +
-          (ok >= 6 ? '很棒！辛亥革命核心知识掌握不错。' : '建议回顾时间线、重要人物与革命意义。') +
+          (ok >= 4 ? '很棒！内能、热机与电路核心知识掌握不错。' : '建议回顾 Q=cmΔt、热机冲程与欧姆定律。') +
           '</p>' +
           '<button type="button" class="btn btn-primary" id="scRetry" style="margin-top:14px;">重新作答</button>';
         stage.appendChild(box);
@@ -709,8 +707,8 @@
   </script>
 </template>
 
-<!-- P9 多选题 -->
-<template class="page-data" data-id="9" data-name="多选题">
+<!-- P10 多选题 -->
+<template class="page-data" data-id="10" data-name="多选题">
   <style>
     .mc .q { font-size: 14px; font-weight: 700; margin: 0 0 6px; line-height: 1.45; }
     .mc .type { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
@@ -719,8 +717,8 @@
       border: 2px solid var(--card-border); border-radius: var(--radius);
       background: #fff; cursor: pointer; font-size: 13px; font-family: inherit;
     }
-    .mc-opt.picked { border-color: var(--primary); background: var(--btn-2nd-bg); }
-    .mc-opt.correct { border-color: var(--success); background: #E8F5E0; }
+    .mc-opt.picked { border-color: var(--accent); background: var(--btn-2nd-bg); }
+    .mc-opt.correct { border-color: var(--success); background: #D3F6F4; }
     .mc-opt.wrong { border-color: var(--error); background: #FDE8E6; }
     .mc-opt.missed { border-color: var(--accent); border-style: dashed; }
     .mc-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
@@ -729,22 +727,22 @@
   <div class="page-container mc">
     <div class="page-title">练习：多选题</div>
     <p class="type">可选多个答案，选完后点「提交」</p>
-    <p class="q">下列关于辛亥革命的说法，正确的是（　）（多选）</p>
-    <button type="button" class="mc-opt" data-interactive data-v="A">A. 推翻了清朝统治</button>
-    <button type="button" class="mc-opt" data-interactive data-v="B">B. 建立了资产阶级共和国</button>
-    <button type="button" class="mc-opt" data-interactive data-v="C">C. 完成了反帝反封建的历史任务</button>
-    <button type="button" class="mc-opt" data-interactive data-v="D">D. 使民主共和观念深入人心</button>
-    <button type="button" class="mc-opt" data-interactive data-v="E">E. 没有改变中国半殖民地半封建社会的性质</button>
+    <p class="q">下列关于内能、热机和电路的说法，正确的是（　）（多选）</p>
+    <button type="button" class="mc-opt" data-interactive data-v="A">A. 0℃ 的物体没有内能</button>
+    <button type="button" class="mc-opt" data-interactive data-v="B">B. 做功和热传递都能改变物体的内能</button>
+    <button type="button" class="mc-opt" data-interactive data-v="C">C. 热机的做功冲程将内能转化为机械能</button>
+    <button type="button" class="mc-opt" data-interactive data-v="D">D. 串联电路中各处的电流相等</button>
+    <button type="button" class="mc-opt" data-interactive data-v="E">E. 比热容是物质的一种特性</button>
     <div class="mc-foot">
       <span id="mcMsg">已选 0 项，请至少选 2 项再提交</span>
       <button type="button" class="btn btn-2nd" id="mcReset" data-interactive>重做</button>
       <button type="button" class="btn btn-primary" id="mcSubmit" data-interactive>提交</button>
     </div>
-    <div class="tip" id="mcExplain" style="margin-top:8px;font-size:12px;display:none;">解析：A、B、D 是辛亥革命的历史功绩；C 错误，辛亥革命未能完成反帝反封建任务；E 正确，社会性质未变，中国仍是半殖民地半封建社会。</div>
+    <div class="tip" id="mcExplain" style="margin-top:8px;font-size:12px;display:none;">解析：B、C、D、E 正确。A 错误——一切物体都有内能，0℃ 物体仍具有内能。</div>
   </div>
   <script>
     (function () {
-      var CORRECT = { A: true, B: true, D: true, E: true };
+      var CORRECT = { B: true, C: true, D: true, E: true };
       var picked = {};
       var done = false;
       var msg = document.getElementById('mcMsg');
@@ -783,9 +781,9 @@
           else if (should && !isOn) { b.classList.add('missed'); }
           else if (!should && isOn) { b.classList.add('wrong'); }
         });
-        msg.textContent = ok === total ? '全部正确！A、B、D、E 均为正确表述' : '正确 ' + ok + '/' + total + '，绿框为应选项';
+        msg.textContent = ok === total ? '全部正确！B、C、D、E 均为正确表述' : '正确 ' + ok + '/' + total + '，绿框为应选项';
         document.getElementById('mcExplain').style.display = '';
-        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 9, raw: ok, max: total }, '*');
+        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 10, raw: ok, max: total }, '*');
         save();
       }
       document.getElementById('mcSubmit').addEventListener('click', grade);
@@ -812,35 +810,56 @@
   </script>
 </template>
 
-<!-- P10 小结 -->
-<template class="page-data" data-id="10" data-name="课堂小结">
+<!-- P11 小结 -->
+<template class="page-data" data-id="11" data-name="课堂小结">
   <style>
-    .sum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .sum-card h4 { margin: 0 0 8px; color: var(--primary); font-size: 16px; }
-    .sum-card ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.7; }
+    .sum-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .sum-card h4 { margin: 0 0 8px; color: var(--accent); font-size: 15px; }
+    .sum-card ul { margin: 0; padding-left: 16px; font-size: 13px; line-height: 1.65; }
+    .formula-row {
+      display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+      margin-top: 10px; font-size: 14px; font-weight: 700; color: var(--primary);
+    }
+    .formula-row span {
+      padding: 6px 14px; background: var(--demo-bg); border: 2px solid var(--demo-border);
+      border-radius: var(--radius);
+    }
   </style>
   <div class="page-container">
     <div class="page-title">课堂小结</div>
     <div class="sum-grid">
       <div class="card sum-card">
-        <h4>核心知识回顾</h4>
+        <h4>内能</h4>
         <ul>
-          <li>兴中会（1894）→ 同盟会（1905）→ 三民主义</li>
-          <li>武昌起义（1911.10.10）→ 中华民国成立（1912.1.1）</li>
-          <li>《临时约法》· 清帝退位 · 帝制终结</li>
+          <li>分子动能与势能之和</li>
+          <li>做功 / 热传递改变内能</li>
+          <li>Q = cmΔt</li>
         </ul>
       </div>
       <div class="card sum-card">
-        <h4>评价与启示</h4>
+        <h4>热机</h4>
         <ul>
-          <li>功绩：推翻帝制、建立共和、思想解放</li>
-          <li>局限：未改变社会性质、任务未完成</li>
-          <li>启示：民族复兴需要持续探索与奋斗</li>
+          <li>四冲程：吸压做排</li>
+          <li>做功冲程：内能→机械能</li>
+          <li>η = Q有/Q放</li>
+        </ul>
+      </div>
+      <div class="card sum-card">
+        <h4>电路</h4>
+        <ul>
+          <li>I = U / R</li>
+          <li>串联：电流相等</li>
+          <li>并联：电压相等</li>
         </ul>
       </div>
     </div>
+    <div class="formula-row">
+      <span>Q = cmΔt</span>
+      <span>η = Q有/Q放</span>
+      <span>I = U/R</span>
+    </div>
     <div class="tip" style="margin-top:14px;text-align:center;font-size:16px;">
-      <strong>课堂结束。</strong>下节课我们将学习新文化运动与五四运动。
+      <strong>复习完成。</strong>建议结合错题回顾公式与概念辨析。
     </div>
   </div>
 </template>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>水调歌头·明月几时有</title>
+  <!-- spec: requirements=八年级语文·统编版·苏轼水调歌头精读; core-loop=P9单选5题逐题;P10多选 -->
+  <!-- visual: typography=serif-classic(fallback-only); cover=cover-01-center-stack; palette=自选夜墨月金; radius=14; version=v3-latest -->
+</head>
+<body>
+
+<div id="cw-loading" style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui,sans-serif;font-size:18px;color:#999;">加载课件中...</div>
+
+<template class="page-shared">
+  <style>
+    /* CW_TYPOGRAPHY_DECISION:
+     * selectedTypographyPreset=serif-classic;
+     * category=中文宋体;
+     * reason=古诗词精读，正文需稳定可读、标题需书卷感；
+     * resourceMode=fallback-only;
+     * loadedFontFaces=none;
+     * fallbackReady=true;
+     */
+    :root {
+      --cw-courseware-title-font: "Noto Serif SC", "Songti SC", "STSong", serif;
+      --cw-courseware-body-font: "Noto Serif SC", "Songti SC", "STSong", serif;
+      --cw-courseware-label-font: "PingFang SC", "Microsoft YaHei", sans-serif;
+      --cw-courseware-note-font: "Kaiti SC", "STKaiti", "KaiTi", cursive;
+      --cw-courseware-latin-accent-font: "Georgia", "Times New Roman", serif;
+
+      /* 自选配色（夜墨 + 月金 + 暖纸），全课件统一 */
+      --ink: #1b2a4a;
+      --ink-soft: #33456b;
+      --gold: #c8974b;
+      --gold-deep: #a9752b;
+      --paper: #fbf7ee;
+      --paper-2: #f3ebd8;
+      --card-border: rgba(27, 42, 74, 0.22);
+      --success: #2f7d4f;
+      --error: #b23b3b;
+      --radius: 14px;               /* 全课件统一圆角 */
+
+      --stage-base: #eef1f5;
+      --canvas-bg: color-mix(in srgb, var(--paper) 60%, var(--stage-base) 40%);
+    }
+    html, body {
+      margin: 0; color: var(--ink);
+      font-family: var(--cw-courseware-body-font);
+      background: var(--canvas-bg);
+    }
+    .page-container {
+      height: 100%; max-height: 100%; min-height: 0;
+      padding: 26px 38px; box-sizing: border-box;
+      display: flex; flex-direction: column; overflow-y: auto;
+      background: var(--canvas-bg);
+    }
+    .page-title {
+      font-family: var(--cw-courseware-title-font);
+      font-size: 29px; font-weight: 700; color: var(--ink);
+      margin: 0 0 14px; padding-left: 14px; line-height: 1.2; flex-shrink: 0;
+      border-left: 6px solid var(--gold);
+    }
+    .card {
+      background: var(--paper); border: 2px solid var(--card-border);
+      border-radius: var(--radius); padding: 14px 18px; margin-bottom: 10px;
+    }
+    .card.warm { background: var(--paper-2); }
+    ul.compact { margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.8; }
+    ul.compact li { margin-bottom: 4px; }
+    .pill {
+      display: inline-block; padding: 3px 12px; border: 2px solid var(--gold);
+      border-radius: 999px; font-size: 13px; color: var(--gold-deep);
+      background: #fff; margin-right: 6px; font-family: var(--cw-courseware-label-font);
+    }
+    .note {
+      font-family: var(--cw-courseware-note-font);
+      color: var(--ink-soft); font-size: 15px; line-height: 1.7;
+    }
+    .btn {
+      padding: 8px 16px; border-radius: var(--radius); font-weight: 600;
+      cursor: pointer; border: 2px solid var(--card-border);
+      font-size: 14px; font-family: var(--cw-courseware-label-font); background: #fff; color: var(--ink);
+    }
+    .btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+    .btn-gold { background: var(--gold); color: #fff; border-color: var(--gold-deep); }
+    .tip {
+      background: #fff; border: 2px solid var(--gold);
+      border-radius: var(--radius); padding: 10px 14px; font-size: 15px; line-height: 1.6;
+    }
+  </style>
+</template>
+
+<!-- P1 封面（cover-01-center-stack 固定版式，无外链图，CSS 夜空月色装饰） -->
+<template class="page-data" data-id="1" data-name="封面">
+  <style>
+    .cover-page {
+      position: relative; width: 960px; height: 540px;
+      min-width: 960px; max-width: 960px; min-height: 540px; max-height: 540px;
+      flex-shrink: 0; color: #f6efe0; overflow: hidden;
+      background: radial-gradient(120% 90% at 78% 22%, #33456b 0%, #23335a 42%, #16233f 100%);
+    }
+    .cover-page * { box-sizing: border-box; }
+    /* CSS 明月（装饰，非媒体图） */
+    .cover-moon {
+      position: absolute; left: 690px; top: 84px; width: 132px; height: 132px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 34%, #fff7e0 0%, #f2dca0 45%, #e7c877 70%, #d9b45f 100%);
+      box-shadow: 0 0 46px 14px rgba(240, 220, 160, .38);
+    }
+    .cover-cloud {
+      position: absolute; left: 640px; top: 176px; width: 250px; height: 26px; border-radius: 999px;
+      background: rgba(230, 236, 250, .16); filter: blur(2px);
+    }
+    .cover-stars i {
+      position: absolute; width: 3px; height: 3px; border-radius: 50%;
+      background: #fff; opacity: .8;
+    }
+    .cover-copy {
+      position: absolute; left: 163px; top: 168px; width: 634px; height: 150px; text-align: center; z-index: 2;
+    }
+    .cover-title {
+      margin: 0; font-family: var(--cw-courseware-title-font);
+      font-size: 92px; line-height: 100px; font-weight: 700; letter-spacing: 6px;
+      color: #fdf6e6; text-shadow: 0 2px 20px rgba(0,0,0,.35);
+    }
+    .cover-subtitle {
+      margin: 14px 0 0; font-size: 30px; line-height: 34px; font-weight: 400;
+      letter-spacing: 4px; color: var(--gold);
+    }
+    .cover-meta {
+      position: absolute; left: 211px; top: 408px; width: 538px; height: 26px; text-align: center; z-index: 2;
+      font-family: var(--cw-courseware-label-font);
+      font-size: 17px; line-height: 26px; letter-spacing: 1px; color: #d8dce8;
+    }
+    .cover-rule { position: absolute; left: 430px; top: 372px; width: 100px; height: 2px; background: var(--gold); opacity: .7; z-index: 2; }
+  </style>
+  <div class="cover-page" data-cw-role="page-root" data-cover-layout="cover-01-center-stack" data-cover-visual="none">
+    <div class="cover-moon"></div>
+    <div class="cover-cloud"></div>
+    <div class="cover-stars">
+      <i style="left:120px;top:90px"></i><i style="left:200px;top:150px"></i>
+      <i style="left:90px;top:230px"></i><i style="left:300px;top:70px"></i>
+      <i style="left:520px;top:120px"></i><i style="left:860px;top:300px"></i>
+      <i style="left:150px;top:380px"></i><i style="left:760px;top:420px"></i>
+    </div>
+    <header class="cover-copy" data-cw-role="title-block">
+      <h1 class="cover-title">水调歌头</h1>
+      <p class="cover-subtitle">明月几时有</p>
+    </header>
+    <div class="cover-rule"></div>
+    <footer class="cover-meta">统编版语文 · 八年级下册 · 苏轼</footer>
+  </div>
+</template>
+
+<!-- P2 目录 -->
+<template class="page-data" data-id="2" data-name="目录">
+  <style>
+    .toc { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin-top: 6px; }
+    .toc-item {
+      display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+      background: var(--paper); border: 2px solid var(--card-border); border-radius: var(--radius);
+    }
+    .toc-num {
+      width: 34px; height: 34px; background: var(--ink); color: #fff; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-weight: 700; font-size: 15px; font-family: var(--cw-courseware-latin-accent-font);
+    }
+    .toc-text { font-size: 16px; line-height: 1.35; }
+    .toc-text small { display: block; color: var(--ink-soft); font-size: 12px; font-family: var(--cw-courseware-label-font); }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">学习路径</h2>
+    <div class="toc">
+      <div class="toc-item"><div class="toc-num">01</div><div class="toc-text">写作背景<small>苏轼 · 丙辰中秋 · 怀子由</small></div></div>
+      <div class="toc-item"><div class="toc-num">02</div><div class="toc-text">上阕精读<small>问月 · 欲归 · 恋人间</small></div></div>
+      <div class="toc-item"><div class="toc-num">03</div><div class="toc-text">下阕精读<small>怨月 · 悟理 · 致祝愿</small></div></div>
+      <div class="toc-item"><div class="toc-num">04</div><div class="toc-text">名句赏析<small>哲理句 · 祝愿句</small></div></div>
+      <div class="toc-item"><div class="toc-num">05</div><div class="toc-text">情感意境<small>由苦闷到旷达</small></div></div>
+      <div class="toc-item"><div class="toc-num">06</div><div class="toc-text">例题 · 练习<small>赏析示范 + 单选 + 多选</small></div></div>
+    </div>
+  </div>
+</template>
+
+<!-- P3 背景 -->
+<template class="page-data" data-id="3" data-name="写作背景">
+  <div class="page-container">
+    <h2 class="page-title">写作背景</h2>
+    <div class="card">
+      <span class="pill">作者</span>
+      <span style="font-size:16px">苏轼（1037—1101），字子瞻，号东坡居士，北宋文学家，豪放派词人代表。</span>
+    </div>
+    <div class="card warm">
+      <span class="pill">背景</span>
+      <span style="font-size:16px">宋神宗熙宁九年（丙辰，1076）中秋，苏轼在密州任上。政治失意，又与弟弟苏辙（子由）多年未见，欢饮达旦、大醉而作此词。</span>
+    </div>
+    <div class="card">
+      <div class="note">【小序】丙辰中秋，欢饮达旦，大醉，作此篇，兼怀子由。</div>
+    </div>
+    <ul class="compact" style="margin-top:4px">
+      <li>题材：中秋咏月词，借月抒怀。</li>
+      <li>情感基调：由苦闷矛盾走向旷达乐观。</li>
+    </ul>
+  </div>
+</template>
+
+<!-- P4 上阕精读（点击句子展开注释） -->
+<template class="page-data" data-id="4" data-name="上阕精读">
+  <style>
+    .verse { display: flex; flex-direction: column; gap: 8px; }
+    .line { border: 2px solid var(--card-border); border-radius: var(--radius); overflow: hidden; background: var(--paper); }
+    .line .txt { padding: 9px 16px; font-size: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .line .txt .hint { font-size: 12px; color: var(--gold-deep); font-family: var(--cw-courseware-label-font); }
+    .line .exp { display: none; padding: 8px 16px 11px; border-top: 1px dashed var(--card-border); }
+    .line.open .exp { display: block; }
+    .line.open .hint { visibility: hidden; }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">上阕精读 · 问天与归思</h2>
+    <div class="verse" id="v4"></div>
+  </div>
+  <script>
+    (function () {
+      var LINES = [
+        { t: '明月几时有？把酒问青天。', e: '端起酒杯问天：明月何时才有？开篇奇问，豪放而富想象，直入咏月主题。' },
+        { t: '不知天上宫阙，今夕是何年。', e: '不知月宫今晚是何年岁——遥想天上时序，寄托对超脱之境的向往与好奇。' },
+        { t: '我欲乘风归去，又恐琼楼玉宇，高处不胜寒。', e: '想乘风回到天上，又怕月宫太高太冷。"欲……又恐"写出出世与入世的矛盾。' },
+        { t: '起舞弄清影，何似在人间。', e: '月下起舞、清影相随，哪里比得上人间？由天上回落人间，转向对现实的珍视。' }
+      ];
+      var open = {};
+      var box = document.getElementById('v4');
+      LINES.forEach(function (l, i) {
+        var d = document.createElement('div'); d.className = 'line';
+        d.innerHTML = '<div class="txt"><span>' + l.t + '</span><span class="hint">点击看注释</span></div><div class="exp note">' + l.e + '</div>';
+        d.querySelector('.txt').addEventListener('click', function () {
+          d.classList.toggle('open'); open[i] = d.classList.contains('open'); save();
+        });
+        box.appendChild(d);
+      });
+      function save() { window.parent.postMessage({ type: 'saveState', state: { open: open } }, '*'); }
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state && e.data.state.open) {
+          open = e.data.state.open;
+          Array.prototype.forEach.call(box.children, function (d, i) { if (open[i]) d.classList.add('open'); });
+        }
+      });
+    })();
+  </script>
+</template>
+
+<!-- P5 下阕精读（点击句子展开注释） -->
+<template class="page-data" data-id="5" data-name="下阕精读">
+  <style>
+    .verse { display: flex; flex-direction: column; gap: 8px; }
+    .line { border: 2px solid var(--card-border); border-radius: var(--radius); overflow: hidden; background: var(--paper); }
+    .line .txt { padding: 9px 16px; font-size: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .line .txt .hint { font-size: 12px; color: var(--gold-deep); font-family: var(--cw-courseware-label-font); }
+    .line .exp { display: none; padding: 8px 16px 11px; border-top: 1px dashed var(--card-border); }
+    .line.open .exp { display: block; }
+    .line.open .hint { visibility: hidden; }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">下阕精读 · 由怨月到旷达</h2>
+    <div class="verse" id="v5"></div>
+  </div>
+  <script>
+    (function () {
+      var LINES = [
+        { t: '转朱阁，低绮户，照无眠。', e: '月光转过朱红楼阁、低照雕花窗户，照着无法入睡的人。以景写情，暗含离愁。' },
+        { t: '不应有恨，何事长向别时圆？', e: '月本无情，为何偏在人离别时格外圆？以"怨月"写怀人，情致婉转深沉。' },
+        { t: '人有悲欢离合，月有阴晴圆缺，此事古难全。', e: '由个人推及普遍：人事离合如月之圆缺，自古难以两全——转出旷达与人生哲理。' },
+        { t: '但愿人长久，千里共婵娟。', e: '只愿亲人平安长久，纵隔千里也共赏这一轮明月。以美好祝愿收束，境界开阔。' }
+      ];
+      var open = {};
+      var box = document.getElementById('v5');
+      LINES.forEach(function (l, i) {
+        var d = document.createElement('div'); d.className = 'line';
+        d.innerHTML = '<div class="txt"><span>' + l.t + '</span><span class="hint">点击看注释</span></div><div class="exp note">' + l.e + '</div>';
+        d.querySelector('.txt').addEventListener('click', function () {
+          d.classList.toggle('open'); open[i] = d.classList.contains('open'); save();
+        });
+        box.appendChild(d);
+      });
+      function save() { window.parent.postMessage({ type: 'saveState', state: { open: open } }, '*'); }
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state && e.data.state.open) {
+          open = e.data.state.open;
+          Array.prototype.forEach.call(box.children, function (d, i) { if (open[i]) d.classList.add('open'); });
+        }
+      });
+    })();
+  </script>
+</template>
+
+<!-- P6 名句赏析 -->
+<template class="page-data" data-id="6" data-name="名句赏析">
+  <style>
+    .quote { font-family: var(--cw-courseware-title-font); font-size: 20px; color: var(--ink); line-height: 1.5; margin-bottom: 6px; }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">名句赏析</h2>
+    <div class="card">
+      <div class="quote">人有悲欢离合，月有阴晴圆缺，此事古难全。</div>
+      <div style="font-size:15px;line-height:1.7">把人事的悲欢离合与自然的阴晴圆缺并置类比，说明缺憾自古难免，由感伤转为豁达，蕴含深刻的人生哲理。</div>
+    </div>
+    <div class="card warm">
+      <div class="quote">但愿人长久，千里共婵娟。</div>
+      <div style="font-size:15px;line-height:1.7">"婵娟"指明月。超越时空的祝愿：不强求团圆，但求平安长久、共赏明月，把个人思念升华为博大祝福。</div>
+    </div>
+  </div>
+</template>
+
+<!-- P7 情感意境 -->
+<template class="page-data" data-id="7" data-name="情感意境">
+  <style>
+    .flow { display: flex; align-items: stretch; gap: 10px; margin: 6px 0 12px; }
+    .flow .step { flex: 1; background: var(--paper); border: 2px solid var(--card-border); border-radius: var(--radius); padding: 11px 12px; }
+    .flow .step b { color: var(--gold-deep); font-family: var(--cw-courseware-label-font); font-size: 13px; }
+    .flow .step p { margin: 5px 0 0; font-size: 14px; line-height: 1.5; }
+    .flow .arrow { align-self: center; color: var(--gold); font-weight: 700; }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">情感与意境</h2>
+    <div class="flow">
+      <div class="step"><b>苦闷矛盾</b><p>政治失意、与弟分离；"欲乘风归去，又恐高处不胜寒"。</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><b>自我宽解</b><p>由天上回到"何似在人间"，转向对现实生活的珍视。</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><b>旷达祝愿</b><p>"此事古难全""但愿人长久"，情由郁结转为开阔。</p></div>
+    </div>
+    <div class="tip"><b>写法：</b>借景抒情、情景交融——以明月贯穿全篇，由景入情、由情入理，尽显苏词的豪放旷达。</div>
+  </div>
+</template>
+
+<!-- P8 例题 -->
+<template class="page-data" data-id="8" data-name="赏析例题">
+  <style>
+    .steps { counter-reset: s; margin: 0; padding: 0; list-style: none; }
+    .steps li { counter-increment: s; position: relative; padding: 6px 0 6px 34px; font-size: 15px; line-height: 1.6; }
+    .steps li::before {
+      content: counter(s); position: absolute; left: 0; top: 5px; width: 24px; height: 24px;
+      background: var(--ink); color: #fff; border-radius: 8px; text-align: center; line-height: 24px;
+      font-size: 13px; font-family: var(--cw-courseware-latin-accent-font);
+    }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">赏析例题</h2>
+    <div class="card">
+      <b>题：</b>词的结尾"但愿人长久，千里共婵娟"表达了词人怎样的思想感情？
+    </div>
+    <div class="card warm">
+      <b style="font-family:var(--cw-courseware-label-font);font-size:13px;color:var(--gold-deep)">答题思路</b>
+      <ol class="steps" style="margin-top:6px">
+        <li>释句意：只愿人平安长久，即使相隔千里也共赏明月。</li>
+        <li>明情感：对弟弟（及天下离人）的美好祝愿与思念。</li>
+        <li>析境界：不困于一时团圆，转为旷达乐观。</li>
+        <li>联主旨：将个人离愁升华为普世祝福，体现苏词的豪放旷达。</li>
+      </ol>
+    </div>
+  </div>
+</template>
+
+<!-- P9 单选题（逐题闭环 + cwScore id=9） -->
+<template class="page-data" data-id="9" data-name="单选练习">
+  <style>
+    .qwrap { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+    .qbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .qbar .prog { font-family: var(--cw-courseware-label-font); font-size: 13px; color: var(--ink-soft); }
+    .bar { height: 6px; background: var(--paper-2); border-radius: 999px; overflow: hidden; flex: 1; margin-left: 12px; }
+    .bar > i { display: block; height: 100%; background: var(--gold); border-radius: 999px; transition: width .25s; }
+    .stem { font-size: 17px; line-height: 1.5; margin: 6px 0 10px; }
+    .opts { display: flex; flex-direction: column; gap: 8px; }
+    .opt { border: 2px solid var(--card-border); border-radius: var(--radius); padding: 9px 14px; font-size: 15px; cursor: pointer; background: var(--paper); display: flex; gap: 10px; }
+    .opt .k { font-weight: 700; color: var(--ink-soft); font-family: var(--cw-courseware-latin-accent-font); }
+    .opt.sel { border-color: var(--ink); background: #fff; }
+    .opt.right { border-color: var(--success); background: #eef7f0; }
+    .opt.wrong { border-color: var(--error); background: #f9eeee; }
+    .exp { margin-top: 10px; display: none; }
+    .nav { margin-top: auto; display: flex; gap: 10px; justify-content: flex-end; padding-top: 10px; }
+    .result { text-align: center; padding-top: 30px; }
+    .result .score { font-size: 40px; font-weight: 800; color: var(--gold-deep); font-family: var(--cw-courseware-latin-accent-font); }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">课堂练习 · 单选</h2>
+    <div class="qwrap" id="q9"></div>
+  </div>
+  <script>
+    (function () {
+      var QS = [
+        { stem: '《水调歌头·明月几时有》的作者是（　）', options: [{k:'A',t:'李白'},{k:'B',t:'苏轼'},{k:'C',t:'辛弃疾'},{k:'D',t:'李清照'}], ans: 'B', exp: '苏轼，北宋文学家，字子瞻，号东坡居士，豪放派代表。' },
+        { stem: '"把酒问青天"中"把"的意思是（　）', options: [{k:'A',t:'拿、端起'},{k:'B',t:'把握'},{k:'C',t:'阻挡'},{k:'D',t:'将（介词）'}], ans: 'A', exp: '"把酒"即端起酒杯。' },
+        { stem: '"此事古难全"中的"此事"指（　）', options: [{k:'A',t:'天气阴晴'},{k:'B',t:'人的悲欢离合与月的阴晴圆缺'},{k:'C',t:'仕途升迁'},{k:'D',t:'填词作赋'}], ans: 'B', exp: '承上句"人有悲欢离合，月有阴晴圆缺"。' },
+        { stem: '全词结尾流露的主要情感是（　）', options: [{k:'A',t:'悲观绝望'},{k:'B',t:'愤世嫉俗'},{k:'C',t:'旷达与美好祝愿'},{k:'D',t:'及时行乐'}], ans: 'C', exp: '由苦闷转向旷达，以"但愿人长久"的祝愿收束。' },
+        { stem: '本词最突出的写法是（　）', options: [{k:'A',t:'借月抒怀、情景交融'},{k:'B',t:'直抒胸臆、全无写景'},{k:'C',t:'大量用典堆砌'},{k:'D',t:'白描叙事'}], ans: 'A', exp: '以明月贯穿全篇，由景入情、由情入理。' }
+      ];
+      var idx = 0, phase = 'quiz', answers = {}, revealed = {}, reported = false;
+      var box = document.getElementById('q9');
+
+      function save() { window.parent.postMessage({ type: 'saveState', state: { idx: idx, phase: phase, answers: answers, revealed: revealed } }, '*'); }
+      function score() { var ok = 0; QS.forEach(function (q, i) { if (answers[i] === q.ans) ok++; }); return ok; }
+
+      function render() {
+        if (phase === 'result') return renderResult();
+        var q = QS[idx];
+        var pct = Math.round((idx) / QS.length * 100);
+        var h = '<div class="qbar"><span class="prog">第 ' + (idx + 1) + ' / ' + QS.length + ' 题</span><span class="bar"><i style="width:' + pct + '%"></i></span></div>';
+        h += '<div class="stem">' + q.stem + '</div><div class="opts">';
+        q.options.forEach(function (o) { h += '<div class="opt" data-k="' + o.k + '"><span class="k">' + o.k + '</span><span>' + o.t + '</span></div>'; });
+        h += '</div><div class="exp tip" id="exp9"></div>';
+        h += '<div class="nav"><button class="btn" id="prev9">上一题</button><button class="btn btn-primary" id="confirm9">确认答案</button><button class="btn btn-gold" id="next9" style="display:none">' + (idx === QS.length - 1 ? '查看结果' : '下一题') + '</button></div>';
+        box.innerHTML = h;
+
+        var picked = answers[idx], done = revealed[idx];
+        Array.prototype.forEach.call(box.querySelectorAll('.opt'), function (el) {
+          var k = el.dataset.k;
+          if (picked === k) el.classList.add('sel');
+          el.addEventListener('click', function () {
+            if (revealed[idx]) return;
+            answers[idx] = k;
+            Array.prototype.forEach.call(box.querySelectorAll('.opt'), function (x) { x.classList.remove('sel'); });
+            el.classList.add('sel');
+            box.querySelector('#confirm9').disabled = false;
+            save();
+          });
+        });
+        box.querySelector('#confirm9').disabled = !picked;
+        box.querySelector('#prev9').style.display = idx === 0 ? 'none' : '';
+        box.querySelector('#prev9').addEventListener('click', function () { if (idx > 0) { idx--; save(); render(); } });
+        box.querySelector('#confirm9').addEventListener('click', function () { revealed[idx] = true; save(); reveal(); });
+        box.querySelector('#next9').addEventListener('click', function () {
+          if (idx === QS.length - 1) { phase = 'result'; save(); renderResult(); }
+          else { idx++; save(); render(); }
+        });
+        if (done) reveal();
+      }
+
+      function reveal() {
+        var q = QS[idx];
+        Array.prototype.forEach.call(box.querySelectorAll('.opt'), function (el) {
+          var k = el.dataset.k; el.style.cursor = 'default';
+          if (k === q.ans) el.classList.add('right');
+          else if (k === answers[idx]) el.classList.add('wrong');
+        });
+        var exp = box.querySelector('#exp9');
+        exp.style.display = 'block';
+        exp.innerHTML = (answers[idx] === q.ans ? '<b style="color:var(--success)">答对了！</b> ' : '<b style="color:var(--error)">正确答案：' + q.ans + '</b> ') + q.exp;
+        box.querySelector('#confirm9').style.display = 'none';
+        box.querySelector('#next9').style.display = '';
+      }
+
+      function renderResult() {
+        var ok = score();
+        if (!reported) { reported = true; }
+        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 9, raw: ok, max: QS.length }, '*');
+        box.innerHTML = '<div class="result"><div class="score">' + ok + ' / ' + QS.length + '</div>' +
+          '<p style="font-size:16px;margin:10px 0 18px">' + (ok === QS.length ? '全部答对，理解到位！' : (ok >= 3 ? '不错，回看解析巩固薄弱题。' : '再读原文与注释，重做一次吧。')) + '</p>' +
+          '<button class="btn btn-primary" id="redo9">重新作答</button></div>';
+        box.querySelector('#redo9').addEventListener('click', function () {
+          idx = 0; phase = 'quiz'; answers = {}; revealed = {}; reported = false; save(); render();
+        });
+      }
+
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          idx = e.data.state.idx || 0; phase = e.data.state.phase || 'quiz';
+          answers = e.data.state.answers || {}; revealed = e.data.state.revealed || {};
+          render();
+        }
+      });
+      render();
+    })();
+  </script>
+</template>
+
+<!-- P10 多选题（提交判分 + cwScore id=10） -->
+<template class="page-data" data-id="10" data-name="多选练习">
+  <style>
+    .mc-stem { font-size: 17px; line-height: 1.5; margin: 4px 0 10px; }
+    .mc-opts { display: flex; flex-direction: column; gap: 8px; }
+    .mc-opt { border: 2px solid var(--card-border); border-radius: var(--radius); padding: 9px 14px; font-size: 15px; cursor: pointer; background: var(--paper); display: flex; gap: 10px; align-items: flex-start; }
+    .mc-opt .k { font-weight: 700; color: var(--ink-soft); font-family: var(--cw-courseware-latin-accent-font); }
+    .mc-opt.sel { border-color: var(--ink); background: #fff; }
+    .mc-opt.right { border-color: var(--success); background: #eef7f0; }
+    .mc-opt.miss { border-color: var(--gold-deep); background: #fbf3e2; }
+    .mc-opt.wrong { border-color: var(--error); background: #f9eeee; }
+    .mc-nav { margin-top: 12px; display: flex; gap: 10px; justify-content: flex-end; }
+    #mcExp { display: none; margin-top: 10px; }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">课堂练习 · 多选</h2>
+    <div class="mc-stem">关于《水调歌头·明月几时有》，下列表述<b>正确</b>的有（多选）：</div>
+    <div class="mc-opts" id="mc10"></div>
+    <div id="mcExp" class="tip"></div>
+    <div class="mc-nav">
+      <button class="btn btn-primary" id="mcSubmit" disabled>提交</button>
+      <button class="btn" id="mcRedo" style="display:none">重做</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var OPTS = [
+        { k: 'A', t: '这是一首中秋词，作于丙辰中秋，兼怀弟弟子由', ok: true },
+        { k: 'B', t: '"婵娟"在词中指美好的明月（月光）', ok: true },
+        { k: 'C', t: '全词情感由旷达开始、以悲观告终', ok: false },
+        { k: 'D', t: '"起舞弄清影，何似在人间"流露对人间生活的留恋', ok: true },
+        { k: 'E', t: '苏轼是南宋豪放派词人', ok: false }
+      ];
+      var picked = {}, done = false, box = document.getElementById('mc10');
+      var expBox = document.getElementById('mcExp'), submit = document.getElementById('mcSubmit'), redo = document.getElementById('mcRedo');
+
+      function draw() {
+        box.innerHTML = '';
+        OPTS.forEach(function (o) {
+          var el = document.createElement('div'); el.className = 'mc-opt'; el.dataset.k = o.k;
+          el.innerHTML = '<span class="k">' + o.k + '</span><span>' + o.t + '</span>';
+          if (picked[o.k]) el.classList.add('sel');
+          el.addEventListener('click', function () {
+            if (done) return;
+            picked[o.k] = !picked[o.k]; el.classList.toggle('sel');
+            submit.disabled = Object.keys(picked).filter(function (k) { return picked[k]; }).length === 0;
+            save();
+          });
+          box.appendChild(el);
+        });
+      }
+      function save() { window.parent.postMessage({ type: 'saveState', state: { picked: picked, done: done } }, '*'); }
+
+      function grade() {
+        done = true; var ok = 0, total = 0;
+        OPTS.forEach(function (o) { if (o.ok) total++; });
+        Array.prototype.forEach.call(box.querySelectorAll('.mc-opt'), function (el) {
+          var k = el.dataset.k, o = OPTS.filter(function (x) { return x.k === k; })[0];
+          el.style.cursor = 'default';
+          if (o.ok && picked[k]) { el.classList.add('right'); ok++; }
+          else if (o.ok && !picked[k]) el.classList.add('miss');
+          else if (!o.ok && picked[k]) el.classList.add('wrong');
+        });
+        expBox.style.display = 'block';
+        expBox.innerHTML = '<b>应选 A、B、D。</b> C 错：情感由苦闷转向旷达；E 错：苏轼是<b>北宋</b>词人。你答对应选项 ' + ok + ' / ' + total + ' 项。';
+        submit.style.display = 'none'; redo.style.display = '';
+        window.parent.postMessage({ type: 'cwScore', id: (window.__CW_PAGE__ && window.__CW_PAGE__.id) || 10, raw: ok, max: total }, '*');
+        save();
+      }
+
+      submit.addEventListener('click', grade);
+      redo.addEventListener('click', function () { picked = {}; done = false; expBox.style.display = 'none'; submit.style.display = ''; submit.disabled = true; redo.style.display = 'none'; draw(); save(); });
+
+      window.addEventListener('message', function (e) {
+        if (e.data && e.data.type === 'restoreState' && e.data.state) {
+          picked = e.data.state.picked || {}; done = !!e.data.state.done;
+          draw();
+          submit.disabled = Object.keys(picked).filter(function (k) { return picked[k]; }).length === 0;
+          if (done) grade();
+        }
+      });
+      draw();
+    })();
+  </script>
+</template>
+
+<!-- P11 小结 -->
+<template class="page-data" data-id="11" data-name="小结">
+  <style>
+    .sum { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+    .sum .item { background: var(--paper); border: 2px solid var(--card-border); border-radius: var(--radius); padding: 12px 15px; }
+    .sum .item b { color: var(--gold-deep); font-family: var(--cw-courseware-label-font); font-size: 13px; }
+    .sum .item p { margin: 5px 0 0; font-size: 15px; line-height: 1.55; }
+    .end { text-align: center; margin-top: 14px; font-family: var(--cw-courseware-title-font); font-size: 20px; color: var(--ink); letter-spacing: 2px; }
+  </style>
+  <div class="page-container">
+    <h2 class="page-title">课堂小结</h2>
+    <div class="sum">
+      <div class="item"><b>背景</b><p>丙辰中秋，苏轼在密州怀弟子由而作的中秋咏月词。</p></div>
+      <div class="item"><b>结构</b><p>上阕问天、欲归而恋人间；下阕怨月、悟理而致祝愿。</p></div>
+      <div class="item"><b>名句</b><p>人有悲欢离合，月有阴晴圆缺；但愿人长久，千里共婵娟。</p></div>
+      <div class="item"><b>情感</b><p>由苦闷矛盾走向旷达乐观，情景交融、由情入理。</p></div>
+    </div>
+    <div class="end">—— 一轮明月，照见旷达人生 ——</div>
+  </div>
+</template>
+
+<!-- CW_PAGES -->
+
+<script src="./courseware-shell.js"></script>
+
+</body>
+</html>

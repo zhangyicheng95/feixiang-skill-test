@@ -1,7 +1,7 @@
 ---
 description: >-
-  K12 教学页面 MVP：单页/多页生成 Skill 各含完整三步流程（素材→内容→test）。
-  文内路径自 teaching-page-v2/ 后起。
+  K12 教学页面 MVP（v3 · 飞象最新视觉）：单页/多页生成 Skill 各含完整三步流程（素材→内容→test）。多页课件视觉已对齐最新版（字体 preset + 封面版式；配色/圆角每份课件自选并统一，不写死）。
+  文内路径自 teaching-page-v3/ 后起。
 globs: pages/**/*.html
 alwaysApply: true
 ---
@@ -12,8 +12,8 @@ alwaysApply: true
 
 | 类型 | 写法 |
 |------|------|
-| 物理根目录 | `.cursor/skills/teaching-page-v2/`（仅本规则说明用） |
-| Skill 文内引用 | 自 v2 根起：`html-authoring/SKILL.md` |
+| 物理根目录 | `.cursor/skills/teaching-page-v3/`（仅本规则说明用，飞象最新视觉版） |
+| Skill 文内引用 | 自 v3 根起：`html-authoring/SKILL.md` |
 | 产物 | 自仓库根：`pages/<slug>/` |
 
 ## 入口 Skill（含完整三步流程）
@@ -25,12 +25,13 @@ alwaysApply: true
 
 **执行生成任务时 Read 对应入口 Skill 即可**，按其中 Step 1→2→3 顺序走完。
 
-## 辅助 Skill（细则展开）
+## 辅助细则
 
 | 用途 | 路径 |
 |------|------|
-| 素材细则（大纲指南等） | `assets/SKILL.md` |
-| 验收细则（must-cover） | `test-html/SKILL.md` |
+| 单页素材 | `html-authoring/manifest.md` |
+| 多页素材 | `courseware-generator/manifest.md` + `outline-guidance.md` |
+| 验收 | `test-html/SKILL.md` |
 
 ## 路由
 

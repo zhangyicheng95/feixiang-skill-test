@@ -1,0 +1,266 @@
+# math-design 子链路
+
+> 目录：`html-authoring/math-design/`  
+> **仅当** `html-authoring/SKILL.md` 判定为数学场景时启用。
+
+## 文件导航
+
+| 文件 | 用途 | 何时读取 |
+|---|---|---|
+| **workflow.md**（本文件） | 数学视觉工作流 + 布局/字号 | 数学场景**首先读取** |
+| [color-palettes-a.md](color-palettes-a.md) | `html-authoring/math-design/color-palettes-a.md` | Phase 3 选定 A 编号后，**仅读该编号段落** |
+| [color-palettes-b.md](color-palettes-b.md) | `html-authoring/math-design/color-palettes-b.md` | Phase 3 选定 B 编号后，**仅读该编号段落** |
+| [visual-impact.md](visual-impact.md) | `html-authoring/math-design/visual-impact.md` | Phase 4 编写演示区前 |
+
+## 色彩选用工作流（Color Selection）
+
+```
+Phase 1 ┃ 场景确认（已由 html-authoring 路由判定为数学）
+Phase 2 ┃ 学段判定 → 选择 pool
+  - 小学 1-6 年级 / 低段算术几何 → pool A（11 套）
+  - 初中 7-9 / 高中 10-12 / 代数·函数·三角·数列 → pool B（20 套）
+  - 年级未明示：按知识点难度推断；仍不确定 → 默认 pool B
+
+Phase 3 ┃ 机械抽选 1 套（⚠️ 禁止主观挑选、禁止照搬示例编号、禁止跳号）
+
+  **抽选池（完整覆盖，排序无关）：**
+  - pool A → A-01 ~ A-11（11 套）
+  - pool B → B-01 ~ B-20（20 套）
+  - 所有编号同权参与抽选；A-01 居首、B-12 居中**仅是索引**，与命中概率无关
+  - 严禁基于「示例用过 X」「A-01 / B-12 太常见」「某编号看着稳妥」等理由跳号
+
+  **Step 1 — 提取 keyword**
+  - keyword = 用户 prompt 中最核心的数学知识点词（如「勾股定理」「鸡兔同笼」「圆锥」）
+  - 取最短能描述本课的词；无明显知识点 → prompt 前 4 字
+
+  **Step 2 — 查 [knowledge-palette-map] 表（优先级 1，必查）**
+
+  下表为 30 个常见知识点的预算定 palette。**Agent 必须先按 keyword 在表中精确匹配；命中即采用，禁止主观换号。** 表覆盖 A pool 8+ 套、B pool 13+ 套，已分散，A-01/B-12 与其它编号同权。
+
+  | keyword | pool | palette_id | keyword | pool | palette_id |
+  |---|---|---|---|---|---|
+  | 鸡兔同笼 | A | A-06 | 勾股定理 | B | B-04 |
+  | 表内乘法 | A | A-03 | 一次函数 | B | B-09 |
+  | 圆的周长 | A | A-08 | 二次函数 | B | B-14 |
+  | 长方体 | A | A-04 | 方程组 | B | B-07 |
+  | 平行四边形 | A | A-09 | 等差数列 | B | B-11 |
+  | 平均数 | A | A-02 | 阴影面积 | B | B-15 |
+  | 植树问题 | A | A-07 | 数轴 | B | B-20 |
+  | 相遇问题 | A | A-10 | 一元一次方程 | B | B-03 |
+  | 圆锥 | A | A-05 | 因式分解 | B | B-17 |
+  | 面动成体 | A | A-11 | 圆周角 | B | B-05 |
+  | 概率（小学） | A | A-06 | 概率（初高中） | B | B-18 |
+  | 单位进率 | A | A-04 | 绝对值 | B | B-12 |
+  | 分数加减 | A | A-09 | 全等三角形 | B | B-06 |
+  | 时分秒 | A | A-02 | 立体几何 | B | B-10 |
+  | 平移旋转 | A | A-05 | 三角函数 | B | B-13 |
+  | 表面积展开图 | A | A-01 | 数列求和 | B | B-08 |
+
+  - **精确匹配命中即用**，禁止替换
+  - 同义词归一：「长方体表面积」→「长方体」；「相遇」→「相遇问题」；不必拘泥完整原句
+
+  **Step 3 — 算式兜底（仅当 Step 2 未命中时使用）**
+
+  ```
+  c1 = ord(keyword 第 1 字符)
+  c2 = ord(keyword 末字符)
+  hash = c1 × 7 + c2 × 5 + len(prompt)
+  pool=A → palette_id = A-{(hash mod 11) + 1:02d}
+  pool=B → palette_id = B-{(hash mod 20) + 1:02d}
+  ```
+
+  - 不会算 Unicode codepoint 时：选**与 keyword 最接近**的表中条目使用其 palette；严禁直接选 A-01 / B-12 / 任何"安全"编号
+
+  **Step 4 — 声明输出（Phase 4 前必写）**
+
+  必须在推理中显式输出**完整 4 项**，缺一即失败：
+  ```
+  抽选 ┃ keyword=<词>  pool=<A|B>  source=<table|hash>  palette_id=<X-XX>
+  ```
+
+  HTML 首行注释中的 palette **必须与本声明一致**。
+
+  **修改已有 HTML 时**：保留原 palette_id，不重新抽选（除非用户明确要求换配色）。
+
+Phase 4 ┃ 按需读取（禁止全量加载 31 套）
+  - **必须使用 `Read` 打开** `html-authoring/math-design/` 下对应文件
+  - pool=A → 读取 `html-authoring/math-design/color-palettes-a.md` 中对应编号段落
+  - pool=B → 读取 `html-authoring/math-design/color-palettes-b.md` 中对应编号段落
+  - read visual-impact.md
+  - 将选定色板的 hex **映射**为 CSS 变量：`--primary` `--secondary` `--accent` `--background` `--foreground`
+
+Phase 5 ┃ 交付硬约束（**缺一即失败，禁止 terminate**）
+  ① **palette 注释（最高优先级）**
+     - `create_file` / `edit_file` 后，HTML **第一行**（`<!DOCTYPE html>` 之前）必须是：
+       `<!-- html-authoring:math-design palette=<id> layout=<L1|L2|L3> -->`
+     - 替换为 Phase 3 实际 palette_id 和 §2.2 实际 layout
+     - 禁止写在 `<head>` 内代替首行；禁止省略
+     - **未写入 → 必须 `edit_file` 补首行，然后才允许 terminate**
+  ② 字号/按钮：H1=40px / font-weight:700 !important；按钮高 80px；按钮字号 28px
+  ③ palette_id 与 Phase 3 输出一致（查表命中→精确匹配；hash 兜底→与算式结果一致）
+  ④ Stage 主演示容器中心与 Stage 几何中心可视化对齐（§2.3）
+  ⑤ 布局变体已落实并匹配算式（§2.2）：Agent 推理已声明 layout_hash 数字
+  ⑥ **无下拉条**：HTML 中**不包含** `#controls` / `.controls` 的 `overflow-y:auto|scroll` 或 `overflow:auto|scroll`；`<body>` 只允许 `overflow:hidden`；唯一允许的滚动容器是 `#stage` 且仅在内容真超出时
+  ⑦ Controls 控件块数 ≤ 5（L2/L3）或横向块 ≤ 6（L1），超量必须用 Tabs/Accordion 内部折叠
+  ⑧ 平面直角坐标系闸门：仅当实际绘制平面直角坐标系/函数坐标图时执行 §2.3.1；默认只画坐标轴/刻度/标签/曲线，未显式要求“方格线/坐标网格/方格纸”时禁止完整方格背景；统计直方图、柱状图、条形图等图表内参考线不按“坐标系背景方格”处理
+  ⑨ **无整图方格背景**：数学场景默认禁止在 `#stage`、`.stage`、`.stage-area`、`.plot-area`、`.chart-area`、`.svg-container`、`#plot-container`、Canvas/SVG 容器上用 CSS 背景或 SVG/JS 循环生成方格纸；出现 §1.1 任一命中项 → 必须 edit_file 删除后再 terminate
+  ⑩ **源码禁词自检**：用户未明确要求网格/方格时，源码不得出现 `id="grid-layer"`、`class="coord-grid"`、`.coord-grid`、`gridLayer`、`initGrid()`、`drawGrid()`、`createGrid`、`网格线会在 JS 中生成`；刻度层只能命名 `tick-layer/ticks-group`，且只画短刻度线
+```
+
+## 一、视觉硬性要求 (Visual Identity)
+
+- 可视区域参考比例：16:7，优先一屏展示所有交互
+- 内容超屏时：Step Navigation 或 Card Tab 切换；允许 Stage 区局部滚动
+- 演示图示必须通过色彩填充保持视觉冲击力（遵循 visual-impact.md）
+- 按钮统一高度：**80px**
+- 页面采用 safe area 安全高度设计
+- grid 仅用于模块，不用于锁死整体高度
+- **默认不铺整页/整图方格纸背景**：色板中的“背景网格”只提供可选视觉语言，不能自动变成 Stage 底纹、函数坐标图底纹或统计图表底纹；统计直方图、柱状图、条形图、表格等可以使用图表/模块内部参考线，但这些线必须属于具体图表或模块，不能覆盖整个 Stage/plot 形成独立背景方格纸
+- **数学演示容器默认不用 `background-image`**：`#stage`、`.stage`、`.stage-area`、`.plot-area`、`.chart-area`、`.svg-container`、`#plot-container` 默认只用纯色/透明 `background`；不要用 `background-image` 做纹理、网格或装饰底纹
+- 禁止标题前 Emoji；具体元素用 SVG 绘制，配色符合选定色板
+
+### 1.1 整图方格背景禁令（所有数学场景通用）
+
+除非用户原文明确要求“方格线 / 网格线 / 坐标网格 / 坐标纸 / 方格纸 / 网格背景 / 带网格坐标系”，否则以下任一写法都视为失败，必须删除：
+
+- 在 `#stage`、`.stage`、`.stage-area`、`.plot-area`、`.chart-area`、`.svg-container`、`#plot-container`、Canvas/SVG 外层容器上写 `background-image` 生成网格或纹理
+- 成对 CSS 背景网格：`linear-gradient(... 1px, transparent 1px)` + `linear-gradient(90deg, ... 1px, transparent 1px)` + `background-size: <n>px <n>px`
+- `repeating-linear-gradient`、SVG `<pattern>`、名为 `grid`/`grid-line`/`coord-grid` 的双向背景层、覆盖全宽全高的 Canvas/SVG 横竖线循环
+- SVG/JS 坐标网格禁词：`id="grid-layer"`、`class="coord-grid"`、`.coord-grid`、`gridLayer`、`initGrid()`、`drawGrid()`、`createGridLines()`、注释“网格线会在 JS 中生成”
+- 注释写“坐标网格 / 网格背景 / 网格线”并把它作为背景底纹实现
+
+统计直方图、柱状图、条形图、折线统计图允许**少量图表内部参考线**，但必须满足：
+- 参考线必须在绘图区内部，通常只保留 3–6 条水平数值参考线或必要分箱线
+- 禁止使用 CSS 背景方格来实现参考线；应使用 SVG `<line>` 或独立 div 线条，并与坐标轴/数据刻度绑定
+- 不画竖横双向密集网格，不覆盖整个 Stage，不让参考线抢过数据主体
+- 参考线命名使用 `.ref-line`/`.tick-line`，不要使用 `.grid-line`/`.coord-grid`；Stage 本身不得有 `background-image`
+
+**真实坏例（必须避开）：**
+- 函数图像中写 `<g id="grid-layer"></g>`，再用 `initGrid()` 循环创建 `vLine/hLine` 并设 `class="coord-grid"`，即使是虚线也属于完整坐标网格，未被用户明确要求时必须删除
+- 直方图/条形统计图中在 `#stage` 上写 `background-image: linear-gradient(...), linear-gradient(90deg, ...)` 和 `background-size: 30px 30px`，属于整图方格背景；应删除 Stage 背景，仅保留 SVG 内少量水平参考线
+
+## 二、布局硬性约束 (Visual & Layout Constraints)
+
+### 2.1 基础公式
+- **一屏优先级**：不产生全局滚动条为最高目标
+- **基础公式**：Container(flex) = Header(fixed) + Body(flex-grow:1) + Controls(flex-shrink:0)
+  - **Body** 至少包含 Stage（演示区）；Controls 的位置由「布局变体」决定
+- **弹性字号保护**：H1 基准 **40px**（禁止 42px）；必要时 `clamp(30px, 5vh, 40px)`
+
+### 2.2 布局变体（**三向必选 1 种，禁止默认底栏**）
+
+| 变体 | 结构 | Controls 位置 | 适用场景 |
+|---|---|---|---|
+| **L1 底栏** | Header → Stage → Controls(bottom) | 底部 | 步骤导航、按钮 ≥3、以「上一步/下一步/重置」为主 |
+| **L2 左栏** | Header → [Controls(left) ‖ Stage] | 左侧 | 滑块/参数调节为主、几何探索、左侧选择列表 |
+| **L3 右栏** | Header → [Stage ‖ Controls(right)] | 右侧 | 演示主导、辅助参数面板、信息说明类 |
+
+**选择算法（机械，必须在推理中输出 layout_hash 数字）：**
+```
+c1 = ord(keyword 第 1 字符)
+layout_hash = (c1 + len(prompt)) mod 3
+layout = ["L1底栏", "L2左栏", "L3右栏"][layout_hash]
+```
+
+**层级例外（极少使用，必须显式声明理由）：**
+- 仅当算式命中 L1 但实际控件含 ≥ 3 个滑块/数值输入 → 在 L2 / L3 之间二选一（按 `(c1+1) mod 2` → 0=L2 / 1=L3）
+- 其它情形**一律按算式**，禁止"为简洁/安全/熟悉"改为 L1
+
+**Controls 尺寸约束：**
+- L1：高度 ≤ 140px（按钮 80px + 上下 20px 边距 + 必要标签），横向 flex
+- L2 / L3：宽度 ≤ 28% 视口宽，按钮高 **80px**，纵向 flex
+- 三种变体均保留：按钮 80px、按钮字号 28px、按钮上方 20px 安全边距
+
+**Controls 内容硬约束（**关键，防止下拉条**）：**
+- **禁止** `#controls` / `.controls` 设置 `overflow-y: auto`、`overflow-y: scroll`、`overflow: auto` 或 `overflow: scroll`（一旦出现 → terminate 失败）
+- L2 / L3 单栏控件数 **≤ 5 块**（一个滑块组、一个按钮组、一个公式卡、一个数值显示 = 4 块）
+- 控件多 → 用 Tabs / Accordion 内部折叠；**不允许**靠滚动条解决
+- 全局 `<body>` 仅允许 `overflow: hidden`；唯一允许内部滚动的容器是 `#stage`（也仅在内容真超出时）
+
+### 2.3 Stage 居中硬约束（**所有变体通用**）
+
+- **Stage 容器**必须设置：
+  ```css
+  #stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  ```
+- **主演示元素**（SVG / Canvas / 几何容器 / 三维场景）必须：
+  - 使用 `margin: auto` 或 flex 居中，**禁止**仅靠 `position:absolute; left:0; top:0`
+  - 包围盒中心 = Stage 几何中心；坐标系/数轴的原点或对称轴必须对齐 Stage 中心
+  - 容器 `max-width: 90%; max-height: 90%`，避免贴边
+- **SVG viewBox**：原点居中 (`viewBox="-W/2 -H/2 W H"`)，方便绕中心绘制
+- terminate 前自检：左右留白偏差 ≤ 15%、上下留白偏差 ≤ 15%
+
+### 2.3.1 平面直角坐标系与方格线硬约束（防视觉误差）
+
+- **适用范围只限平面直角坐标系**：当页面实际绘制“平面直角坐标系 / 坐标轴 / x 轴 y 轴 / 函数图像 / 一次函数图像 / 二次函数图像 / 抛物线 / 坐标平移或变换”时，执行本节
+- **不适用范围**：统计直方图、柱状图、条形图、折线统计图、扇形图、表格、分块卡片等图表/模块；这些场景允许图表内部参考线、分隔线、分箱线，但不得把它们写成覆盖整个 Stage 的方格纸背景
+- **坐标系默认形态**：只画坐标轴、箭头、刻度、刻度标签、函数曲线/点位，以及必要的语义辅助线（如对称轴、区间边界、极值垂线）；默认**不画覆盖整个 SVG/Canvas/Stage 的方格纸背景**
+- **显式要求才可画坐标方格**：只有用户原文明确出现“方格线 / 网格线 / 坐标网格 / 坐标纸 / 方格纸 / 网格背景 / 带网格坐标系”等要求，并且需要学生按网格读数时，才允许绘制完整坐标方格
+- 未显式要求坐标方格时，坐标图代码中禁止出现：用于坐标背景的 CSS `background-image` 网格、成对 `linear-gradient`、`repeating-linear-gradient`、SVG `<pattern>` 方格底纹、`id="grid-layer"`、`class="coord-grid"`、`.coord-grid`、`gridLayer`、`initGrid()`、`drawGrid()`、`createGrid*()`、Canvas/SVG 中覆盖全宽全高的全量横竖线循环；此处不禁止 CSS 布局 `display:grid`
+- 若需要刻度，只画短刻度线：x 轴刻度为 y=-4 到 y=4 的短线，y 轴刻度为 x=-4 到 x=4 的短线；禁止把刻度线延伸成贯穿整个绘图区的横线/竖线
+- 色板段落里的“背景网格”不能触发坐标方格；它只能作为普通模块纹理参考，不能替代用户的显式网格要求
+- 允许绘制坐标系方格时，必须定义唯一的 `unit`、`originX`、`originY`，并用同一变换绘制所有元素：
+  ```js
+  xScreen = originX + x * unit;
+  yScreen = originY - y * unit;
+  ```
+- 网格线、坐标轴、刻度、标签、曲线、点位、辅助线必须全部来自上述同一坐标变换；x 轴和 y 轴必须落在网格线上，刻度标签必须对齐网格交点
+- 优先用同一个 SVG / Canvas 绘制方格、轴、刻度、曲线；禁止用独立 CSS 背景伪装坐标方格，除非 `background-size` 与 `background-position` 严格绑定同一个 `unit/origin`
+- 坐标系方格颜色仍必须来自选定 palette 的浅色/边框色变量，不能引入外源灰蓝、默认蓝等非 palette 颜色；若无法保证与坐标轴精确对齐，**必须删除方格，只保留坐标轴/刻度/标签**
+- `test_html`/自检必须覆盖本节：读取页面内容并断言 Stage/plot/chart 容器的 `backgroundImage` 不含 `linear-gradient`/`repeating-linear-gradient`，源码不含 `grid-layer`/`coord-grid`/`initGrid`/`drawGrid`；任一失败必须 `edit_file` 删除后重测
+
+### 2.4 三向布局 CSS 骨架（**Agent 应直接套用**，避免落回 L1）
+
+**L2 左栏（Controls 在左，Stage 在右）：**
+```html
+<main style="flex:1; display:flex; flex-direction:row; gap:20px; padding:20px;">
+  <aside id="controls" style="width:26%; min-width:240px; display:flex; flex-direction:column; gap:16px;">
+    <!-- 控件块 ≤ 5 个；禁止 overflow-y:auto -->
+  </aside>
+  <section id="stage" style="flex:1; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+    <!-- 演示主体居中渲染 -->
+  </section>
+</main>
+```
+
+**L3 右栏（Stage 在左，Controls 在右）：**
+```html
+<main style="flex:1; display:flex; flex-direction:row; gap:20px; padding:20px;">
+  <section id="stage" style="flex:1; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;"></section>
+  <aside id="controls" style="width:26%; min-width:240px; display:flex; flex-direction:column; gap:16px;"></aside>
+</main>
+```
+
+**L1 底栏（Stage 上、Controls 下）：**
+```html
+<main style="flex:1; display:flex; flex-direction:column; gap:20px; padding:20px;">
+  <section id="stage" style="flex:1; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;"></section>
+  <aside id="controls" style="height:120px; display:flex; flex-direction:row; align-items:center; gap:16px;"></aside>
+</main>
+```
+
+**禁止**在以上任何 `aside#controls` 上加 `overflow-y:auto`；超量控件用 Tabs/Accordion 替代。
+
+## 三、字号系统（Typography）
+
+- H1 = **40px** / font-weight: 700 !important（禁止 42px 或其他值）
+- H2 = 30px / font-weight: 600
+- H3 = 28px / font-weight: 500
+- Body = 28px / font-weight: 500
+- Caption ≥ 22px / font-weight: 300
+- 按钮字号 = 28px / font-weight: 500
+
+## 四、与 html-authoring 通用规范的衔接
+
+数学场景下，以下 `html-authoring/guide.md` 通用规则**仍适用**：
+
+以下 html-authoring 通用规则**被本链路覆盖，禁止同时执行**：
+- 「参考配色方案（5 个）」—— 数学必须用本目录 31 套色板
+- 「根据学科选：数学-橙紫」—— 已由 pool A/B 替代
+- 通用排版「标题为正文 1.5–2 倍」—— 改用第三节固定 px 字号
