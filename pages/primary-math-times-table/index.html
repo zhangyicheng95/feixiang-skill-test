@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>表内乘法</title>
+  <!-- spec: mode=courseware -->
+  <!-- style-guide: palette=EDU-蓝; radius=16; typography=sans-modern -->
+</head>
+<body>
+
+<div id="cw-loading">加载课件中...</div>
+
+<template class="page-shared">
+  <style>
+    /* CW_TYPOGRAPHY_DECISION:
+     * selectedTypographyPreset=sans-modern;
+     * category=中文黑体;
+     * reason=小学数学课件强调数字与步骤清晰;
+     * resourceMode=fallback-only;
+     * loadedFontFaces=none;
+     * fallbackReady=true;
+     */
+    :root {
+      --bg:#DFEDFF;
+      --text:#0F2336;
+      --primary:#278DEA;
+      --accent:#40A10B;
+      --card:#FFFFFF;
+      --card-border:rgba(15,35,54,.30);
+      --demo-bg:#FFFFFF;
+      --demo-border:rgba(15,35,54,.30);
+      --demo-grid:#F1F5FB;
+      --btn-primary-bg:#278DEA;
+      --btn-primary-fg:#FFFFFF;
+      --btn-2nd-bg:#DFEDFF;
+      --btn-2nd-fg:#000;
+      --radius:16px;
+      --success:#2a8f5c;
+      --error:#c0392b;
+      --stage-base:#eef1f5;
+      --canvas-bg:color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+
+      --cw-courseware-title-font:"Noto Sans SC","Source Han Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+      --cw-courseware-body-font:"Noto Sans SC","Source Han Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+      --cw-courseware-label-font:"PingFang SC","Microsoft YaHei",sans-serif;
+      --cw-courseware-note-font:"Kaiti SC","STKaiti","KaiTi",cursive;
+      --cw-courseware-latin-accent-font:Arial,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    html, body {
+      margin:0;
+      width:100%;
+      height:100%;
+      background:var(--canvas-bg);
+      color:var(--text);
+      font-family:var(--cw-courseware-body-font);
+    }
+    .page-container {
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      padding:20px 30px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      background:var(--canvas-bg);
+    }
+    .eyebrow {
+      margin:0;
+      color:var(--accent);
+      font-size:12px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      font-family:var(--cw-courseware-label-font);
+    }
+    .page-title {
+      margin:0;
+      padding-left:12px;
+      border-left:5px solid var(--primary);
+      font-size:26px;
+      line-height:1.2;
+      font-weight:700;
+      font-family:var(--cw-courseware-title-font);
+      flex-shrink:0;
+    }
+    .fill {
+      flex:1;
+      min-height:0;
+      overflow:hidden;
+    }
+    .two-col {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      flex:1;
+      min-height:0;
+    }
+    .card {
+      background:var(--card);
+      border:2px solid var(--card-border);
+      border-radius:var(--radius);
+      padding:12px 14px;
+    }
+    .demo {
+      flex:1;
+      min-height:0;
+      border:2px solid var(--demo-border);
+      border-radius:var(--radius);
+      background-color:var(--demo-bg);
+      background-image:
+        linear-gradient(var(--demo-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--demo-grid) 1px, transparent 1px);
+      background-size:24px 24px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .toolbar {
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+      flex-shrink:0;
+    }
+    .btn {
+      padding:8px 14px;
+      border-radius:var(--radius);
+      border:2px solid var(--card-border);
+      background:var(--btn-2nd-bg);
+      color:var(--btn-2nd-fg);
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      font-family:var(--cw-courseware-label-font);
+    }
+    .btn-primary {
+      background:var(--btn-primary-bg);
+      color:var(--btn-primary-fg);
+      border-color:var(--primary);
+    }
+    .btn-primary:disabled {
+      opacity:.45;
+      cursor:not-allowed;
+    }
+    .btn.active {
+      outline:3px solid var(--accent);
+    }
+    .pill {
+      display:inline-block;
+      margin-right:6px;
+      padding:2px 10px;
+      border-radius:999px;
+      border:2px solid var(--primary);
+      font-size:12px;
+      color:var(--primary);
+      background:#fff;
+      font-family:var(--cw-courseware-label-font);
+    }
+    .tip {
+      padding:10px 14px;
+      border-radius:var(--radius);
+      border:2px solid var(--primary);
+      background:#fff;
+      font-size:14px;
+      line-height:1.55;
+      flex-shrink:0;
+    }
+    .tip.ok {
+      border-color:var(--success);
+      background:#f0faf4;
+    }
+    .tip.err {
+      border-color:var(--error);
+      background:#fdf3f2;
+    }
+    ul.compact {
+      margin:0;
+      padding-left:18px;
+      line-height:1.6;
+      font-size:15px;
+    }
+    ul.compact li { margin-bottom:4px; }
+  </style>
+</template>
+
+<template class="page-data" data-id="1" data-name="封面">
+  <style>
+    .cover-page {
+      position:relative;
+      width:960px;
+      height:540px;
+      min-width:960px;
+      max-width:960px;
+      min-height:540px;
+      max-height:540px;
+      overflow:hidden;
+      flex-shrink:0;
+      background:linear-gradient(150deg,#DFEDFF 0%,#FFFFFF 52%,#EEF6FF 100%);
+    }
+    .cover-page * { box-sizing:border-box; }
+    .cover-copy {
+      position:absolute;
+      left:164px;
+      top:178px;
+      width:632px;
+      height:150px;
+      text-align:center;
+      z-index:2;
+    }
+    .cover-title {
+      margin:0;
+      color:var(--primary);
+      font-size:72px;
+      line-height:80px;
+      letter-spacing:4px;
+      font-family:var(--cw-courseware-title-font);
+      font-weight:700;
+    }
+    .cover-subtitle {
+      margin:12px 0 0;
+      color:var(--accent);
+      font-size:32px;
+      line-height:36px;
+      font-family:var(--cw-courseware-label-font);
+    }
+    .cover-meta {
+      position:absolute;
+      left:228px;
+      top:404px;
+      width:504px;
+      text-align:center;
+      color:var(--text);
+      font-size:22px;
+      line-height:28px;
+      font-family:var(--cw-courseware-label-font);
+      z-index:2;
+    }
+    .deco-block {
+      position:absolute;
+      border-radius:16px;
+      border:2px solid rgba(39,141,234,.28);
+      background:rgba(39,141,234,.12);
+    }
+    .deco-b1 { left:88px; top:94px; width:86px; height:86px; }
+    .deco-b2 { left:120px; top:192px; width:58px; height:58px; }
+    .deco-b3 { right:98px; top:88px; width:96px; height:96px; }
+    .deco-b4 { right:144px; top:214px; width:52px; height:52px; }
+    .deco-dot {
+      position:absolute;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:rgba(64,161,11,.35);
+    }
+    .d1 { left:220px; top:92px; }
+    .d2 { left:246px; top:92px; }
+    .d3 { left:272px; top:92px; }
+    .d4 { right:224px; top:382px; }
+    .d5 { right:250px; top:382px; }
+    .d6 { right:276px; top:382px; }
+  </style>
+  <div class="cover-page" data-cw-role="page-root" data-cover-layout="cover-01-center-stack" data-cover-visual="none">
+    <div class="deco-block deco-b1"></div>
+    <div class="deco-block deco-b2"></div>
+    <div class="deco-block deco-b3"></div>
+    <div class="deco-block deco-b4"></div>
+    <div class="deco-dot d1"></div>
+    <div class="deco-dot d2"></div>
+    <div class="deco-dot d3"></div>
+    <div class="deco-dot d4"></div>
+    <div class="deco-dot d5"></div>
+    <div class="deco-dot d6"></div>
+    <header class="cover-copy" data-cw-role="title-block">
+      <h1 class="cover-title">表内乘法</h1>
+      <p class="cover-subtitle">三年级数学</p>
+    </header>
+    <footer class="cover-meta">人教版·数学·第三单元</footer>
+  </div>
+</template>
+
+<template class="page-data" data-id="2" data-name="目录">
+  <style>
+    .toc-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .toc-item {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border-radius:var(--radius);
+      border:2px solid var(--card-border);
+      background:#fff;
+      padding:11px 12px;
+    }
+    .toc-num {
+      width:32px;
+      height:32px;
+      border-radius:10px;
+      background:var(--primary);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      font-weight:700;
+      flex-shrink:0;
+    }
+    .toc-text { font-size:15px; line-height:1.35; }
+    .toc-text small {
+      display:block;
+      margin-top:2px;
+      color:var(--accent);
+      font-size:11px;
+    }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">学习路径</p>
+    <h2 class="page-title">本课目录</h2>
+    <div class="toc-grid fill">
+      <div class="toc-item"><div class="toc-num">01</div><div class="toc-text">学习目标<small>知道本课要学什么</small></div></div>
+      <div class="toc-item"><div class="toc-num">02</div><div class="toc-text">乘法的意义<small>连加与乘法关系</small></div></div>
+      <div class="toc-item"><div class="toc-num">03</div><div class="toc-text">点阵图互动<small>看行列写算式</small></div></div>
+      <div class="toc-item"><div class="toc-num">04</div><div class="toc-text">口诀表互动<small>二到五的口诀</small></div></div>
+      <div class="toc-item"><div class="toc-num">05</div><div class="toc-text">例题精讲<small>3×4 的解题步骤</small></div></div>
+      <div class="toc-item"><div class="toc-num">06</div><div class="toc-text">课堂练习<small>单选 5 题检测</small></div></div>
+    </div>
+  </div>
+</template>
+
+<template class="page-data" data-id="3" data-name="学习目标">
+  <div class="page-container">
+    <p class="eyebrow">课前目标</p>
+    <h2 class="page-title">学习目标</h2>
+    <div class="fill" style="display:flex;flex-direction:column;gap:10px;justify-content:center">
+      <div class="card"><span class="pill">目标1</span> 理解乘法表示几个相同加数连加，能把连加写成乘法算式。</div>
+      <div class="card"><span class="pill">目标2</span> 熟练说出 2 到 5 的乘法口诀，能根据口诀口算结果。</div>
+      <div class="card"><span class="pill">目标3</span> 会用乘法解决简单生活问题，并说出每一步的理由。</div>
+    </div>
+    <div class="tip">提示：看到“几组相同的数”就想一想能不能用乘法更简洁地表示。</div>
+  </div>
+</template>
+
+<template class="page-data" data-id="4" data-name="乘法的意义">
+  <div class="page-container">
+    <p class="eyebrow">新知讲解</p>
+    <h2 class="page-title">乘法的意义</h2>
+    <div class="card fill" style="display:flex;flex-direction:column;justify-content:center;gap:10px">
+      <p style="margin:0;font-size:18px;line-height:1.55">
+        有 <strong>3 组</strong>苹果，每组 <strong>3 个</strong>，一共可以写成：
+      </p>
+      <div style="text-align:center;font-size:26px;font-weight:700;color:var(--primary);line-height:1.2">
+        3 + 3 + 3 = 9
+      </div>
+      <div style="text-align:center;font-size:28px;font-weight:700;color:var(--accent);line-height:1.2">
+        3 × 3 = 9
+      </div>
+      <ul class="compact">
+        <li>连加里有几个相同加数，就有几组。</li>
+        <li>乘法更简洁，适合表示相同数的重复相加。</li>
+        <li>读作：3 乘 3 等于 9。</li>
+      </ul>
+    </div>
+    <div class="tip">把“相同加数连加”改写成乘法，是今天最重要的一步。</div>
+  </div>
+</template>
+
+<template class="page-data" data-id="5" data-name="点阵图互动">
+  <style>
+    .dots-wrap {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      width:100%;
+      height:100%;
+    }
+    .dots-grid {
+      display:grid;
+      gap:8px;
+      justify-content:center;
+      align-content:center;
+      padding:16px;
+      border-radius:var(--radius);
+      border:2px dashed rgba(39,141,234,.35);
+      background:#fff;
+      min-width:280px;
+      min-height:190px;
+    }
+    .dot {
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:var(--primary);
+      box-shadow:inset 0 -3px 0 rgba(0,0,0,.12);
+    }
+    .eq-label {
+      font-size:28px;
+      font-weight:700;
+      color:var(--text);
+      margin:0;
+      min-height:38px;
+    }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">互动理解</p>
+    <h2 class="page-title">点阵图看乘法</h2>
+    <div class="toolbar">
+      <button class="btn btn-primary" type="button" data-exp="2x3">2 × 3</button>
+      <button class="btn" type="button" data-exp="3x4">3 × 4</button>
+      <button class="btn" type="button" data-exp="4x5">4 × 5</button>
+    </div>
+    <div class="demo fill">
+      <div class="dots-wrap">
+        <p id="eq-label" class="eq-label">2 × 3 = 6</p>
+        <div id="dots-grid" class="dots-grid" aria-label="点阵图"></div>
+      </div>
+    </div>
+    <div class="tip">点击上方算式，观察“几行几列”的点阵变化，再读出乘法结果。</div>
+  </div>
+  <script>
+  (function(){
+    var current = "2x3";
+    var map = {
+      "2x3": { r:2, c:3, t:"2 × 3 = 6" },
+      "3x4": { r:3, c:4, t:"3 × 4 = 12" },
+      "4x5": { r:4, c:5, t:"4 × 5 = 20" }
+    };
+    function render(){
+      var cfg = map[current];
+      var grid = document.getElementById("dots-grid");
+      var eq = document.getElementById("eq-label");
+      if(!cfg || !grid || !eq) return;
+      eq.textContent = cfg.t;
+      grid.style.gridTemplateColumns = "repeat(" + cfg.c + ", 20px)";
+      var html = "";
+      var i;
+      for(i = 0; i < cfg.r * cfg.c; i++){ html += '<span class="dot"></span>'; }
+      grid.innerHTML = html;
+      document.querySelectorAll('[data-exp]').forEach(function(btn){
+        btn.classList.toggle("active", btn.getAttribute("data-exp") === current);
+        btn.classList.toggle("btn-primary", btn.getAttribute("data-exp") === current);
+      });
+    }
+    function save(){
+      window.parent.postMessage({ type:"saveState", state:{ current:current } }, "*");
+    }
+    function restore(s){
+      if(s && s.current && map[s.current]){
+        current = s.current;
+      }
+      render();
+    }
+    window.addEventListener("message", function(e){
+      if(e.data && e.data.type === "restoreState"){ restore(e.data.state); }
+    });
+    window.addEventListener("DOMContentLoaded", function(){
+      document.querySelectorAll('[data-exp]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          current = btn.getAttribute("data-exp");
+          render();
+          save();
+        });
+      });
+      render();
+    });
+  })();
+  </script>
+</template>
+
+<template class="page-data" data-id="6" data-name="口诀表互动">
+  <style>
+    .koujue-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+    }
+    .koujue-row {
+      border:2px solid var(--card-border);
+      border-radius:var(--radius);
+      background:#fff;
+      padding:5px 10px;
+      text-align:left;
+      font-size:14px;
+      line-height:1.3;
+      cursor:pointer;
+      font-family:var(--cw-courseware-body-font);
+    }
+    .koujue-row.active {
+      border-color:var(--accent);
+      background:#eef9e9;
+      box-shadow:0 0 0 2px rgba(64,161,11,.15) inset;
+    }
+    .koujue-row strong {
+      color:var(--primary);
+      margin-right:8px;
+    }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">互动记忆</p>
+    <h2 class="page-title">2 到 5 的乘法口诀</h2>
+    <div id="koujue-grid" class="koujue-grid fill"></div>
+    <div id="koujue-tip" class="tip" style="font-size:13px;padding:8px 12px">点击一行口诀高亮，方便朗读记忆。</div>
+  </div>
+  <script>
+  (function(){
+    var rows = [
+      "二一得二","二二得四","二三得六","二四得八","二五一十",
+      "三一得三","三二得六","三三得九","三四十二","三五十五",
+      "四一得四","四二得八","四三十二","四四十六","四五二十",
+      "五一得五","五二一十","五三十五","五四二十","五五二十五"
+    ];
+    var active = -1;
+    function render(){
+      var box = document.getElementById("koujue-grid");
+      if(!box) return;
+      var html = "";
+      rows.forEach(function(text, idx){
+        var cls = "koujue-row" + (idx === active ? " active" : "");
+        html += '<button type="button" class="' + cls + '" data-idx="' + idx + '"><strong>' + (idx + 1) + ".</strong>" + text + "</button>";
+      });
+      box.innerHTML = html;
+      box.querySelectorAll(".koujue-row").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          active = Number(btn.getAttribute("data-idx"));
+          render();
+          save();
+        });
+      });
+      var tip = document.getElementById("koujue-tip");
+      if(tip && active >= 0){
+        tip.textContent = "当前口诀：" + rows[active] + "。请大声读两遍。";
+      }
+    }
+    function save(){
+      window.parent.postMessage({ type:"saveState", state:{ active:active } }, "*");
+    }
+    function restore(s){
+      if(s && typeof s.active === "number"){ active = s.active; }
+      render();
+    }
+    window.addEventListener("message", function(e){
+      if(e.data && e.data.type === "restoreState"){ restore(e.data.state); }
+    });
+    window.addEventListener("DOMContentLoaded", render);
+  })();
+  </script>
+</template>
+
+<template class="page-data" data-id="7" data-name="例题精讲">
+  <div class="page-container">
+    <p class="eyebrow">例题</p>
+    <h2 class="page-title">小明的铅笔一共有多少支？</h2>
+    <div class="card fill" style="display:flex;flex-direction:column;gap:8px">
+      <p style="margin:0;font-size:16px;line-height:1.5">
+        <strong>题目：</strong>小明有 <strong>3 盒</strong>铅笔，每盒有 <strong>4 支</strong>。一共有多少支铅笔？
+      </p>
+      <div id="s0" class="tip">点击「下一步」，按步骤完成这道题。</div>
+      <div id="s1" class="card" style="display:none">
+        <strong>第1步：</strong>先看“有几盒、每盒几支”。<br>
+        这是 <strong>3 组</strong>，每组 <strong>4 支</strong>。
+      </div>
+      <div id="s2" class="card" style="display:none">
+        <strong>第2步：</strong>可以写连加：4 + 4 + 4 = 12。
+      </div>
+      <div id="s3" class="card" style="display:none">
+        <strong>第3步：</strong>改写成乘法：3 × 4 = 12。
+      </div>
+      <div id="s4" class="tip ok" style="display:none">
+        <strong>答：</strong>小明一共有 <strong>12 支</strong>铅笔。
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-primary" id="next-step" type="button">下一步</button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var step = 0;
+    var ids = ["s0","s1","s2","s3","s4"];
+    function render(){
+      ids.forEach(function(id, idx){
+        var el = document.getElementById(id);
+        if(el){ el.style.display = idx <= step ? "block" : "none"; }
+      });
+      var btn = document.getElementById("next-step");
+      if(btn){
+        btn.disabled = step >= 4;
+        btn.textContent = step >= 4 ? "已完成" : "下一步";
+      }
+    }
+    function save(){
+      window.parent.postMessage({ type:"saveState", state:{ step:step } }, "*");
+    }
+    function restore(s){
+      if(s && typeof s.step === "number"){ step = s.step; }
+      render();
+    }
+    window.addEventListener("message", function(e){
+      if(e.data && e.data.type === "restoreState"){ restore(e.data.state); }
+    });
+    window.addEventListener("DOMContentLoaded", function(){
+      var btn = document.getElementById("next-step");
+      if(btn){
+        btn.addEventListener("click", function(){
+          if(step < 4){
+            step += 1;
+            render();
+            save();
+          }
+        });
+      }
+      render();
+    });
+  })();
+  </script>
+</template>
+
+<template class="page-data" data-id="8" data-name="课堂练习">
+  <style>
+    .quiz-body {
+      flex:1;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+    .opt {
+      display:block;
+      width:100%;
+      margin-bottom:8px;
+      padding:10px 14px;
+      text-align:left;
+      border:2px solid var(--card-border);
+      border-radius:var(--radius);
+      background:#fff;
+      cursor:pointer;
+      font-size:15px;
+      font-family:var(--cw-courseware-body-font);
+    }
+    .opt.sel { border-color:var(--primary); background:#eef5ff; }
+    .opt.correct { border-color:var(--success); background:#f0faf4; }
+    .opt.wrong { border-color:var(--error); background:#fdf3f2; }
+    #quiz-stem {
+      margin:0 0 8px;
+      font-size:17px;
+      line-height:1.4;
+      font-weight:700;
+    }
+    #quiz-opts {
+      flex:1;
+      min-height:0;
+      overflow:hidden;
+    }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">课堂练习</p>
+    <h2 class="page-title">单选题（5题）</h2>
+    <div id="quiz-view" class="quiz-body">
+      <div id="quiz-prog" style="font-size:13px;color:var(--accent);margin-bottom:6px">第 1 / 5 题</div>
+      <p id="quiz-stem"></p>
+      <div id="quiz-opts"></div>
+      <div id="quiz-explain" class="tip" style="display:none;margin-top:6px"></div>
+      <div class="toolbar" style="margin-top:8px">
+        <button class="btn" id="quiz-prev" type="button">上一题</button>
+        <button class="btn btn-primary" id="quiz-confirm" type="button">确认答案</button>
+        <button class="btn btn-primary" id="quiz-next" type="button" disabled>下一题</button>
+      </div>
+    </div>
+    <div id="quiz-result" style="display:none;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px">
+      <p id="quiz-score" style="margin:0;font-size:30px;font-weight:700"></p>
+      <p style="margin:0;font-size:16px">练习完成，继续翻页查看本课小结。</p>
+      <button class="btn btn-primary" id="quiz-redo" type="button">重新练习</button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var QUESTIONS = [
+      { stem:"3 + 3 + 3 可以写成哪道乘法算式？", options:[{k:"A",text:"3×2"},{k:"B",text:"3×3"},{k:"C",text:"2×3"},{k:"D",text:"3×4"}], ans:"B", explain:"3 个 3 相加，所以写成 3×3。"},
+      { stem:"2×5 的结果是几？", options:[{k:"A",text:"7"},{k:"B",text:"8"},{k:"C",text:"10"},{k:"D",text:"12"}], ans:"C", explain:"二五一十，所以 2×5=10。"},
+      { stem:"下面哪句口诀对应 4×3？", options:[{k:"A",text:"三四十二"},{k:"B",text:"四四十六"},{k:"C",text:"三五十五"},{k:"D",text:"二四得八"}], ans:"A", explain:"4×3 和 3×4 同样是 12，对应三四十二。"},
+      { stem:"小红有 4 盒糖，每盒 2 颗，一共几颗？", options:[{k:"A",text:"6"},{k:"B",text:"8"},{k:"C",text:"10"},{k:"D",text:"12"}], ans:"B", explain:"4 组每组 2 颗，4×2=8。"},
+      { stem:"5×5 的结果是？", options:[{k:"A",text:"15"},{k:"B",text:"20"},{k:"C",text:"25"},{k:"D",text:"30"}], ans:"C", explain:"五五二十五，所以答案是 25。"}
+    ];
+    var state = { phase:"quiz", index:0, answers:{}, revealed:{} };
+    function el(id){ return document.getElementById(id); }
+    function save(){
+      window.parent.postMessage({ type:"saveState", state:JSON.parse(JSON.stringify(state)) }, "*");
+    }
+    function sendScore(){
+      var ok = 0;
+      QUESTIONS.forEach(function(q, i){ if(state.answers[i] === q.ans){ ok += 1; } });
+      window.parent.postMessage({ type:"cwScore", id:8, raw:ok, max:QUESTIONS.length }, "*");
+    }
+    function render(){
+      if(state.phase === "result"){
+        el("quiz-view").style.display = "none";
+        el("quiz-result").style.display = "flex";
+        var ok = 0;
+        QUESTIONS.forEach(function(q, i){ if(state.answers[i] === q.ans){ ok += 1; } });
+        el("quiz-score").textContent = "得分：" + ok + " / " + QUESTIONS.length;
+        sendScore();
+        return;
+      }
+      el("quiz-view").style.display = "flex";
+      el("quiz-result").style.display = "none";
+      var q = QUESTIONS[state.index];
+      el("quiz-prog").textContent = "第 " + (state.index + 1) + " / " + QUESTIONS.length + " 题";
+      el("quiz-stem").textContent = q.stem;
+
+      var opts = "";
+      q.options.forEach(function(o){
+        var sel = state.answers[state.index] === o.k;
+        var rev = !!state.revealed[state.index];
+        var cls = "opt" + (sel ? " sel" : "");
+        if(rev){
+          if(o.k === q.ans){ cls += " correct"; }
+          else if(sel){ cls += " wrong"; }
+        }
+        opts += '<button type="button" class="' + cls + '" data-k="' + o.k + '">' + o.k + ". " + o.text + "</button>";
+      });
+      el("quiz-opts").innerHTML = opts;
+      el("quiz-opts").querySelectorAll(".opt").forEach(function(btn){
+        if(state.revealed[state.index]) return;
+        btn.addEventListener("click", function(){
+          state.answers[state.index] = btn.getAttribute("data-k");
+          render();
+          save();
+        });
+      });
+
+      var revealed = !!state.revealed[state.index];
+      el("quiz-explain").style.display = revealed ? "block" : "none";
+      el("quiz-explain").textContent = revealed ? ((state.answers[state.index] === q.ans ? "回答正确。 " : "回答错误。 ") + q.explain) : "";
+      el("quiz-explain").className = "tip " + (revealed ? (state.answers[state.index] === q.ans ? "ok" : "err") : "");
+      el("quiz-confirm").disabled = !state.answers[state.index] || revealed;
+      el("quiz-prev").disabled = state.index === 0;
+      el("quiz-next").disabled = !revealed;
+      if(state.index === QUESTIONS.length - 1){
+        el("quiz-next").textContent = revealed ? "查看结果" : "下一题";
+      } else {
+        el("quiz-next").textContent = "下一题";
+      }
+    }
+    function restore(s){
+      if(!s) return;
+      state = Object.assign(state, s);
+      render();
+    }
+    window.addEventListener("message", function(e){
+      if(e.data && e.data.type === "restoreState"){ restore(e.data.state); }
+    });
+    window.addEventListener("DOMContentLoaded", function(){
+      el("quiz-confirm").addEventListener("click", function(){
+        if(!state.answers[state.index]) return;
+        state.revealed[state.index] = true;
+        render();
+        save();
+      });
+      el("quiz-prev").addEventListener("click", function(){
+        if(state.index > 0){
+          state.index -= 1;
+          render();
+          save();
+        }
+      });
+      el("quiz-next").addEventListener("click", function(){
+        if(!state.revealed[state.index]) return;
+        if(state.index < QUESTIONS.length - 1){
+          state.index += 1;
+          render();
+          save();
+        } else {
+          state.phase = "result";
+          render();
+          save();
+        }
+      });
+      el("quiz-redo").addEventListener("click", function(){
+        state = { phase:"quiz", index:0, answers:{}, revealed:{} };
+        render();
+        save();
+      });
+      render();
+    });
+  })();
+  </script>
+</template>
+
+<template class="page-data" data-id="9" data-name="课堂小结">
+  <div class="page-container">
+    <p class="eyebrow">课末总结</p>
+    <h2 class="page-title">本课小结</h2>
+    <div class="fill" style="display:flex;flex-direction:column;justify-content:center;gap:10px">
+      <div class="card"><span class="pill">1</span> 乘法表示相同加数连加，写起来更简洁。</div>
+      <div class="card"><span class="pill">2</span> 会把连加算式改写成乘法算式，如 3+3+3 写成 3×3。</div>
+      <div class="card"><span class="pill">3</span> 熟记 2 到 5 的口诀，能快速口算乘法。</div>
+      <div class="card"><span class="pill">4</span> 解决生活问题时，先找“几组、每组多少”，再列乘法。</div>
+    </div>
+    <div class="tip ok">继续练习：每天背诵口诀并做 5 道口算题，速度会越来越快。</div>
+  </div>
+</template>
+
+<script src="./courseware-shell.js"></script>
+</body>
+</html>

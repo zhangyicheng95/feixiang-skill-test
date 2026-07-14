@@ -1,5 +1,5 @@
 /**
- * 飞象风课件预览壳 — 对齐飞象老师产物预览 UI
+ * 教学课件预览壳
  * 外框 100%（顶栏 + 缩略图栏 + 浅灰舞台）；主区居中固定 960×540 画布
  */
 window.__CW_SHELL_MAIN__ = function () {
@@ -73,7 +73,7 @@ window.__CW_SHELL_MAIN__ = function () {
       'html,body{background:' +
       STAGE_BG +
       '}' +
-      '.page-container{height:100%;max-height:100%;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}' +
+      '.page-container{height:100%;max-height:100%;min-height:0;overflow:hidden}' +
       '</style>';
 
     return (
@@ -255,7 +255,15 @@ window.__CW_SHELL_MAIN__ = function () {
     var exportFix = document.createElement('style');
     exportFix.textContent =
       '.cw-export-root{height:100vh;display:flex;flex-direction:column;background:#fff}' +
-      '.cw-export-root .cw-body{flex:1;min-height:0}';
+      '.cw-export-root .cw-body{flex:1;min-height:0}' +
+      '.cw-export-root .cw-stage{position:relative}' +
+      '.cw-present-btn{position:absolute;right:20px;bottom:20px;z-index:200;display:flex;align-items:center;gap:8px;' +
+      'padding:10px 20px 10px 16px;border:none;border-radius:999px;cursor:pointer;' +
+      'background:#d8f7e8;color:#047857;font-size:15px;font-weight:600;font-family:inherit;' +
+      'box-shadow:0 4px 14px rgba(16,185,129,.18)}' +
+      '.cw-present-btn:hover{background:#c6f0dc}' +
+      '.cw-present-icon{display:block;width:0;height:0;border-style:solid;' +
+      'border-width:8px 0 8px 13px;border-color:transparent transparent transparent #10b981}';
     document.head.appendChild(exportFix);
 
     var root = document.createElement('div');
@@ -295,6 +303,7 @@ window.__CW_SHELL_MAIN__ = function () {
     document.body.appendChild(root);
 
     this.titleEl = null;
+    this._addPresentButton();
 
     var self = this;
     window.addEventListener('message', function (e) {
@@ -316,6 +325,17 @@ window.__CW_SHELL_MAIN__ = function () {
 
     document.addEventListener('keydown', function (e) {
       self._handleNavKey(e);
+    });
+
+    document.addEventListener('fullscreenchange', function () {
+      if (self._isFullscreen()) self._focusFs();
+      self._syncPresentButton();
+      self._fitMain();
+    });
+    document.addEventListener('webkitfullscreenchange', function () {
+      if (self._isFullscreen()) self._focusFs();
+      self._syncPresentButton();
+      self._fitMain();
     });
 
     this.scorm = new ScormRT();
@@ -464,11 +484,39 @@ window.__CW_SHELL_MAIN__ = function () {
     return fs === this.bodyEl;
   };
 
+  CoursewareShell.prototype._addPresentButton = function () {
+    var self = this;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'cw-present-btn';
+    btn.setAttribute('aria-label', '演示');
+    btn.innerHTML =
+      '<span class="cw-present-icon" aria-hidden="true"></span><span>演示</span>';
+    btn.addEventListener('click', function () {
+      self._toggleFullscreen();
+    });
+    this.stageEl.appendChild(btn);
+    this.presentBtn = btn;
+  };
+
+  CoursewareShell.prototype._syncPresentButton = function () {
+    if (!this.presentBtn) return;
+    this.presentBtn.style.display = this._isFullscreen() ? 'none' : 'flex';
+  };
+
   CoursewareShell.prototype._toggleFullscreen = function () {
     var self = this;
     if (this._isFullscreen()) {
-      if (document.exitFullscreen) document.exitFullscreen();
-      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      var done = function () {
+        self._syncPresentButton();
+        self._fitMain();
+      };
+      if (document.exitFullscreen) {
+        document.exitFullscreen().then(done).catch(done);
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+        done();
+      }
       return;
     }
     var el = this.bodyEl;
@@ -480,6 +528,7 @@ window.__CW_SHELL_MAIN__ = function () {
     if (req && req.then) {
       req.then(function () {
         self._focusFs();
+        self._syncPresentButton();
         self._fitMain();
       });
     }

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>初中历史·辛亥革命</title>
-  <!-- spec: requirements=完整初中历史课件,单选8题同页逐题,多选题; core-loop=P8选题→确认→解析→下一题×8→结果;P9多选→提交→解析;P7拖拽分类 -->
-  <!-- fx-style: palette=FX-橙(B-05); radius=16; keyword=辛亥革命; source=hash; version=v3 -->
+  <!-- spec: mode=courseware; requirements=初中历史八年级辛亥革命; core-loop=P7拖拽;P8单选8题;P9多选 -->
+  <!-- style-guide: palette=EDU-橙; radius=16; keyword=辛亥革命; typography=sans-modern -->
 </head>
 <body>
 
@@ -13,6 +13,12 @@
 
 <template class="page-shared">
   <style>
+    /* CW_TYPOGRAPHY_DECISION:
+     * selectedTypographyPreset=sans-modern;
+     * category=中文黑体;
+     * reason=初中历史信息清晰，时间线人物需易读;
+     * resourceMode=fallback-only;
+     */
     :root {
       --bg: #FFF3D9;
       --text: #3D3334;
@@ -23,32 +29,41 @@
       --demo-bg: #FFFFFF;
       --demo-border: rgba(0, 0, 0, 0.30);
       --demo-grid: #ECECEC;
-      --btn-bg: #F8981F;
-      --btn-fg: #000;
+      --btn-primary-bg: #F8981F;
+      --btn-primary-fg: #000000;
       --btn-2nd-bg: #FFF6E3;
-      --btn-2nd-fg: #000;
+      --btn-2nd-fg: #000000;
       --success: #549B22;
       --error: #C0392B;
       --radius: 16px;
-      --font: "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
       --stage-base: #eef1f5;
       --canvas-bg: color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+      --cw-courseware-title-font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --cw-courseware-body-font: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --cw-courseware-label-font: "PingFang SC", "Microsoft YaHei", sans-serif;
     }
     html, body {
-      font-family: var(--font); color: var(--text);
-      background: var(--canvas-bg); margin: 0;
+      margin: 0; width: 100%; height: 100%;
+      font-family: var(--cw-courseware-body-font); color: var(--text);
+      background: var(--canvas-bg);
     }
     .page-container {
-      height: 100%; max-height: 100%; min-height: 0;
-      padding: 26px 36px; display: flex; flex-direction: column;
-      box-sizing: border-box; overflow-y: auto;
+      width: 100%; height: 100%; max-height: 100%;
+      padding: 20px 28px; display: flex; flex-direction: column; gap: 8px;
+      box-sizing: border-box; overflow: hidden;
       background: var(--canvas-bg);
     }
     .page-title {
-      font-size: 28px; font-weight: 700; color: var(--primary);
-      margin-bottom: 14px; padding-left: 14px;
-      border-left: 6px solid var(--primary); line-height: 1.2; flex-shrink: 0;
+      font-family: var(--cw-courseware-title-font);
+      font-size: 24px; font-weight: 700; color: var(--primary);
+      margin: 0; padding-left: 12px;
+      border-left: 5px solid var(--accent); line-height: 1.2; flex-shrink: 0;
     }
+    .eyebrow {
+      font-family: var(--cw-courseware-label-font);
+      font-size: 12px; color: var(--accent); margin: 0 0 2px;
+    }
+    .fill { flex: 1; min-height: 0; overflow: hidden; }
     .card {
       background: var(--card); border: 2px solid var(--card-border);
       border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px;
@@ -58,13 +73,13 @@
       cursor: pointer; border: 2px solid var(--card-border);
       font-size: 14px; font-family: inherit;
     }
-    .btn-primary { background: var(--btn-bg); color: var(--btn-fg); border-color: var(--primary); }
+    .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); border-color: var(--primary); }
     .btn-2nd { background: var(--btn-2nd-bg); color: var(--btn-2nd-fg); }
     .tip {
       background: var(--btn-2nd-bg); border: 2px solid var(--accent);
       border-radius: var(--radius); padding: 10px 14px; font-size: 14px; line-height: 1.55;
     }
-    ul.compact { margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.75; }
+    ul.compact { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.55; }
     .tag-pill {
       display: inline-block; padding: 4px 12px; border: 2px solid var(--primary);
       border-radius: var(--radius); font-size: 13px; background: var(--bg); margin-right: 6px;
@@ -75,22 +90,49 @@
 <!-- P1 封面 -->
 <template class="page-data" data-id="1" data-name="封面">
   <style>
-    .cover {
-      height: 100%; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; background: var(--primary); color: #000; text-align: center;
-      padding: 36px; box-sizing: border-box;
+    .cover-page {
+      position: relative; width: 960px; height: 540px;
+      min-width: 960px; max-width: 960px; min-height: 540px; max-height: 540px;
+      flex-shrink: 0; overflow: hidden;
+      background: linear-gradient(160deg, #FFF3D9 0%, #fff 50%, #FFF6E3 100%);
     }
-    .cover h1 { font-size: 42px; margin: 0 0 12px; font-weight: 800; }
-    .cover .sub { font-size: 18px; margin: 0 0 20px; line-height: 1.6; }
-    .cover .meta {
-      font-size: 16px; background: var(--btn-2nd-bg); color: var(--text);
-      border: 2px solid var(--accent); padding: 10px 24px; border-radius: var(--radius);
+    .cover-page * { box-sizing: border-box; }
+    .cover-deco-flag {
+      position: absolute; left: 60px; top: 80px; width: 90px; height: 120px;
+      background: var(--primary); border: 3px solid var(--accent); border-radius: 4px;
+    }
+    .cover-deco-flag::after {
+      content: "★"; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      font-size: 36px; color: #fff;
+    }
+    .cover-deco-year {
+      position: absolute; right: 70px; top: 100px; font-size: 72px; font-weight: 800;
+      color: rgba(248,152,31,.25); font-family: var(--cw-courseware-latin-accent-font, Georgia, serif);
+    }
+    .cover-page[data-cover-layout="cover-01-center-stack"] .cover-copy { left:163px; top:184px; width:634px; height:135px; text-align:center; }
+    .cover-page[data-cover-layout="cover-01-center-stack"] .cover-title {
+      margin:0; font-family:var(--cw-courseware-title-font); font-size:72px; line-height:80px;
+      font-weight:700; color:var(--primary); letter-spacing:4px;
+      border:0!important; padding:0!important;
+    }
+    .cover-page[data-cover-layout="cover-01-center-stack"] .cover-subtitle {
+      margin:12px 0 0; font-size:32px; line-height:36px; color:var(--accent); font-weight:400;
+    }
+    .cover-page[data-cover-layout="cover-01-center-stack"] .cover-meta {
+      left:211px; top:400px; width:538px; height:25px; text-align:center;
+      font-size:22px; line-height:26px; font-weight:500; color:var(--primary);
+      position:absolute; z-index:2; margin:0;
+      font-family:var(--cw-courseware-label-font);
     }
   </style>
-  <div class="cover">
-    <h1>辛亥革命</h1>
-    <p class="sub">推翻帝制 · 走向共和 · 近代中国的伟大转折</p>
-    <div class="meta">初中历史 · 八年级 · 人教版</div>
+  <div class="cover-page" data-cw-role="page-root" data-cover-layout="cover-01-center-stack" data-cover-visual="none">
+    <div class="cover-deco-flag"></div>
+    <div class="cover-deco-year">1911</div>
+    <header class="cover-copy" data-cw-role="title-block">
+      <h1 class="cover-title">辛亥革命</h1>
+      <p class="cover-subtitle">推翻帝制 · 走向共和</p>
+    </header>
+    <footer class="cover-meta">人教版 · 初中历史 · 八年级</footer>
   </div>
 </template>
 
@@ -122,7 +164,6 @@
       <div class="toc-item"><span class="toc-num">7</span><span class="toc-text">多选题<br><small>Multiple Choice</small></span></div>
       <div class="toc-item"><span class="toc-num">8</span><span class="toc-text">课堂小结<br><small>Summary</small></span></div>
     </div>
-    <div class="tip" style="margin-top:12px;">第 8 页单选共 8 题，同页逐题切换，每题确认后出解析；第 9 页为多选题。</div>
   </div>
 </template>
 
@@ -130,34 +171,18 @@
 <template class="page-data" data-id="3" data-name="清末危机与革命酝酿">
   <div class="page-container">
     <div class="page-title">讲解：清末内外危机与革命酝酿</div>
-    <div class="card" style="font-size:16px;font-weight:700;color:var(--accent);text-align:center;">
-      民族危机加深 + 清政府腐朽无能 → 资产阶级革命思想传播
+    <div class="card" style="font-size:14px;font-weight:700;color:var(--accent);text-align:center;flex-shrink:0;">
+      民族危机加深 → 革命思想传播 → 武装起义此起彼伏
     </div>
-    <div class="card">
-      <div style="display:flex;gap:16px;align-items:flex-start;">
-        <div style="flex:1;min-width:0;">
-          <p style="margin:0 0 8px;font-size:15px;"><strong>时代背景：</strong>甲午战争失败、《辛丑条约》签订后，中国<strong>完全沦为半殖民地半封建社会</strong>，民族危机空前严重。</p>
-          <ul class="compact">
-            <li><span class="tag-pill">1894</span> 孙中山在檀香山创立<strong>兴中会</strong>，提出「驱除鞑虏，恢复中国，创立合众政府」</li>
-            <li><span class="tag-pill">1905</span> 孙中山在日本东京成立<strong>中国同盟会</strong>，纲领为「驱除鞑虏，恢复中华，创立民国，平均地权」</li>
-            <li><span class="tag-pill">三民主义</span> 民族主义、民权主义、民生主义，是孙中山领导革命的<strong>指导思想</strong></li>
-            <li><span class="tag-pill">武装起义</span> 广州起义、黄花岗起义等多次起义虽失败，但动摇了清朝统治根基</li>
-          </ul>
-        </div>
-        <figure style="margin:0;flex:0 0 176px;text-align:center;">
-          <img
-            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80"
-            alt="公网图片联网测试"
-            loading="lazy"
-            style="width:176px;height:120px;object-fit:cover;display:block;border:3px solid var(--accent);border-radius:8px;background:#f5efe6;"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
-          />
-          <div style="display:none;width:176px;height:120px;border:3px dashed var(--error);border-radius:8px;align-items:center;justify-content:center;color:var(--error);font-size:13px;font-weight:800;line-height:1.5;background:#fff5f5;">图片未加载<br>（外链被拦）</div>
-          <figcaption style="font-size:12px;color:var(--accent);margin-top:5px;font-weight:700;">示例图片 · 公网链接联网测试</figcaption>
-        </figure>
-      </div>
+    <div class="card fill" style="overflow:hidden">
+      <p style="margin:0 0 6px;font-size:14px;line-height:1.5"><strong>时代背景：</strong>《辛丑条约》后中国<strong>完全沦为半殖民地半封建社会</strong>，民族危机空前严重。</p>
+      <ul class="compact">
+        <li><span class="tag-pill">1894</span> 孙中山创立<strong>兴中会</strong>，号召推翻清朝</li>
+        <li><span class="tag-pill">1905</span> 成立<strong>中国同盟会</strong>，提出三民主义纲领</li>
+        <li><span class="tag-pill">起义</span> 黄花岗起义等虽失败，却动摇清朝统治根基</li>
+      </ul>
     </div>
-    <div class="tip"><strong>记忆要点：</strong>同盟会是第一个全国规模的资产阶级革命政党；革命派与维新派、洋务派的根本分歧在于是否推翻清朝、建立共和。</div>
+    <div class="tip" style="flex-shrink:0;font-size:13px"><strong>要点：</strong>同盟会是第一个全国规模的资产阶级革命政党。</div>
   </div>
 </template>
 
@@ -178,29 +203,24 @@
   </style>
   <div class="page-container">
     <div class="page-title">讲解：武昌起义与中华民国成立</div>
-    <div class="timeline">
+    <div class="timeline fill" style="overflow:hidden">
       <div class="tl-item">
         <div class="tl-date">1911.10.10</div>
-        <div class="tl-body"><strong>武昌起义</strong>爆发。湖北新军工程营打响第一枪，起义军迅速占领武昌，成立湖北军政府，推举黎元洪为都督。因 1911 年为农历辛亥年，故称<strong>辛亥革命</strong>。</div>
+        <div class="tl-body"><strong>武昌起义</strong>爆发，起义军占领武昌，成立湖北军政府（辛亥革命开端）。</div>
       </div>
       <div class="tl-item">
         <div class="tl-date">1911.11—12</div>
-        <div class="tl-body">全国十余省纷纷响应，清朝统治土崩瓦解。南方革命政权与北方清政府形成对峙局面。</div>
+        <div class="tl-body">十余省响应，清朝统治土崩瓦解。</div>
       </div>
       <div class="tl-item">
         <div class="tl-date">1912.1.1</div>
-        <div class="tl-body">孙中山在南京宣誓就职，<strong>中华民国临时政府</strong>成立，定都南京，改用公历，以中华民国纪年。</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-date">1912.3</div>
-        <div class="tl-body">临时参议院颁布<strong>《中华民国临时约法》</strong>，是中国历史上第一部具有资产阶级共和国宪法性质的重要文件。</div>
+        <div class="tl-body">孙中山在南京就职，<strong>中华民国临时政府</strong>成立。</div>
       </div>
       <div class="tl-item">
         <div class="tl-date">1912.2.12</div>
-        <div class="tl-body">清帝溥仪退位，清朝统治结束，<strong>中国两千多年封建帝制终结</strong>。</div>
+        <div class="tl-body">清帝退位，<strong>两千多年封建帝制终结</strong>。</div>
       </div>
     </div>
-    <div class="tip" style="margin-top:10px;"><strong>注意：</strong>武昌起义具有偶然性（原计划推迟却因意外提前），但辛亥革命的胜利具有历史必然性。</div>
   </div>
 </template>
 
@@ -235,10 +255,8 @@
         </ul>
       </div>
     </div>
-    <div class="card discuss" style="margin-top:10px;">
-      <p style="margin:0 0 6px;"><strong>讨论 1：</strong>为什么说辛亥革命是一次「不彻底的资产阶级民主革命」？</p>
-      <p style="margin:0 0 8px;"><strong>讨论 2：</strong>孙中山说「革命尚未成功，同志仍须努力」，这句话反映了什么？</p>
-      <p style="margin:0;font-size:13px;color:var(--accent);">提示：从革命性质、革命任务是否完成、革命成果是否巩固三个角度思考。</p>
+    <div class="card discuss" style="margin-top:6px;flex-shrink:0;font-size:13px;line-height:1.5">
+      <p style="margin:0"><strong>思考：</strong>为什么说辛亥革命是「不彻底的资产阶级民主革命」？（提示：革命任务是否完成、社会性质是否改变）</p>
     </div>
   </div>
 </template>

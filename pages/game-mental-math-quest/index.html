@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>口算星球闯关</title>
+  <!-- spec: mode=single; requirements=小学口算闯关小游戏; core-loop=选模式→开始→答题→判定反馈→下一题×10→结算→再玩 -->
+  <!-- style-guide: palette=EDU-橙; radius=16; keyword=口算闯关; source=game -->
+  <style>
+    :root {
+      --bg: #FFF3D9;
+      --text: #3D3334;
+      --primary: #F8981F;
+      --accent: #9D3E00;
+      --card: #FFFFFF;
+      --card-border: rgba(0, 0, 0, 0.30);
+      --demo-bg: #FFFFFF;
+      --demo-border: rgba(0, 0, 0, 0.30);
+      --demo-grid: #ECECEC;
+      --btn-primary-bg: #F8981F;
+      --btn-primary-fg: #000000;
+      --btn-2nd-bg: #FFF6E3;
+      --btn-2nd-fg: #000000;
+      --success: #549B22;
+      --error: #C0392B;
+      --radius: 16px;
+      --stage-base: #eef1f5;
+      --canvas-bg: color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; height: 100%; overflow: hidden;
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--text); background: var(--canvas-bg);
+    }
+    .page-frame {
+      width: 100%; height: 100vh; max-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px; background: var(--canvas-bg);
+    }
+    .canvas {
+      width: 960px; height: 540px; max-width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border: 3px solid var(--card-border);
+      border-radius: var(--radius);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    @media (max-aspect-ratio: 16/9) {
+      .canvas { width: 100%; height: auto; }
+    }
+    .deco-star {
+      position: absolute; width: 12px; height: 12px;
+      background: var(--primary); border-radius: 50%; opacity: 0.35;
+    }
+    .topbar {
+      flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; border-bottom: 2px solid var(--card-border);
+      background: var(--card);
+    }
+    .topbar h1 { margin: 0; font-size: 22px; color: var(--primary); }
+    .stats { display: flex; gap: 14px; font-size: 14px; font-weight: 700; align-items: center; }
+    .hearts { color: var(--error); letter-spacing: 2px; font-size: 18px; }
+    .stage {
+      flex: 1; min-height: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 16px 24px; gap: 14px;
+      background: var(--demo-bg);
+      background-image: linear-gradient(var(--demo-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--demo-grid) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .panel { text-align: center; width: 100%; max-width: 720px; }
+    .panel h2 { margin: 0 0 8px; font-size: 28px; color: var(--primary); }
+    .panel p { margin: 0 0 14px; font-size: 15px; line-height: 1.5; }
+    .chip-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .chip {
+      padding: 6px 14px; border: 2px solid var(--card-border); border-radius: 999px;
+      background: var(--btn-2nd-bg); font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .chip.on { border-color: var(--primary); background: #fff; outline: 3px solid rgba(248,152,31,.25); }
+    .btn {
+      padding: 10px 22px; border: 2px solid var(--card-border); border-radius: var(--radius);
+      font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+      background: var(--btn-2nd-bg); color: var(--btn-2nd-fg);
+    }
+    .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); border-color: var(--primary); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .question-box {
+      width: 100%; max-width: 520px; margin: 0 auto 12px;
+      padding: 20px; background: var(--card); border: 3px solid var(--primary);
+      border-radius: var(--radius); font-size: 42px; font-weight: 800;
+      color: var(--accent); letter-spacing: 2px;
+    }
+    .opts {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+      width: 100%; max-width: 520px; margin: 0 auto;
+    }
+    .opt {
+      padding: 14px; font-size: 24px; font-weight: 700; cursor: pointer;
+      border: 2px solid var(--card-border); border-radius: var(--radius);
+      background: #fff; transition: border-color 0.15s, background 0.15s;
+    }
+    .opt:hover:not(:disabled) { border-color: var(--primary); }
+    .opt.correct { border-color: var(--success); background: #f0faf4; }
+    .opt.wrong { border-color: var(--error); background: #fdf3f2; }
+    .opt:disabled { cursor: default; }
+    .feedback {
+      min-height: 44px; max-width: 520px; margin: 8px auto 0;
+      padding: 10px 14px; border-radius: var(--radius); font-size: 15px;
+      border: 2px solid var(--card-border); background: #fff;
+    }
+    .feedback.ok { border-color: var(--success); color: var(--success); }
+    .feedback.bad { border-color: var(--error); color: var(--error); }
+    .progress {
+      flex-shrink: 0; height: 8px; background: var(--btn-2nd-bg);
+      border-top: 2px solid var(--card-border);
+    }
+    .progress > i {
+      display: block; height: 100%; background: var(--primary);
+      width: 0%; transition: width 0.25s;
+    }
+    .toolbar {
+      flex-shrink: 0; display: flex; justify-content: center; gap: 10px;
+      padding: 10px 16px; border-top: 2px solid var(--card-border); background: var(--card);
+    }
+    .score-big { font-size: 48px; font-weight: 800; color: var(--primary); margin: 8px 0; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="page-frame">
+    <main class="canvas" id="app">
+      <div class="deco-star" style="left:40px;top:60px"></div>
+      <div class="deco-star" style="right:80px;top:90px;width:8px;height:8px"></div>
+      <div class="deco-star" style="right:120px;bottom:100px"></div>
+
+      <header class="topbar">
+        <h1>口算星球闯关</h1>
+        <div class="stats">
+          <span id="stat-mode">模式：混合</span>
+          <span id="stat-score">得分：0</span>
+          <span class="hearts" id="stat-hearts" aria-label="生命值">♥♥♥</span>
+        </div>
+      </header>
+
+      <div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+
+      <!-- 开始 -->
+      <section class="stage" id="screen-start">
+        <div class="panel">
+          <h2>准备好挑战了吗？</h2>
+          <p>在 10 道题内尽可能拿高分。答对 +10 分，答错扣 1 颗心。心用完则闯关失败。</p>
+          <div class="chip-row" id="mode-chips">
+            <button type="button" class="chip" data-mode="add">加法</button>
+            <button type="button" class="chip" data-mode="sub">减法</button>
+            <button type="button" class="chip on" data-mode="mix">混合</button>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-start">开始闯关</button>
+        </div>
+      </section>
+
+      <!-- 游戏中 -->
+      <section class="stage hidden" id="screen-play">
+        <div class="question-box" id="question-text">3 + 5 = ?</div>
+        <div class="opts" id="opts"></div>
+        <div class="feedback" id="feedback" role="status"></div>
+      </section>
+
+      <!-- 结算 -->
+      <section class="stage hidden" id="screen-end">
+        <div class="panel">
+          <h2 id="end-title">闯关成功！</h2>
+          <div class="score-big" id="end-score">80 分</div>
+          <p id="end-msg">太棒了，口算越来越熟练！</p>
+          <button type="button" class="btn btn-primary" id="btn-replay">再玩一次</button>
+        </div>
+      </section>
+
+      <footer class="toolbar">
+        <button type="button" class="btn hidden" id="btn-next">下一题</button>
+        <button type="button" class="btn hidden" id="btn-reset">返回首页</button>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+  (function () {
+    var TOTAL = 10;
+    var mode = 'mix';
+    var index = 0;
+    var score = 0;
+    var hearts = 3;
+    var current = null;
+    var answered = false;
+
+    var el = {
+      start: document.getElementById('screen-start'),
+      play: document.getElementById('screen-play'),
+      end: document.getElementById('screen-end'),
+      question: document.getElementById('question-text'),
+      opts: document.getElementById('opts'),
+      feedback: document.getElementById('feedback'),
+      progress: document.getElementById('progress-bar'),
+      statMode: document.getElementById('stat-mode'),
+      statScore: document.getElementById('stat-score'),
+      statHearts: document.getElementById('stat-hearts'),
+      endTitle: document.getElementById('end-title'),
+      endScore: document.getElementById('end-score'),
+      endMsg: document.getElementById('end-msg'),
+      btnNext: document.getElementById('btn-next'),
+      btnReset: document.getElementById('btn-reset')
+    };
+
+    var modeLabels = { add: '加法', sub: '减法', mix: '混合' };
+
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function genQuestion() {
+      var op = mode;
+      if (mode === 'mix') op = Math.random() < 0.5 ? 'add' : 'sub';
+      var a, b, ans, text;
+      if (op === 'add') {
+        a = rand(1, 18); b = rand(1, 20 - a);
+        ans = a + b;
+        text = a + ' + ' + b + ' = ?';
+      } else {
+        a = rand(5, 20); b = rand(1, a);
+        ans = a - b;
+        text = a + ' − ' + b + ' = ?';
+      }
+      var opts = new Set([ans]);
+      while (opts.size < 4) {
+        var d = ans + rand(-4, 4);
+        if (d >= 0 && d !== ans) opts.add(d);
+      }
+      var arr = Array.from(opts);
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = rand(0, i);
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+      }
+      return { text: text, answer: ans, options: arr };
+    }
+
+    function renderHearts() {
+      var s = '';
+      for (var i = 0; i < 3; i++) s += i < hearts ? '♥' : '♡';
+      el.statHearts.textContent = s;
+    }
+
+    function renderStats() {
+      el.statMode.textContent = '模式：' + modeLabels[mode];
+      el.statScore.textContent = '得分：' + score;
+      el.progress.style.width = (index / TOTAL * 100) + '%';
+      renderHearts();
+    }
+
+    function showScreen(name) {
+      el.start.classList.toggle('hidden', name !== 'start');
+      el.play.classList.toggle('hidden', name !== 'play');
+      el.end.classList.toggle('hidden', name !== 'end');
+      el.btnNext.classList.toggle('hidden', name !== 'play' || !answered);
+      el.btnReset.classList.toggle('hidden', name === 'start');
+    }
+
+    function renderQuestion() {
+      answered = false;
+      current = genQuestion();
+      el.question.textContent = current.text;
+      el.feedback.textContent = '';
+      el.feedback.className = 'feedback';
+      el.opts.innerHTML = '';
+      current.options.forEach(function (v) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt';
+        btn.textContent = v;
+        btn.addEventListener('click', function () { pick(v, btn); });
+        el.opts.appendChild(btn);
+      });
+      el.btnNext.classList.add('hidden');
+    }
+
+    function pick(val, btn) {
+      if (answered) return;
+      answered = true;
+      var ok = val === current.answer;
+      Array.prototype.forEach.call(el.opts.children, function (b) {
+        b.disabled = true;
+        var n = Number(b.textContent);
+        if (n === current.answer) b.classList.add('correct');
+        else if (b === btn && !ok) b.classList.add('wrong');
+      });
+      if (ok) {
+        score += 10;
+        el.feedback.textContent = '正确！+10 分。';
+        el.feedback.className = 'feedback ok';
+      } else {
+        hearts -= 1;
+        el.feedback.textContent = '不对哦，正确答案是 ' + current.answer + '。';
+        el.feedback.className = 'feedback bad';
+      }
+      renderStats();
+      el.btnNext.classList.remove('hidden');
+      if (hearts <= 0) {
+        setTimeout(finishGame, 600);
+      }
+    }
+
+    function nextQuestion() {
+      if (!answered) return;
+      index += 1;
+      if (index >= TOTAL) {
+        finishGame();
+        return;
+      }
+      renderQuestion();
+      renderStats();
+    }
+
+    function finishGame() {
+      var win = hearts > 0;
+      el.endTitle.textContent = win ? '闯关成功！' : '闯关失败';
+      el.endScore.textContent = score + ' 分';
+      if (win && score >= 80) el.endMsg.textContent = '太棒了，你是口算小能手！';
+      else if (win) el.endMsg.textContent = '不错，再练几轮可以拿更高分。';
+      else el.endMsg.textContent = '别灰心，选对模式再试一次吧。';
+      showScreen('end');
+    }
+
+    function startGame() {
+      index = 0; score = 0; hearts = 3;
+      renderStats();
+      showScreen('play');
+      renderQuestion();
+    }
+
+    function resetAll() {
+      showScreen('start');
+      el.btnNext.classList.add('hidden');
+    }
+
+    document.getElementById('mode-chips').addEventListener('click', function (e) {
+      var chip = e.target.closest('.chip');
+      if (!chip) return;
+      mode = chip.getAttribute('data-mode');
+      Array.prototype.forEach.call(document.querySelectorAll('.chip'), function (c) {
+        c.classList.toggle('on', c === chip);
+      });
+      renderStats();
+    });
+
+    document.getElementById('btn-start').addEventListener('click', startGame);
+    document.getElementById('btn-replay').addEventListener('click', startGame);
+    el.btnNext.addEventListener('click', nextQuestion);
+    el.btnReset.addEventListener('click', resetAll);
+
+    renderStats();
+    showScreen('start');
+  })();
+  </script>
+</body>
+</html>

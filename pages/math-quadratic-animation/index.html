@@ -1,0 +1,529 @@
+<!-- html-authoring:math-design palette=B-14 layout=L1 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>二次函数图像动态演示</title>
+  <!-- spec: requirements=单页数学动画课件; require=二次函数抛物线形变,坐标轴,面积填充,参考曲线对比,沿曲线运动点,分步讲解,参数a滑块,播放暂停步进重置; forbid=整图方格背景,emoji,虚构外链; core-loop=播放→观察抛物线形变与面积变化→滑块调节→分步讲解→暂停→重置 -->
+  <style>
+    :root {
+      --bg: #27644D;
+      --text: #FFFFFF;
+      --primary: #6AFA77;
+      --secondary: #B292FA;
+      --card-bg: #27644D;
+      --card-border: rgba(255, 255, 255, 0.30);
+      --stage-bg: #EBEDD4;
+      --stage-border: #689383;
+      --demo-1: rgba(106, 250, 119, 0.55);
+      --demo-1-solid: rgba(106, 250, 119, 0.95);
+      --demo-1-border: #438B66;
+      --demo-2: #B292FA;
+      --demo-2-border: #5925CF;
+      --btn-primary-bg: #6AFA77;
+      --btn-primary-fg: #1B4535;
+      --btn-secondary-bg: #1B4535;
+      --btn-secondary-fg: #FFFFFF;
+      --radius: 26px;
+      --font: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    #app {
+      min-height: 100vh;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      flex-shrink: 0;
+      padding: 16px 24px 8px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 5vh, 40px);
+      font-weight: 700 !important;
+      color: var(--primary);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 0 16px 16px;
+      min-height: 0;
+    }
+
+    #stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: var(--stage-bg);
+      border: 1px solid var(--stage-border);
+      border-radius: var(--radius);
+      min-height: 300px;
+    }
+
+    #plot-svg {
+      width: min(96%, 760px);
+      height: min(88%, 400px);
+      max-width: 96%;
+      max-height: 88%;
+      margin: auto;
+    }
+
+    .axis-line { stroke: #1B4535; stroke-width: 2.5; }
+    .tick-line { stroke: #689383; stroke-width: 1.5; }
+    .axis-label { fill: #1B4535; font-size: 16px; font-weight: 600; }
+    .ref-curve { fill: none; stroke-width: 2.5; stroke-dasharray: 6 5; opacity: 0.55; }
+    .ref-curve.pos { stroke: var(--demo-1-border); }
+    .ref-curve.neg { stroke: var(--demo-2-border); }
+    .main-fill { opacity: 0.42; stroke: none; }
+    .main-curve { fill: none; stroke-width: 5; stroke-linecap: round; }
+    .symmetry-line { stroke: var(--demo-1-border); stroke-width: 2; stroke-dasharray: 8 6; opacity: 0.7; }
+    .vertex-dot { fill: var(--demo-2); stroke: var(--demo-2-border); stroke-width: 3; }
+    .tracer-dot { fill: var(--demo-1-solid); stroke: var(--demo-1-border); stroke-width: 3; }
+    .tracer-line { stroke: var(--demo-1-border); stroke-width: 2; stroke-dasharray: 5 4; opacity: 0.8; }
+    .coord-label { fill: #1B4535; font-size: 15px; font-weight: 600; }
+
+    .overlay-top {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .chip {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 8px 14px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .chip .va { color: var(--primary); font-weight: 700; font-size: 24px; }
+    .chip .vb { color: var(--secondary); font-weight: 700; }
+
+    .teach-bar {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font-size: 20px;
+      line-height: 1.45;
+      color: #fff;
+    }
+
+    .teach-bar strong { color: var(--primary); }
+
+    .legend {
+      position: absolute;
+      top: 52px;
+      right: 12px;
+      background: rgba(39, 100, 77, 0.92);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 8px 12px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-swatch { width: 22px; height: 4px; border-radius: 2px; }
+
+    #controls {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 4px 2px;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 160px;
+      flex: 1;
+    }
+
+    .control-label { font-size: 22px; font-weight: 500; }
+    input[type="range"] { width: 100%; height: 12px; accent-color: var(--primary); cursor: pointer; }
+    .range-value { font-size: 28px; font-weight: 700; color: var(--primary); }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    button {
+      height: 80px;
+      min-width: 110px;
+      padding: 0 20px;
+      border-radius: var(--radius);
+      font-size: 28px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+      transition: transform 0.12s ease;
+    }
+
+    button:active { transform: scale(0.97); }
+    .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); }
+    .btn-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-fg); }
+    .btn-primary.is-playing { box-shadow: 0 0 0 3px rgba(106, 250, 119, 0.45); }
+
+    .step-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .step-pill {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 18px;
+      background: var(--btn-secondary-bg);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      cursor: pointer;
+    }
+    .step-pill.active { background: var(--primary); color: var(--btn-primary-fg); font-weight: 600; }
+
+    @media (max-width: 768px) {
+      #controls { flex-direction: column; align-items: stretch; }
+      button { flex: 1; font-size: 24px; height: 72px; }
+      .legend { display: none; }
+      .teach-bar { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>二次函数图像动态演示</h1>
+      <p class="subtitle">看抛物线如何随 a 翻转、变宽变窄，以及曲线下方面积如何变化</p>
+    </header>
+
+    <main>
+      <section id="stage" aria-label="函数图像演示区">
+        <div class="overlay-top">
+          <div class="chip">y = <span class="va" id="formula-a">1</span>x²</div>
+          <div class="chip" id="feature-chip">开口向上 · |a| = 1</div>
+          <div class="chip" id="area-chip">x∈[-3,3] 面积 ≈ <span class="vb" id="area-val">9</span></div>
+        </div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--demo-2-border)"></span>当前曲线</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--demo-1-border);opacity:.6"></span>参考 y=±1x²</div>
+          <div class="legend-item"><span class="legend-swatch" style="background:var(--demo-1-solid)"></span>沿曲线运动的点</div>
+        </div>
+
+        <svg id="plot-svg" viewBox="-200 -130 400 260" aria-hidden="true">
+          <g id="axes-group"></g>
+          <path id="ref-pos" class="ref-curve pos"/>
+          <path id="ref-neg" class="ref-curve neg"/>
+          <path id="main-fill" class="main-fill"/>
+          <line id="symmetry-axis" class="symmetry-line" x1="0" y1="-115" x2="0" y2="115"/>
+          <path id="main-curve" class="main-curve"/>
+          <line id="tracer-v" class="tracer-line" x1="0" y1="0" x2="0" y2="0"/>
+          <line id="tracer-h" class="tracer-line" x1="0" y1="0" x2="0" y2="0"/>
+          <circle id="vertex" class="vertex-dot" r="6" cx="0" cy="0"/>
+          <circle id="tracer" class="tracer-dot" r="8" cx="0" cy="0"/>
+          <text id="tracer-label" class="coord-label" x="0" y="0"></text>
+        </svg>
+
+        <div class="teach-bar" id="teach-text">
+          <strong>第 1 步</strong>：当 a &gt; 0 时，抛物线开口向上，顶点在原点 (0, 0)。
+        </div>
+      </section>
+
+      <aside id="controls">
+        <div class="control-group">
+          <span class="control-label">参数 a = <span class="range-value" id="a-value">1.0</span></span>
+          <input type="range" id="slider-a" min="-3" max="3" step="0.1" value="1">
+        </div>
+        <div class="step-pills" id="step-pills"></div>
+        <div class="btn-row">
+          <button type="button" class="btn-primary" id="btn-play">播放动画</button>
+          <button type="button" class="btn-secondary" id="btn-pause">暂停</button>
+          <button type="button" class="btn-secondary" id="btn-reset">重置</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const X_MIN = -4, X_MAX = 4;
+      const X_AREA = 3;
+      const UNIT = 28;
+      const Y_TOP = 4.5, Y_BOT = -4.5;
+
+      const TEACH_STEPS = [
+        { a: 1, text: '<strong>第 1 步</strong>：当 a &gt; 0 时，抛物线开口向上，顶点在原点 (0, 0)。' },
+        { a: 2, text: '<strong>第 2 步</strong>：|a| 越大，抛物线越"瘦"。对比参考线 y = x²，a = 2 时开口更窄。' },
+        { a: 0.4, text: '<strong>第 3 步</strong>：|a| 越小，抛物线越"胖"。a = 0.4 时曲线更平缓。' },
+        { a: -1, text: '<strong>第 4 步</strong>：当 a &lt; 0 时，抛物线开口向下，图像关于 x 轴翻转。' },
+        { a: -2, text: '<strong>第 5 步</strong>：a = -2 时开口向下且更窄，注意曲线下方面积变为负向区域。' }
+      ];
+
+      const $ = id => document.getElementById(id);
+      const slider = $('slider-a');
+      const aValueEl = $('a-value');
+      const formulaA = $('formula-a');
+      const featureChip = $('feature-chip');
+      const areaVal = $('area-val');
+      const teachText = $('teach-text');
+      const mainCurve = $('main-curve');
+      const mainFill = $('main-fill');
+      const refPos = $('ref-pos');
+      const refNeg = $('ref-neg');
+      const tracer = $('tracer');
+      const tracerV = $('tracer-v');
+      const tracerH = $('tracer-h');
+      const tracerLabel = $('tracer-label');
+      const axesGroup = $('axes-group');
+      const stepPills = $('step-pills');
+      const btnPlay = $('btn-play');
+      const btnPause = $('btn-pause');
+      const btnReset = $('btn-reset');
+
+      let currentA = 1;
+      let teachIndex = 0;
+      let playing = false;
+      let animFrame = null;
+      let playT = 0;
+      let tracerT = 0;
+
+      function toScreen(x, y) {
+        return { x: x * UNIT, y: -y * UNIT };
+      }
+
+      function drawAxes() {
+        axesGroup.innerHTML = '';
+        const mk = (x1, y1, x2, y2, cls) => {
+          const el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+          el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+          el.setAttribute('class', cls);
+          return el;
+        };
+
+        const xS = toScreen(X_MIN, 0), xE = toScreen(X_MAX, 0);
+        const yS = toScreen(0, Y_BOT), yE = toScreen(0, Y_TOP);
+        axesGroup.appendChild(mk(xS.x, xS.y, xE.x, xE.y, 'axis-line'));
+        axesGroup.appendChild(mk(yS.x, yS.y, yE.x, yE.y, 'axis-line'));
+
+        for (let i = X_MIN; i <= X_MAX; i++) {
+          if (!i) continue;
+          const p = toScreen(i, 0);
+          axesGroup.appendChild(mk(p.x, -5, p.x, 5, 'tick-line'));
+          const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          t.setAttribute('x', p.x); t.setAttribute('y', 18);
+          t.setAttribute('text-anchor', 'middle');
+          t.setAttribute('class', 'axis-label');
+          t.textContent = i;
+          axesGroup.appendChild(t);
+        }
+        for (let j = Math.ceil(Y_BOT); j <= Math.floor(Y_TOP); j++) {
+          if (!j) continue;
+          const p = toScreen(0, j);
+          axesGroup.appendChild(mk(-5, p.y, 5, p.y, 'tick-line'));
+          const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          t.setAttribute('x', -12); t.setAttribute('y', p.y + 5);
+          t.setAttribute('text-anchor', 'end');
+          t.setAttribute('class', 'axis-label');
+          t.textContent = j;
+          axesGroup.appendChild(t);
+        }
+      }
+
+      function curvePath(a, fillToAxis) {
+        const pts = [];
+        const n = 100;
+        for (let i = 0; i <= n; i++) {
+          const x = X_MIN + (X_MAX - X_MIN) * i / n;
+          let y = a * x * x;
+          y = Math.max(Y_BOT, Math.min(Y_TOP, y));
+          const p = toScreen(x, y);
+          pts.push((i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ',' + p.y.toFixed(1));
+        }
+        if (fillToAxis) {
+          const pR = toScreen(X_MAX, 0);
+          const pL = toScreen(X_MIN, 0);
+          pts.push('L' + pR.x.toFixed(1) + ',' + pR.y.toFixed(1));
+          pts.push('L' + pL.x.toFixed(1) + ',' + pL.y.toFixed(1) + 'Z');
+        }
+        return pts.join(' ');
+      }
+
+      function areaUnder(a) {
+        return (2 * a * Math.pow(X_AREA, 3)) / 3;
+      }
+
+      function formatA(a) {
+        if (Math.abs(a) < 0.05) return '0';
+        const r = Math.round(a * 10) / 10;
+        return Number.isInteger(r) ? String(r) : r.toFixed(1);
+      }
+
+      function setTracer(x, a) {
+        const y = a * x * x;
+        const yClamped = Math.max(Y_BOT, Math.min(Y_TOP, y));
+        const p = toScreen(x, yClamped);
+        const ox = toScreen(x, 0);
+        const oy = toScreen(0, yClamped);
+        tracer.setAttribute('cx', p.x);
+        tracer.setAttribute('cy', p.y);
+        tracerV.setAttribute('x1', p.x); tracerV.setAttribute('y1', p.y);
+        tracerV.setAttribute('x2', ox.x); tracerV.setAttribute('y2', ox.y);
+        tracerH.setAttribute('x1', p.x); tracerH.setAttribute('y1', p.y);
+        tracerH.setAttribute('x2', oy.x); tracerH.setAttribute('y2', oy.y);
+        tracerLabel.setAttribute('x', p.x + 10);
+        tracerLabel.setAttribute('y', p.y - 10);
+        tracerLabel.textContent = '(' + x.toFixed(1) + ', ' + y.toFixed(1) + ')';
+      }
+
+      function render(a, tracerX) {
+        currentA = a;
+        const clamped = Math.max(-3, Math.min(3, a));
+        slider.value = clamped;
+        aValueEl.textContent = formatA(clamped);
+        formulaA.textContent = formatA(clamped);
+
+        const dir = clamped > 0.05 ? '开口向上' : clamped < -0.05 ? '开口向下' : '退化为直线';
+        const width = Math.abs(clamped) >= 1 ? '较窄' : Math.abs(clamped) < 0.05 ? '' : '较宽';
+        featureChip.textContent = dir + (width ? ' · ' + width : '') + ' · |a| = ' + formatA(Math.abs(clamped));
+
+        const area = areaUnder(clamped);
+        areaVal.textContent = area.toFixed(1);
+
+        refPos.setAttribute('d', curvePath(1, false));
+        refNeg.setAttribute('d', curvePath(-1, false));
+        mainFill.setAttribute('d', curvePath(clamped, true));
+        mainCurve.setAttribute('d', curvePath(clamped, false));
+
+        const fillColor = clamped >= 0 ? 'var(--demo-1)' : 'rgba(178, 146, 250, 0.45)';
+        const strokeColor = clamped >= 0 ? 'var(--demo-2-border)' : 'var(--demo-1-border)';
+        mainFill.style.fill = fillColor;
+        mainCurve.style.stroke = strokeColor;
+
+        setTracer(tracerX !== undefined ? tracerX : Math.sin(tracerT) * 3, clamped);
+
+        stepPills.querySelectorAll('.step-pill').forEach((pill, i) => {
+          pill.classList.toggle('active', i === teachIndex);
+        });
+      }
+
+      function buildStepPills() {
+        TEACH_STEPS.forEach((step, i) => {
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.className = 'step-pill' + (i === 0 ? ' active' : '');
+          pill.textContent = '步骤' + (i + 1);
+          pill.addEventListener('click', () => {
+            stopPlay();
+            teachIndex = i;
+            teachText.innerHTML = step.text;
+            render(step.a, 2);
+          });
+          stepPills.appendChild(pill);
+        });
+      }
+
+      function stopPlay() {
+        playing = false;
+        btnPlay.classList.remove('is-playing');
+        btnPlay.textContent = '播放动画';
+        if (animFrame) cancelAnimationFrame(animFrame);
+        animFrame = null;
+      }
+
+      function playLoop(ts) {
+        if (!playing) return;
+        if (!playT) playT = ts;
+        const elapsed = (ts - playT) / 1000;
+        playT = ts;
+
+        tracerT += elapsed * 1.8;
+        const cycle = elapsed % (TEACH_STEPS.length * 3);
+        const stepIdx = Math.floor(cycle / 3) % TEACH_STEPS.length;
+        const localT = (cycle % 3) / 3;
+
+        if (stepIdx !== teachIndex) {
+          teachIndex = stepIdx;
+          teachText.innerHTML = TEACH_STEPS[stepIdx].text;
+        }
+
+        const fromA = TEACH_STEPS[stepIdx].a;
+        const toA = TEACH_STEPS[(stepIdx + 1) % TEACH_STEPS.length].a;
+        const eased = localT < 0.5 ? 2 * localT * localT : 1 - Math.pow(-2 * localT + 2, 2) / 2;
+        const a = fromA + (toA - fromA) * eased;
+        const tx = Math.sin(tracerT) * 3;
+        render(a, tx);
+        animFrame = requestAnimationFrame(playLoop);
+      }
+
+      function startPlay() {
+        playing = true;
+        playT = 0;
+        btnPlay.classList.add('is-playing');
+        btnPlay.textContent = '播放中…';
+        animFrame = requestAnimationFrame(playLoop);
+      }
+
+      slider.addEventListener('input', () => {
+        stopPlay();
+        render(parseFloat(slider.value));
+        teachText.innerHTML = '手动调节：a = <strong>' + formatA(parseFloat(slider.value)) + '</strong>，观察曲线形变与填充区域变化。';
+      });
+
+      btnPlay.addEventListener('click', () => playing ? stopPlay() : startPlay());
+      btnPause.addEventListener('click', () => {
+        stopPlay();
+        teachText.innerHTML = '已暂停。当前 a = <strong>' + formatA(currentA) + '</strong>。';
+      });
+      btnReset.addEventListener('click', () => {
+        stopPlay();
+        teachIndex = 0;
+        teachText.innerHTML = TEACH_STEPS[0].text;
+        tracerT = 0;
+        render(1, 2);
+      });
+
+      drawAxes();
+      buildStepPills();
+      teachText.innerHTML = TEACH_STEPS[0].text;
+      render(1, 2);
+    })();
+  </script>
+</body>
+</html>

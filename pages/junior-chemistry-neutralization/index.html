@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>酸碱中和反应</title>
+  <!-- spec: mode=courseware; requirements=初中化学九年级酸碱中和; core-loop=P6指示剂切换;P8单选5题 -->
+  <!-- style-guide: palette=EDU-青; radius=16; keyword=酸碱中和; typography=sans-modern -->
+</head>
+<body>
+
+<div id="cw-loading">加载课件中...</div>
+
+<template class="page-shared">
+  <style>
+    /* CW_TYPOGRAPHY_DECISION:
+     * selectedTypographyPreset=sans-modern;
+     * category=中文黑体;
+     * reason=初中化学信息密集，公式与步骤需清晰可读;
+     * resourceMode=fallback-only;
+     * loadedFontFaces=none;
+     * fallbackReady=true;
+     */
+    :root {
+      --bg:#FFFFFF;
+      --text:#00404D;
+      --primary:#00404D;
+      --accent:#137F8B;
+      --card:#D3F6F4;
+      --card-border:rgba(0,64,77,.30);
+      --demo-bg:#D3F6F4;
+      --demo-border:#93BFC2;
+      --demo-grid:#DBF1F0;
+      --btn-primary-bg:#00404D;
+      --btn-primary-fg:#FFFFFF;
+      --btn-2nd-bg:#ECFCFB;
+      --btn-2nd-fg:#00404D;
+      --radius:16px;
+      --success:#2a8f5c;
+      --error:#c0392b;
+      --stage-base:#eef1f5;
+      --canvas-bg:color-mix(in srgb, var(--bg) 50%, var(--stage-base) 50%);
+
+      --cw-courseware-title-font:"Noto Sans SC","Source Han Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+      --cw-courseware-body-font:"Noto Sans SC","Source Han Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+      --cw-courseware-label-font:"PingFang SC","Microsoft YaHei",sans-serif;
+      --cw-courseware-note-font:"Kaiti SC","STKaiti","KaiTi",cursive;
+      --cw-courseware-latin-accent-font:Arial,sans-serif;
+    }
+    * { box-sizing:border-box; }
+    html, body {
+      margin:0; width:100%; height:100%;
+      font-family:var(--cw-courseware-body-font);
+      color:var(--text); background:var(--canvas-bg);
+    }
+    .page-container {
+      width:100%; height:100%; max-height:100%;
+      padding:22px 32px; overflow:hidden;
+      background:var(--canvas-bg);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .page-title {
+      margin:0; flex-shrink:0;
+      font-family:var(--cw-courseware-title-font);
+      font-size:26px; font-weight:700; line-height:1.2;
+      padding-left:12px; border-left:5px solid var(--accent);
+    }
+    .eyebrow {
+      font-family:var(--cw-courseware-label-font);
+      font-size:12px; color:var(--accent); margin:0 0 2px;
+      text-transform:uppercase; letter-spacing:1px;
+    }
+    .card {
+      background:var(--card); border:2px solid var(--card-border);
+      border-radius:var(--radius); padding:12px 16px;
+    }
+    .card-white { background:#fff; }
+    .demo {
+      flex:1; min-height:0;
+      background:var(--demo-bg); border:2px solid var(--demo-border);
+      border-radius:var(--radius);
+      background-image:linear-gradient(var(--demo-grid) 1px,transparent 1px),linear-gradient(90deg,var(--demo-grid) 1px,transparent 1px);
+      background-size:24px 24px;
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+    }
+    .toolbar { display:flex; gap:8px; flex-wrap:wrap; flex-shrink:0; align-items:center; }
+    .btn {
+      padding:8px 16px; border-radius:var(--radius); font-weight:600; cursor:pointer;
+      border:2px solid var(--card-border); font-size:14px;
+      font-family:var(--cw-courseware-label-font); background:var(--btn-2nd-bg); color:var(--btn-2nd-fg);
+    }
+    .btn-primary { background:var(--btn-primary-bg); color:var(--btn-primary-fg); border-color:var(--primary); }
+    .btn-primary:disabled { opacity:.45; cursor:not-allowed; }
+    .btn.active { outline:3px solid var(--accent); }
+    .pill {
+      display:inline-block; padding:2px 10px; border:2px solid var(--accent);
+      border-radius:999px; font-size:12px; color:var(--primary);
+      background:#fff; margin-right:6px; font-family:var(--cw-courseware-label-font);
+    }
+    ul.compact { margin:0; padding-left:18px; font-size:15px; line-height:1.65; }
+    ul.compact li { margin-bottom:3px; }
+    .tip {
+      background:#fff; border:2px solid var(--accent); border-radius:var(--radius);
+      padding:10px 14px; font-size:14px; line-height:1.55; flex-shrink:0;
+    }
+    .tip.ok { border-color:var(--success); background:#f0faf4; }
+    .tip.err { border-color:var(--error); background:#fdf3f2; }
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1; min-height:0; }
+    .fill { flex:1; min-height:0; overflow:hidden; }
+    .chem { font-family:var(--cw-courseware-latin-accent-font); letter-spacing:.5px; }
+  </style>
+</template>
+
+<!-- P1 封面 -->
+<template class="page-data" data-id="1" data-name="封面">
+  <style>
+    .cover-page {
+      position:relative; width:960px; height:540px;
+      min-width:960px; max-width:960px; min-height:540px; max-height:540px;
+      flex-shrink:0; overflow:hidden;
+      background:linear-gradient(160deg,#D3F6F4 0%,#fff 45%,#ECFCFB 100%);
+    }
+    .cover-page * { box-sizing:border-box; }
+    .cover-deco-beaker {
+      position:absolute; right:80px; top:120px; width:140px; height:180px;
+      border:3px solid var(--primary); border-top:none; border-radius:0 0 16px 16px;
+      background:rgba(255,255,255,.6);
+    }
+    .cover-deco-beaker::before {
+      content:""; position:absolute; left:20px; right:20px; bottom:20px; height:90px;
+      background:#137F8B; border-radius:0 0 8px 8px; opacity:.75;
+    }
+    .cover-deco-drop {
+      position:absolute; right:155px; top:70px; width:28px; height:36px;
+      background:var(--accent); border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    }
+    .cover-copy { position:absolute; left:163px; top:184px; width:634px; height:135px; text-align:center; z-index:2; }
+    .cover-title {
+      margin:0; font-family:var(--cw-courseware-title-font);
+      font-size:72px; line-height:80px; font-weight:700; color:var(--primary); letter-spacing:4px;
+    }
+    .cover-subtitle { margin:12px 0 0; font-size:32px; line-height:36px; color:var(--accent); }
+    .cover-meta {
+      position:absolute; left:211px; top:400px; width:538px; text-align:center; z-index:2;
+      font-size:22px; line-height:26px; color:var(--primary); font-family:var(--cw-courseware-label-font);
+    }
+  </style>
+  <div class="cover-page" data-cw-role="page-root" data-cover-layout="cover-01-center-stack" data-cover-visual="none">
+    <div class="cover-deco-beaker"></div>
+    <div class="cover-deco-drop"></div>
+    <header class="cover-copy" data-cw-role="title-block">
+      <h1 class="cover-title">酸碱中和反应</h1>
+      <p class="cover-subtitle">九年级化学</p>
+    </header>
+    <footer class="cover-meta">人教版 · 溶液的酸碱性 · 课题2</footer>
+  </div>
+</template>
+
+<!-- P2 目录 -->
+<template class="page-data" data-id="2" data-name="目录">
+  <style>
+    .toc { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .toc-item {
+      display:flex; align-items:center; gap:10px; padding:11px 14px;
+      background:#fff; border:2px solid var(--card-border); border-radius:var(--radius);
+    }
+    .toc-num {
+      width:32px; height:32px; background:var(--primary); color:#fff; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+      font-weight:700; font-size:14px;
+    }
+    .toc-text { font-size:15px; line-height:1.3; }
+    .toc-text small { display:block; color:var(--accent); font-size:11px; margin-top:2px; }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">学习路径</p>
+    <h2 class="page-title">本课导航</h2>
+    <div class="toc fill">
+      <div class="toc-item"><div class="toc-num">01</div><div class="toc-text">学习目标<small>明确本课任务</small></div></div>
+      <div class="toc-item"><div class="toc-num">02</div><div class="toc-text">酸与碱<small>概念与指示剂</small></div></div>
+      <div class="toc-item"><div class="toc-num">03</div><div class="toc-text">中和反应<small>定义 · 通式 · 放热</small></div></div>
+      <div class="toc-item"><div class="toc-num">04</div><div class="toc-text">指示剂演示<small>互动观察 pH 变化</small></div></div>
+      <div class="toc-item"><div class="toc-num">05</div><div class="toc-text">例题精讲<small>计算中和所需碱量</small></div></div>
+      <div class="toc-item"><div class="toc-num">06</div><div class="toc-text">课堂练习<small>单选 5 题</small></div></div>
+    </div>
+  </div>
+</template>
+
+<!-- P3 学习目标 -->
+<template class="page-data" data-id="3" data-name="学习目标">
+  <div class="page-container">
+    <p class="eyebrow">九年级化学</p>
+    <h2 class="page-title">学习目标</h2>
+    <div class="fill" style="display:flex;flex-direction:column;gap:10px;justify-content:center">
+      <div class="card card-white"><span class="pill">目标1</span> 说出酸、碱的概念，认识常见酸碱指示剂及其变色规律。</div>
+      <div class="card card-white"><span class="pill">目标2</span> 理解中和反应，能写出酸与碱反应的通式，知道反应放热。</div>
+      <div class="card card-white"><span class="pill">目标3</span> 能运用中和反应解释生活实例，并完成简单计算与判断。</div>
+    </div>
+    <div class="tip">提示：关注「H⁺ 与 OH⁻ 结合成水」这一核心过程。</div>
+  </div>
+</template>
+
+<!-- P4 酸与碱 -->
+<template class="page-data" data-id="4" data-name="酸与碱">
+  <div class="page-container">
+    <p class="eyebrow">基础知识</p>
+    <h2 class="page-title">认识酸与碱</h2>
+    <div class="two-col">
+      <div class="card card-white">
+        <strong>酸</strong>
+        <ul class="compact" style="margin-top:6px">
+          <li>溶液中含 H⁺（氢离子）</li>
+          <li>例：盐酸 HCl、硫酸 H₂SO₄</li>
+          <li>尝之酸味，能使紫色石蕊变红</li>
+        </ul>
+      </div>
+      <div class="card card-white">
+        <strong>碱</strong>
+        <ul class="compact" style="margin-top:6px">
+          <li>溶液中含 OH⁻（氢氧根离子）</li>
+          <li>例：氢氧化钠 NaOH、熟石灰 Ca(OH)₂</li>
+          <li>触感滑腻，能使紫色石蕊变蓝</li>
+        </ul>
+      </div>
+    </div>
+    <div id="extra" class="card" style="display:none">
+      <ul class="compact">
+        <li>酸碱指示剂：石蕊遇酸变红、遇碱变蓝；酚酞遇碱变红、遇酸无色。</li>
+        <li>pH &lt; 7 呈酸性，pH &gt; 7 呈碱性，pH = 7 呈中性。</li>
+        <li>酸碱溶液具有腐蚀性，实验须规范操作。</li>
+      </ul>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-primary" id="btn-exp" type="button">展开要点</button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var expanded = false;
+    function save(){ window.parent.postMessage({type:'saveState',state:{expanded:expanded}},'*'); }
+    function restore(s){ if(s&&s.expanded){ expanded=true; document.getElementById('extra').style.display='block'; document.getElementById('btn-exp').textContent='收起要点'; } }
+    window.addEventListener('message',function(e){ if(e.data&&e.data.type==='restoreState') restore(e.data.state); });
+    window.addEventListener('DOMContentLoaded',function(){
+      document.getElementById('btn-exp').onclick=function(){
+        expanded=!expanded;
+        document.getElementById('extra').style.display=expanded?'block':'none';
+        this.textContent=expanded?'收起要点':'展开要点';
+        save();
+      };
+    });
+  })();
+  </script>
+</template>
+
+<!-- P5 中和反应 -->
+<template class="page-data" data-id="5" data-name="中和反应">
+  <div class="page-container">
+    <p class="eyebrow">核心概念</p>
+    <h2 class="page-title">什么是中和反应？</h2>
+    <div class="card card-white fill" style="display:flex;flex-direction:column;justify-content:center;gap:12px">
+      <p style="margin:0;font-size:17px;line-height:1.7"><strong>定义：</strong>酸和碱作用生成盐和水的反应，叫做中和反应。</p>
+      <p class="chem" style="margin:0;font-size:22px;text-align:center;padding:12px;background:var(--demo-bg);border-radius:var(--radius);border:2px solid var(--demo-border)">
+        酸 + 碱 → 盐 + 水<br>
+        <span style="font-size:18px;color:var(--accent)">H⁺ + OH⁻ → H₂O</span>
+      </p>
+      <ul class="compact">
+        <li>实质：氢离子与氢氧根离子结合生成水分子。</li>
+        <li>特点：中和反应一般<strong>放热</strong>，触摸容器可感到温度升高。</li>
+        <li>应用：改良酸性土壤、处理工业废水、胃药缓解胃酸过多等。</li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<!-- P6 指示剂演示 -->
+<template class="page-data" data-id="6" data-name="指示剂演示">
+  <style>
+    .beaker-wrap { text-align:center; }
+    .beaker {
+      width:120px; height:150px; margin:0 auto; border:3px solid var(--primary);
+      border-top:none; border-radius:0 0 14px 14px; background:rgba(255,255,255,.7);
+      position:relative; overflow:hidden;
+    }
+    .beaker-liquid {
+      position:absolute; left:8px; right:8px; bottom:8px; height:100px;
+      border-radius:0 0 8px 8px; transition:background .35s;
+    }
+    .ph-badge {
+      display:inline-block; margin-top:12px; padding:6px 18px;
+      background:#fff; border:2px solid var(--card-border); border-radius:var(--radius);
+      font-size:20px; font-weight:700; font-family:var(--cw-courseware-latin-accent-font);
+    }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">互动演示</p>
+    <h2 class="page-title">指示剂与溶液酸碱性</h2>
+    <div class="demo">
+      <div class="beaker-wrap">
+        <div class="beaker"><div class="beaker-liquid" id="liq"></div></div>
+        <div class="ph-badge" id="ph-val">pH = 7</div>
+        <p id="status-lab" style="margin:10px 0 0;font-size:15px">中性溶液</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="btn-acid" type="button">加入酸</button>
+      <button class="btn" id="btn-base" type="button">加入碱</button>
+      <button class="btn btn-primary" id="btn-neu" type="button">中和至中性</button>
+    </div>
+    <div class="tip">点击按钮观察烧杯中溶液颜色与 pH 指示变化（core-loop）。</div>
+  </div>
+  <script>
+  (function(){
+    var mode = 'neutral';
+    var colors = { acid:'#e74c3c', base:'#2980b9', neutral:'#27ae60' };
+    var ph = { acid:'pH ≈ 2', base:'pH ≈ 12', neutral:'pH = 7' };
+    var labels = { acid:'酸性溶液（石蕊变红）', base:'碱性溶液（石蕊变蓝）', neutral:'中性溶液' };
+    function render(){
+      var liq = document.getElementById('liq');
+      var phEl = document.getElementById('ph-val');
+      var lab = document.getElementById('status-lab');
+      if(liq){ liq.style.background = colors[mode]; }
+      if(phEl){ phEl.textContent = ph[mode]; }
+      if(lab){ lab.textContent = labels[mode]; }
+      ['btn-acid','btn-base','btn-neu'].forEach(function(id){
+        var b = document.getElementById(id);
+        if(b) b.classList.toggle('active', (id==='btn-acid'&&mode==='acid')||(id==='btn-base'&&mode==='base')||(id==='btn-neu'&&mode==='neutral'));
+      });
+    }
+    function save(){ window.parent.postMessage({type:'saveState',state:{mode:mode}},'*'); }
+    function restore(s){ if(s&&s.mode){ mode=s.mode; render(); } }
+    window.addEventListener('message',function(e){ if(e.data&&e.data.type==='restoreState') restore(e.data.state); });
+    window.addEventListener('DOMContentLoaded',function(){
+      document.getElementById('btn-acid').onclick=function(){ mode='acid'; render(); save(); };
+      document.getElementById('btn-base').onclick=function(){ mode='base'; render(); save(); };
+      document.getElementById('btn-neu').onclick=function(){ mode='neutral'; render(); save(); };
+      render();
+    });
+  })();
+  </script>
+</template>
+
+<!-- P7 例题 -->
+<template class="page-data" data-id="7" data-name="例题精讲">
+  <div class="page-container">
+    <p class="eyebrow">例题</p>
+    <h2 class="page-title">计算中和所需 NaOH</h2>
+    <div class="card card-white fill" style="overflow:hidden">
+      <p style="margin:0 0 8px;font-size:15px"><strong>题：</strong>现有 10 g 溶质质量分数为 10% 的盐酸，欲恰好中和，需氢氧化钠固体多少克？（HCl 36.5，NaOH 40）</p>
+      <div id="step0" class="tip" style="margin-top:8px">点击「下一步」查看解题过程。</div>
+      <div id="step1" style="display:none;margin-top:8px" class="card">
+        <strong>解①</strong> m(HCl) = 10 g × 10% = <strong>1 g</strong>
+      </div>
+      <div id="step2" style="display:none;margin-top:8px" class="card">
+        <strong>解②</strong> HCl + NaOH → NaCl + H₂O<br>
+        36.5 g HCl ～ 40 g NaOH<br>
+        1 g HCl ～ x g NaOH
+      </div>
+      <div id="step3" style="display:none;margin-top:8px" class="tip ok">
+        <strong>解③</strong> x = 1 × 40 ÷ 36.5 ≈ <strong>1.1 g</strong><br>
+        答：需氢氧化钠固体约 1.1 g。
+      </div>
+    </div>
+    <div class="toolbar"><button class="btn btn-primary" id="btn-next" type="button">下一步</button></div>
+  </div>
+  <script>
+  (function(){
+    var step = 0;
+    var steps = ['step0','step1','step2','step3'];
+    function show(){
+      steps.forEach(function(id,i){ var el=document.getElementById(id); if(el) el.style.display=(i<=step)?'block':'none'; });
+      var btn = document.getElementById('btn-next');
+      if(btn){ btn.textContent = step>=3 ? '完成' : '下一步'; btn.disabled = step>=3; }
+    }
+    function save(){ window.parent.postMessage({type:'saveState',state:{step:step}},'*'); }
+    function restore(s){ if(s&&typeof s.step==='number'){ step=s.step; show(); } }
+    window.addEventListener('message',function(e){ if(e.data&&e.data.type==='restoreState') restore(e.data.state); });
+    window.addEventListener('DOMContentLoaded',function(){
+      document.getElementById('btn-next').onclick=function(){
+        if(step<3){ step++; show(); save(); }
+      };
+      show();
+    });
+  })();
+  </script>
+</template>
+
+<!-- P8 练习 -->
+<template class="page-data" data-id="8" data-name="课堂练习">
+  <style>
+    .opt {
+      display:block; width:100%; text-align:left; margin-bottom:8px; padding:10px 14px;
+      border:2px solid var(--card-border); border-radius:var(--radius);
+      background:#fff; cursor:pointer; font-size:15px; font-family:var(--cw-courseware-body-font);
+    }
+    .opt.sel { border-color:var(--accent); background:var(--card); }
+    .opt.correct { border-color:var(--success); background:#f0faf4; }
+    .opt.wrong { border-color:var(--error); background:#fdf3f2; }
+    #stem { font-size:17px; font-weight:600; margin:0 0 10px; line-height:1.45; }
+    .quiz-body { flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+    #opts { flex:1; min-height:0; overflow:hidden; }
+  </style>
+  <div class="page-container">
+    <p class="eyebrow">课堂练习</p>
+    <h2 class="page-title">单选题（5 题）</h2>
+    <div id="quiz-view" class="quiz-body">
+      <div id="prog" style="font-size:13px;color:var(--accent);margin-bottom:6px">第 1 / 5 题</div>
+      <p id="stem"></p>
+      <div id="opts"></div>
+      <div id="explain" class="tip" style="display:none;margin-top:6px"></div>
+      <div class="toolbar" style="margin-top:8px">
+        <button class="btn" id="btn-prev" type="button">上一题</button>
+        <button class="btn btn-primary" id="btn-confirm" type="button">确认答案</button>
+        <button class="btn btn-primary" id="btn-next" type="button" disabled>下一题</button>
+      </div>
+    </div>
+    <div id="result-view" style="display:none;text-align:center;flex:1;flex-direction:column;justify-content:center;align-items:center;gap:16px">
+      <p id="score-text" style="font-size:28px;font-weight:700;margin:0"></p>
+      <p style="margin:0;font-size:16px">已完成本课练习，可翻页查看小结。</p>
+      <button class="btn btn-primary" id="btn-redo" type="button">重新练习</button>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var QUESTIONS = [
+      { stem:'中和反应的实质是？', options:[{k:'A',text:'生成盐'},{k:'B',text:'H⁺与OH⁻结合成水'},{k:'C',text:'放出氧气'},{k:'D',text:'溶液变无色'}], ans:'B', explain:'中和反应的实质是酸中的 H⁺ 与碱中的 OH⁻ 结合生成 H₂O。' },
+      { stem:'下列物质可用作中和胃酸的是？', options:[{k:'A',text:'盐酸'},{k:'B',text:'氢氧化钠'},{k:'C',text:'氢氧化铝'},{k:'D',text:'硫酸'}], ans:'C', explain:'氢氧化铝能与胃酸（盐酸）发生中和反应，且刺激性较小，常用于胃药。' },
+      { stem:'紫色石蕊遇碱性溶液变？', options:[{k:'A',text:'红色'},{k:'B',text:'蓝色'},{k:'C',text:'无色'},{k:'D',text:'黄色'}], ans:'B', explain:'紫色石蕊遇酸变红，遇碱变蓝。' },
+      { stem:'酸与碱反应的一般通式是？', options:[{k:'A',text:'酸+碱→盐+水'},{k:'B',text:'酸+碱→盐+氢气'},{k:'C',text:'酸+碱→碱+酸'},{k:'D',text:'酸+碱→沉淀'}], ans:'A', explain:'中和反应生成盐和水的通式：酸 + 碱 → 盐 + 水。' },
+      { stem:'中和反应通常伴随？', options:[{k:'A',text:'吸热'},{k:'B',text:'放热'},{k:'C',text:'无热量变化'},{k:'D',text:'产生沉淀'}], ans:'B', explain:'中和反应一般放热，实验时可感到试管温度升高。' }
+    ];
+    var state = { phase:'quiz', index:0, answers:{}, revealed:{} };
+    function el(id){ return document.getElementById(id); }
+    function save(){ window.parent.postMessage({type:'saveState',state:JSON.parse(JSON.stringify(state))},'*'); }
+    function sendScore(){
+      var ok=0; QUESTIONS.forEach(function(q,i){ if(state.answers[i]===q.ans) ok++; });
+      window.parent.postMessage({type:'cwScore',id:(window.__CW_PAGE__&&window.__CW_PAGE__.id)||8,raw:ok,max:QUESTIONS.length},'*');
+    }
+    function render(){
+      if(state.phase==='result'){
+        el('quiz-view').style.display='none';
+        el('result-view').style.display='flex';
+        var ok=0; QUESTIONS.forEach(function(q,i){ if(state.answers[i]===q.ans) ok++; });
+        el('score-text').textContent='得分：'+ok+' / '+QUESTIONS.length;
+        sendScore();
+        return;
+      }
+      el('quiz-view').style.display='flex';
+      el('result-view').style.display='none';
+      var q = QUESTIONS[state.index];
+      el('prog').textContent='第 '+(state.index+1)+' / '+QUESTIONS.length+' 题';
+      el('stem').textContent=q.stem;
+      var opts=''; q.options.forEach(function(o){
+        var sel=state.answers[state.index]===o.k;
+        var rev=state.revealed[state.index];
+        var cls='opt'+(sel?' sel':'');
+        if(rev){ if(o.k===q.ans) cls+=' correct'; else if(sel) cls+=' wrong'; }
+        opts+='<button type="button" class="'+cls+'" data-k="'+o.k+'">'+o.k+'. '+o.text+'</button>';
+      });
+      el('opts').innerHTML=opts;
+      el('opts').querySelectorAll('.opt').forEach(function(btn){
+        if(state.revealed[state.index]) return;
+        btn.onclick=function(){
+          state.answers[state.index]=btn.getAttribute('data-k');
+          render(); save();
+        };
+      });
+      var revealed=!!state.revealed[state.index];
+      el('explain').style.display=revealed?'block':'none';
+      el('explain').textContent=revealed?(state.answers[state.index]===q.ans?'✓ 正确。':'✗ 再想想。')+q.explain:'';
+      el('explain').className='tip '+(revealed?(state.answers[state.index]===q.ans?'ok':'err'):'');
+      el('btn-confirm').disabled=!state.answers[state.index]||revealed;
+      el('btn-prev').disabled=state.index===0;
+      el('btn-next').textContent=state.index===QUESTIONS.length-1?(revealed?'查看结果':'下一题'):'下一题';
+      el('btn-next').disabled=!revealed;
+    }
+    function restore(s){
+      if(!s) return;
+      state=Object.assign(state,s);
+      render();
+    }
+    window.addEventListener('message',function(e){ if(e.data&&e.data.type==='restoreState') restore(e.data.state); });
+    window.addEventListener('DOMContentLoaded',function(){
+      el('btn-confirm').onclick=function(){
+        if(!state.answers[state.index]) return;
+        state.revealed[state.index]=true;
+        render(); save();
+      };
+      el('btn-prev').onclick=function(){
+        if(state.index>0){ state.index--; render(); save(); }
+      };
+      el('btn-next').onclick=function(){
+        if(!state.revealed[state.index]) return;
+        if(state.index<QUESTIONS.length-1){ state.index++; render(); save(); }
+        else { state.phase='result'; render(); save(); }
+      };
+      el('btn-redo').onclick=function(){
+        state={phase:'quiz',index:0,answers:{},revealed:{}};
+        render(); save();
+      };
+      render();
+    });
+  })();
+  </script>
+</template>
+
+<!-- P9 小结 -->
+<template class="page-data" data-id="9" data-name="课堂小结">
+  <div class="page-container">
+    <p class="eyebrow">总结</p>
+    <h2 class="page-title">课堂小结</h2>
+    <div class="fill" style="display:flex;flex-direction:column;gap:10px;justify-content:center">
+      <div class="card card-white"><span class="pill">1</span> 酸含 H⁺，碱含 OH⁻；指示剂可区分酸碱性。</div>
+      <div class="card card-white"><span class="pill">2</span> 中和反应：酸 + 碱 → 盐 + 水，实质 H⁺ + OH⁻ → H₂O。</div>
+      <div class="card card-white"><span class="pill">3</span> 中和反应一般放热，在生活和工业中应用广泛。</div>
+      <div class="card card-white"><span class="pill">4</span> 依据化学方程式可进行中和反应的简单计算。</div>
+    </div>
+    <div class="tip ok">本课学习完成。请回顾互动演示与练习题中的关键步骤。</div>
+  </div>
+</template>
+
+<script src="./courseware-shell.js"></script>
+</body>
+</html>

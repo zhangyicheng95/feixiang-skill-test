@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="courseware:mode" content="courseware" />
+  <meta name="courseware:palette" content="EDU-绿" />
+  <meta name="courseware:radius" content="16" />
+  <meta name="courseware:typography" content="sans-modern" />
+  <title>Colors and Animals</title>
+</head>
+<body>
+  <div id="cw-loading" aria-live="polite">课件加载中...</div>
+
+  <template class="page-shared">
+    <style>
+      :root {
+        --bg: #E2ECD3;
+        --text: #012B1F;
+        --primary: #405E28;
+        --accent: #549B22;
+        --card: #F7FDF6;
+        --card-border: rgba(1, 43, 31, 0.30);
+        --demo-bg: #F7FDF6;
+        --demo-border: rgba(0, 0, 0, 0.30);
+        --demo-grid: #ECF1E6;
+        --btn-primary-bg: #405E28;
+        --btn-primary-fg: #E2ECD3;
+        --btn-2nd-bg: #F7FDF6;
+        --btn-2nd-fg: #012B1F;
+        --radius: 16px;
+        --success: #2f7d4f;
+        --error: #b23b3b;
+        --font-sans-modern: "Inter", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        --font-heading: var(--font-sans-modern);
+        --font-body: var(--font-sans-modern);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: var(--font-body);
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      .page-container {
+        width: 960px;
+        height: 540px;
+        margin: 0;
+        padding: 18px 22px;
+        overflow: hidden;
+        position: relative;
+        background: var(--bg);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .pg-title {
+        font-size: 26px;
+        line-height: 1.2;
+        flex-shrink: 0;
+      }
+
+      .pg-sub {
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      .panel {
+        background: var(--card);
+        border: 2px solid var(--card-border);
+        border-radius: var(--radius);
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-family: var(--font-heading);
+        color: var(--primary);
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.45;
+      }
+
+      .subtitle {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 12px;
+      }
+
+      button {
+        border: 2px solid var(--primary);
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 18px;
+        font-family: var(--font-body);
+        cursor: pointer;
+      }
+
+      button.primary {
+        background: var(--btn-primary-bg);
+        color: var(--btn-primary-fg);
+      }
+
+      button.secondary {
+        background: var(--btn-2nd-bg);
+        color: var(--btn-2nd-fg);
+      }
+
+      .status {
+        min-height: 28px;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .ok {
+        color: var(--success);
+      }
+
+      .bad {
+        color: var(--error);
+      }
+    </style>
+  </template>
+
+  <template class="page-data" data-id="1" data-name="封面 cover-01-center-stack">
+    <div class="page-container cover-page">
+      <style>
+        .cover-page {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          background:
+            radial-gradient(circle at 10% 15%, rgba(84, 155, 34, 0.15) 0, rgba(84, 155, 34, 0) 40%),
+            radial-gradient(circle at 92% 88%, rgba(64, 94, 40, 0.15) 0, rgba(64, 94, 40, 0) 36%),
+            var(--bg);
+        }
+
+        .cover-stack {
+          width: 760px;
+          height: 420px;
+          border-radius: var(--radius);
+          border: 2px solid var(--card-border);
+          background: var(--card);
+          display: grid;
+          grid-template-rows: 1fr auto auto auto 1fr;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .cover-title {
+          font-size: 64px;
+          letter-spacing: 1px;
+        }
+
+        .cover-subtitle {
+          font-size: 34px;
+        }
+
+        .cover-meta {
+          font-size: 22px;
+          color: var(--text);
+          opacity: 0.9;
+        }
+
+        .silhouette {
+          position: absolute;
+          bottom: 18px;
+          width: 110px;
+          height: 90px;
+          background: var(--accent);
+          opacity: 0.35;
+        }
+
+        .cat-shape {
+          left: 74px;
+          border-radius: 34px 34px 24px 24px;
+          clip-path: polygon(8% 100%, 20% 46%, 30% 30%, 40% 46%, 50% 30%, 60% 46%, 74% 20%, 90% 44%, 95% 100%);
+        }
+
+        .dog-shape {
+          right: 74px;
+          border-radius: 28px;
+          clip-path: polygon(8% 100%, 12% 44%, 26% 26%, 34% 44%, 60% 44%, 75% 20%, 92% 40%, 92% 100%);
+        }
+
+        .bird-shape {
+          left: 50%;
+          transform: translateX(-50%);
+          width: 96px;
+          height: 70px;
+          bottom: 28px;
+          border-radius: 50%;
+          clip-path: polygon(2% 62%, 34% 44%, 45% 28%, 58% 44%, 98% 62%, 62% 72%, 52% 98%, 42% 72%);
+        }
+      </style>
+      <div class="cover-stack">
+        <div></div>
+        <h1 class="cover-title">Colors &amp; Animals</h1>
+        <div class="cover-subtitle subtitle">颜色与动物</div>
+        <div class="cover-meta">人教版·英语·三年级上册</div>
+        <div></div>
+        <div class="silhouette cat-shape"></div>
+        <div class="silhouette dog-shape"></div>
+        <div class="silhouette bird-shape"></div>
+      </div>
+    </div>
+  </template>
+
+  <template class="page-data" data-id="2" data-name="目录">
+    <div class="page-container">
+      <style>
+        .toc-wrap {
+          height: 100%;
+          padding: 20px;
+          display: grid;
+          grid-template-rows: auto auto 1fr;
+          gap: 14px;
+        }
+
+        .toc-title {
+          font-size: 44px;
+        }
+
+        .toc-sub {
+          font-size: 22px;
+          font-weight: 700;
+        }
+
+        .toc-list {
+          margin: 0;
+          padding: 18px 28px;
+          list-style: decimal;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px 32px;
+          font-size: 24px;
+          line-height: 1.3;
+        }
+
+        .toc-list li {
+          background: var(--card);
+          border: 2px solid var(--card-border);
+          border-radius: 12px;
+          padding: 10px 12px 10px 18px;
+        }
+      </style>
+      <div class="toc-wrap">
+        <h2 class="toc-title">目录 Contents</h2>
+        <p class="toc-sub subtitle">今天我们要学这 6 个部分</p>
+        <ol class="toc-list">
+          <li>学习目标 Learning Goals</li>
+          <li>颜色单词 Colors</li>
+          <li>颜色互动 Color Buttons</li>
+          <li>动物配对 Match Game</li>
+          <li>对话练习 Dialogue</li>
+          <li>单选测验 Quiz</li>
+        </ol>
+      </div>
+    </div>
+  </template>
+
+  <template class="page-data" data-id="3" data-name="学习目标">
+    <div class="page-container">
+      <style>
+        .goal-layout {
+          height: 100%;
+          display: grid;
+          grid-template-rows: auto auto 1fr;
+          gap: 18px;
+        }
+
+        .goal-title {
+          font-size: 26px;
+        }
+
+        .goal-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+          min-height: 0;
+        }
+
+        .goal-card {
+          padding: 12px;
+          display: grid;
+          gap: 6px;
+          align-content: start;
+        }
+
+        .goal-card h3 {
+          font-size: 18px;
+        }
+
+        .goal-card p {
+          font-size: 14px;
+          line-height: 1.4;
+        }
+      </style>
+      <div class="goal-layout">
+        <h2 class="goal-title">学习目标 Learning Goals</h2>
+        <p class="subtitle">完成本课后，你可以做到：</p>
+        <div class="goal-grid">
+          <article class="goal-card panel">
+            <h3>Color Words</h3>
+            <p>会读会认 5 个颜色单词：red, orange, yellow, green, blue。</p>
+          </article>
+          <article class="goal-card panel">
+            <h3>Animal Words</h3>
+            <p>会读会认常见动物单词：cat, dog, bird, fish。</p>
+          </article>
+          <article class="goal-card panel">
+            <h3>Simple Sentences</h3>
+            <p>会用句型：What color is it? It&apos;s ... 进行简单问答。</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template class="page-data" data-id="4" data-name="讲解 Colors">
+    <div class="page-container">
+      <style>
+        .color-lesson {
+          height: 100%;
+          display: grid;
+          grid-template-rows: auto auto 1fr;
+          gap: 16px;
+        }
+
+        .swatch-grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 14px;
+        }
+
+        .swatch {
+          border-radius: var(--radius);
+          border: 2px solid var(--card-border);
+          padding: 10px;
+          background: var(--card);
+          display: grid;
+          gap: 10px;
+        }
+
+        .swatch-color {
+          height: 110px;
+          border-radius: 12px;
+          border: 2px solid var(--demo-border);
+          background: var(--demo-bg);
+        }
+
+        .swatch-word {
+          font-size: 18px;
+          text-transform: lowercase;
+          font-weight: 700;
+        }
+
+        .swatch-cn {
+          font-size: 15px;
+        }
+      </style>
+      <div class="color-lesson">
+        <h2 class="pg-title">Colors 颜色单词</h2>
+        <p class="pg-sub subtitle">看颜色，读英文，再说中文。</p>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="swatch-color" style="background:#E74C3C;"></div>
+            <div class="swatch-word">red</div>
+            <div class="swatch-cn">红色</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#F39C3D;"></div>
+            <div class="swatch-word">orange</div>
+            <div class="swatch-cn">橙色</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#F4D03F;"></div>
+            <div class="swatch-word">yellow</div>
+            <div class="swatch-cn">黄色</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#4CAF50;"></div>
+            <div class="swatch-word">green</div>
+            <div class="swatch-cn">绿色</div>
+          </div>
+          <div class="swatch">
+            <div class="swatch-color" style="background:#3498DB;"></div>
+            <div class="swatch-word">blue</div>
+            <div class="swatch-cn">蓝色</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template class="page-data" data-id="5" data-name="互动 Color Buttons">
+    <div class="page-container">
+      <style>
+        .color-play {
+          height: 100%;
+          display: grid;
+          grid-template-rows: auto auto auto 1fr;
+          gap: 14px;
+        }
+
+        .color-btns {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 12px;
+        }
+
+        .color-btn {
+          height: 64px;
+          border-radius: 12px;
+          border: 2px solid var(--demo-border);
+          font-size: 16px;
+          font-weight: 700;
+          text-transform: lowercase;
+        }
+
+        .display-box {
+          min-height: 110px;
+          display: grid;
+          align-content: center;
+          justify-items: center;
+          gap: 6px;
+          padding: 12px;
+        }
+
+        .display-word {
+          font-size: 40px;
+          color: var(--primary);
+          font-weight: 800;
+        }
+
+        .display-phonetic {
+          font-size: 18px;
+        }
+      </style>
+      <div class="color-play">
+        <h2 class="pg-title">互动：点颜色按钮</h2>
+        <p class="pg-sub subtitle">点击颜色，读出英文单词。</p>
+        <div class="color-btns" id="colorButtons">
+          <button class="color-btn" data-key="red" style="background:#E74C3C;color:#fff;">red</button>
+          <button class="color-btn" data-key="orange" style="background:#F39C3D;color:#2d1f00;">orange</button>
+          <button class="color-btn" data-key="yellow" style="background:#F4D03F;color:#3d3200;">yellow</button>
+          <button class="color-btn" data-key="green" style="background:#4CAF50;color:#fff;">green</button>
+          <button class="color-btn" data-key="blue" style="background:#3498DB;color:#fff;">blue</button>
+        </div>
+        <div class="display-box panel">
+          <div class="display-word" id="displayWord">Choose a color</div>
+          <div class="display-phonetic" id="displayHint">点击上方按钮开始</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var colors = {
+          red: { word: "red", hint: "/red/" },
+          orange: { word: "orange", hint: "/'or-indj/" },
+          yellow: { word: "yellow", hint: "/'yel-oh/" },
+          green: { word: "green", hint: "/gri:n/" },
+          blue: { word: "blue", hint: "/blu:/" }
+        };
+        var state = { selected: null };
+        var wordEl = document.getElementById("displayWord");
+        var hintEl = document.getElementById("displayHint");
+        var buttonsWrap = document.getElementById("colorButtons");
+
+        function render() {
+          if (!state.selected || !colors[state.selected]) {
+            wordEl.textContent = "Choose a color";
+            hintEl.textContent = "点击上方按钮开始";
+            return;
+          }
+          wordEl.textContent = colors[state.selected].word;
+          hintEl.textContent = colors[state.selected].hint;
+        }
+
+        buttonsWrap.addEventListener("click", function (event) {
+          var btn = event.target.closest("button[data-key]");
+          if (!btn) {
+            return;
+          }
+          state.selected = btn.getAttribute("data-key");
+          render();
+        });
+
+        window.saveState = function () {
+          return { selected: state.selected };
+        };
+
+        window.restoreState = function (saved) {
+          state.selected = saved && saved.selected ? saved.selected : null;
+          render();
+        };
+
+        render();
+      })();
+    </script>
+  </template>
+
+  <template class="page-data" data-id="6" data-name="互动 动物颜色配对">
+    <div class="page-container">
+      <style>
+        .match-page {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          min-height: 0;
+        }
+
+        .match-columns {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          flex: 1;
+          min-height: 0;
+        }
+
+        .match-col {
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          min-height: 0;
+        }
+
+        .match-col h3 {
+          font-size: 16px;
+        }
+
+        .pick-list {
+          display: grid;
+          gap: 5px;
+          flex: 1;
+          min-height: 0;
+        }
+
+        .pick-btn {
+          text-align: left;
+          border-radius: 10px;
+          border: 2px solid var(--card-border);
+          background: #ffffff;
+          font-size: 15px;
+          padding: 6px 10px;
+        }
+
+        .pick-btn.active {
+          border-color: var(--accent);
+          background: #ecf7e7;
+        }
+
+        .pair-board {
+          padding: 8px 10px;
+          font-size: 14px;
+          line-height: 1.3;
+          flex-shrink: 0;
+        }
+      </style>
+      <div class="match-page">
+        <h2 class="pg-title">互动：动物颜色配对</h2>
+        <p class="pg-sub subtitle">先选动物，再选短语，组成 4 组配对。</p>
+        <div class="match-columns">
+          <div class="match-col panel">
+            <h3>Animals</h3>
+            <div class="pick-list" id="animalList">
+              <button class="pick-btn" data-animal="cat">cat</button>
+              <button class="pick-btn" data-animal="dog">dog</button>
+              <button class="pick-btn" data-animal="bird">bird</button>
+              <button class="pick-btn" data-animal="fish">fish</button>
+            </div>
+          </div>
+          <div class="match-col panel">
+            <h3>Color Phrases</h3>
+            <div class="pick-list" id="phraseList">
+              <button class="pick-btn" data-phrase="cat">a yellow cat</button>
+              <button class="pick-btn" data-phrase="dog">a brown dog</button>
+              <button class="pick-btn" data-phrase="bird">a blue bird</button>
+              <button class="pick-btn" data-phrase="fish">a red fish</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel pair-board">
+          <div id="pairText">已配对：暂无</div>
+          <div id="matchResult" class="status"></div>
+          <div class="btn-row" style="margin-top:4px;">
+            <button class="primary" id="checkBtn" style="padding:6px 12px;font-size:14px;">检查</button>
+            <button class="secondary" id="resetBtn" style="padding:6px 12px;font-size:14px;">重置</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var correctKeys = ["cat", "dog", "bird", "fish"];
+        var state = {
+          selectedAnimal: null,
+          selectedPhrase: null,
+          pairs: {}
+        };
+
+        var animalList = document.getElementById("animalList");
+        var phraseList = document.getElementById("phraseList");
+        var pairText = document.getElementById("pairText");
+        var result = document.getElementById("matchResult");
+        var checkBtn = document.getElementById("checkBtn");
+        var resetBtn = document.getElementById("resetBtn");
+
+        function getPhraseLabel(key) {
+          var map = {
+            cat: "a yellow cat",
+            dog: "a brown dog",
+            bird: "a blue bird",
+            fish: "a red fish"
+          };
+          return map[key];
+        }
+
+        function renderButtons() {
+          var animalBtns = animalList.querySelectorAll("button");
+          var phraseBtns = phraseList.querySelectorAll("button");
+          animalBtns.forEach(function (btn) {
+            var isActive = btn.getAttribute("data-animal") === state.selectedAnimal;
+            btn.classList.toggle("active", isActive);
+          });
+          phraseBtns.forEach(function (btn) {
+            var isActive = btn.getAttribute("data-phrase") === state.selectedPhrase;
+            btn.classList.toggle("active", isActive);
+          });
+        }
+
+        function renderPairs() {
+          var keys = Object.keys(state.pairs);
+          if (!keys.length) {
+            pairText.textContent = "已配对：暂无";
+            return;
+          }
+          var lines = keys.map(function (animal) {
+            return animal + " -> " + getPhraseLabel(state.pairs[animal]);
+          });
+          pairText.textContent = "已配对：" + lines.join("；");
+        }
+
+        function tryPair() {
+          if (!state.selectedAnimal || !state.selectedPhrase) {
+            return;
+          }
+          state.pairs[state.selectedAnimal] = state.selectedPhrase;
+          state.selectedAnimal = null;
+          state.selectedPhrase = null;
+          renderButtons();
+          renderPairs();
+        }
+
+        animalList.addEventListener("click", function (event) {
+          var btn = event.target.closest("button[data-animal]");
+          if (!btn) {
+            return;
+          }
+          state.selectedAnimal = btn.getAttribute("data-animal");
+          renderButtons();
+          tryPair();
+        });
+
+        phraseList.addEventListener("click", function (event) {
+          var btn = event.target.closest("button[data-phrase]");
+          if (!btn) {
+            return;
+          }
+          state.selectedPhrase = btn.getAttribute("data-phrase");
+          renderButtons();
+          tryPair();
+        });
+
+        checkBtn.addEventListener("click", function () {
+          var matched = 0;
+          correctKeys.forEach(function (key) {
+            if (state.pairs[key] === key) {
+              matched += 1;
+            }
+          });
+          if (matched === 4) {
+            result.className = "status ok";
+            result.textContent = "正确！4/4 全部配对成功。";
+          } else {
+            result.className = "status bad";
+            result.textContent = "还可以再试试。当前正确 " + matched + "/4。";
+          }
+        });
+
+        resetBtn.addEventListener("click", function () {
+          state.selectedAnimal = null;
+          state.selectedPhrase = null;
+          state.pairs = {};
+          result.className = "status";
+          result.textContent = "";
+          renderButtons();
+          renderPairs();
+        });
+
+        window.saveState = function () {
+          return {
+            selectedAnimal: state.selectedAnimal,
+            selectedPhrase: state.selectedPhrase,
+            pairs: state.pairs
+          };
+        };
+
+        window.restoreState = function (saved) {
+          state.selectedAnimal = saved && saved.selectedAnimal ? saved.selectedAnimal : null;
+          state.selectedPhrase = saved && saved.selectedPhrase ? saved.selectedPhrase : null;
+          state.pairs = saved && saved.pairs ? saved.pairs : {};
+          result.className = "status";
+          result.textContent = "";
+          renderButtons();
+          renderPairs();
+        };
+
+        renderButtons();
+        renderPairs();
+      })();
+    </script>
+  </template>
+
+  <template class="page-data" data-id="7" data-name="讲解 Dialogue">
+    <div class="page-container">
+      <style>
+        .dialogue-page {
+          height: 100%;
+          display: grid;
+          grid-template-rows: auto auto 1fr;
+          gap: 16px;
+        }
+
+        .dialogue-cards {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .dialogue-card {
+          padding: 16px 20px;
+          display: grid;
+          gap: 6px;
+        }
+
+        .en-line {
+          font-size: 28px;
+          color: var(--primary);
+          font-weight: 700;
+        }
+
+        .cn-line {
+          font-size: 21px;
+        }
+      </style>
+      <div class="dialogue-page">
+        <h2 class="pg-title">Dialogue 对话学习</h2>
+        <p class="subtitle">读一读，说一说。</p>
+        <div class="dialogue-cards">
+          <article class="dialogue-card panel">
+            <div class="en-line">Hello!</div>
+            <div class="cn-line">你好！</div>
+          </article>
+          <article class="dialogue-card panel">
+            <div class="en-line">What color is it?</div>
+            <div class="cn-line">它是什么颜色？</div>
+          </article>
+          <article class="dialogue-card panel">
+            <div class="en-line">It&apos;s red.</div>
+            <div class="cn-line">它是红色的。</div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template class="page-data" data-id="8" data-name="练习 单选5题">
+    <div class="page-container">
+      <style>
+        .quiz-page {
+          height: 100%;
+          display: grid;
+          grid-template-rows: auto auto 1fr auto;
+          gap: 12px;
+        }
+
+        .quiz-card {
+          padding: 16px;
+          display: grid;
+          grid-template-rows: auto auto 1fr auto;
+          gap: 12px;
+        }
+
+        .quiz-progress {
+          font-size: 20px;
+          color: var(--primary);
+          font-weight: 700;
+        }
+
+        .quiz-question {
+          font-size: 30px;
+          color: var(--text);
+          font-weight: 700;
+        }
+
+        .quiz-options {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+
+        .quiz-option {
+          border-radius: 10px;
+          border: 2px solid var(--card-border);
+          background: #fff;
+          font-size: 22px;
+          text-align: left;
+          padding: 10px 12px;
+        }
+
+        .quiz-option.selected {
+          border-color: var(--accent);
+          background: #ecf7e7;
+        }
+
+        .quiz-option.correct {
+          border-color: var(--success);
+          background: #e7f7ee;
+        }
+
+        .quiz-option.wrong {
+          border-color: var(--error);
+          background: #fae9e9;
+        }
+
+        .result-box {
+          height: 100%;
+          display: grid;
+          place-content: center;
+          gap: 14px;
+          text-align: center;
+        }
+
+        .result-score {
+          font-size: 56px;
+          color: var(--primary);
+          font-weight: 800;
+        }
+      </style>
+      <div class="quiz-page">
+        <h2 class="pg-title">练习：单选 5 题</h2>
+        <p class="subtitle">每题先选择，再点击“确认答案”。</p>
+        <div class="quiz-card panel" id="quizCard"></div>
+        <div class="btn-row">
+          <button class="primary" id="confirmBtn">确认答案</button>
+          <button class="secondary" id="nextBtn">下一题</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var questions = [
+          {
+            q: "Which word means 红色?",
+            options: ["green", "red", "blue", "cat"],
+            answer: 1
+          },
+          {
+            q: "Which animal is 鱼?",
+            options: ["bird", "fish", "dog", "yellow"],
+            answer: 1
+          },
+          {
+            q: "What color is banana? (常见颜色)",
+            options: ["yellow", "blue", "red", "brown"],
+            answer: 0
+          },
+          {
+            q: "Choose the correct phrase:",
+            options: ["a blue bird", "a green fish cat", "dog yellow", "it blue is"],
+            answer: 0
+          },
+          {
+            q: "Fill in: It is ___. (图片提示: grass)",
+            options: ["orange", "green", "cat", "fish"],
+            answer: 1
+          }
+        ];
+
+        var state = {
+          index: 0,
+          answers: [null, null, null, null, null],
+          confirmed: [false, false, false, false, false],
+          score: 0,
+          finished: false
+        };
+
+        var quizCard = document.getElementById("quizCard");
+        var confirmBtn = document.getElementById("confirmBtn");
+        var nextBtn = document.getElementById("nextBtn");
+
+        function renderQuestion() {
+          var q = questions[state.index];
+          var selected = state.answers[state.index];
+          var isConfirmed = state.confirmed[state.index];
+
+          var html = "";
+          html += '<div class="quiz-progress">Question ' + (state.index + 1) + ' / ' + questions.length + "</div>";
+          html += '<div class="quiz-question">' + q.q + "</div>";
+          html += '<div class="quiz-options">';
+          q.options.forEach(function (opt, i) {
+            var cls = "quiz-option";
+            if (selected === i) {
+              cls += " selected";
+            }
+            if (isConfirmed && i === q.answer) {
+              cls += " correct";
+            }
+            if (isConfirmed && selected === i && i !== q.answer) {
+              cls += " wrong";
+            }
+            html += '<button class="' + cls + '" data-index="' + i + '">' + opt + "</button>";
+          });
+          html += "</div>";
+
+          if (isConfirmed) {
+            if (selected === q.answer) {
+              html += '<div class="status ok">回答正确！</div>';
+            } else {
+              html += '<div class="status bad">回答错误。正确答案是：' + q.options[q.answer] + "</div>";
+            }
+          } else {
+            html += '<div class="status">请选择后确认。</div>';
+          }
+
+          quizCard.innerHTML = html;
+          confirmBtn.style.display = "inline-block";
+          nextBtn.style.display = "inline-block";
+          nextBtn.textContent = state.index === questions.length - 1 ? "查看结果" : "下一题";
+        }
+
+        function renderResult() {
+          quizCard.innerHTML =
+            '<div class="result-box">' +
+            '<div style="font-size:34px;color:var(--primary);font-weight:700;">Result</div>' +
+            '<div class="result-score">' + state.score + " / " + questions.length + "</div>" +
+            '<div style="font-size:22px;">你完成了本次测验。</div>' +
+            '<button class="secondary" id="retryBtn">重做</button>' +
+            "</div>";
+          confirmBtn.style.display = "none";
+          nextBtn.style.display = "none";
+          var retryBtn = document.getElementById("retryBtn");
+          retryBtn.addEventListener("click", function () {
+            state.index = 0;
+            state.answers = [null, null, null, null, null];
+            state.confirmed = [false, false, false, false, false];
+            state.score = 0;
+            state.finished = false;
+            render();
+          });
+        }
+
+        function render() {
+          if (state.finished) {
+            renderResult();
+          } else {
+            renderQuestion();
+          }
+        }
+
+        quizCard.addEventListener("click", function (event) {
+          if (state.finished) {
+            return;
+          }
+          var btn = event.target.closest("button[data-index]");
+          if (!btn) {
+            return;
+          }
+          if (state.confirmed[state.index]) {
+            return;
+          }
+          state.answers[state.index] = Number(btn.getAttribute("data-index"));
+          render();
+        });
+
+        confirmBtn.addEventListener("click", function () {
+          if (state.finished) {
+            return;
+          }
+          if (state.confirmed[state.index]) {
+            return;
+          }
+          var selected = state.answers[state.index];
+          if (selected === null) {
+            return;
+          }
+          state.confirmed[state.index] = true;
+          if (selected === questions[state.index].answer) {
+            state.score += 1;
+          }
+          render();
+        });
+
+        nextBtn.addEventListener("click", function () {
+          if (state.finished) {
+            return;
+          }
+          if (!state.confirmed[state.index]) {
+            return;
+          }
+          if (state.index === questions.length - 1) {
+            state.finished = true;
+            var payload = {
+              type: "cwScore",
+              id: 8,
+              score: state.score,
+              total: questions.length
+            };
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage(payload, "*");
+            }
+            render();
+            return;
+          }
+          state.index += 1;
+          render();
+        });
+
+        window.saveState = function () {
+          return {
+            index: state.index,
+            answers: state.answers,
+            confirmed: state.confirmed,
+            score: state.score,
+            finished: state.finished
+          };
+        };
+
+        window.restoreState = function (saved) {
+          if (!saved) {
+            render();
+            return;
+          }
+          state.index = typeof saved.index === "number" ? saved.index : 0;
+          state.answers = Array.isArray(saved.answers) ? saved.answers : [null, null, null, null, null];
+          state.confirmed = Array.isArray(saved.confirmed) ? saved.confirmed : [false, false, false, false, false];
+          state.score = typeof saved.score === "number" ? saved.score : 0;
+          state.finished = Boolean(saved.finished);
+          render();
+        };
+
+        render();
+      })();
+    </script>
+  </template>
+
+  <template class="page-data" data-id="9" data-name="小结">
+    <div class="page-container">
+      <style>
+        .summary-page {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          min-height: 0;
+        }
+
+        .summary-list {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          display: grid;
+          gap: 6px;
+          flex: 1;
+          min-height: 0;
+        }
+
+        .summary-item {
+          padding: 8px 12px;
+          display: grid;
+          gap: 2px;
+        }
+
+        .summary-en {
+          font-size: 16px;
+          color: var(--primary);
+          font-weight: 700;
+          line-height: 1.35;
+        }
+
+        .summary-cn {
+          font-size: 14px;
+          line-height: 1.35;
+        }
+      </style>
+      <div class="summary-page">
+        <h2 class="pg-title">小结 Summary</h2>
+        <p class="pg-sub subtitle">今天我们完成了这 4 点：</p>
+        <ul class="summary-list">
+          <li class="summary-item panel">
+            <div class="summary-en">1. We learned 5 color words.</div>
+            <div class="summary-cn">我们学习了 5 个颜色单词。</div>
+          </li>
+          <li class="summary-item panel">
+            <div class="summary-en">2. We learned animal words: cat, dog, bird, fish.</div>
+            <div class="summary-cn">我们学习了 4 个动物单词：cat, dog, bird, fish。</div>
+          </li>
+          <li class="summary-item panel">
+            <div class="summary-en">3. We can ask and answer: What color is it? It&apos;s ...</div>
+            <div class="summary-cn">我们会用 What color is it? It&apos;s ... 进行问答。</div>
+          </li>
+          <li class="summary-item panel">
+            <div class="summary-en">4. We finished matching and quiz practice.</div>
+            <div class="summary-cn">我们完成了配对和单选练习。</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </template>
+
+  <script src="./courseware-shell.js"></script>
+</body>
+</html>

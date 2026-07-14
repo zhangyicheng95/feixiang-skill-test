@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D 串联电路动画演示</title>
+  <!-- spec: requirements=单页3D电路图动画; require=3D串联电路,电池开关电阻灯泡,电子流动动画,开关交互,电压电阻调节,电流实时读数,旋转视角,播放暂停重置; forbid=emoji,虚构图片路径,弹窗; core-loop=闭合开关→观察3D电子流动与灯泡发光→调节电压电阻→读数变化→暂停→重置 -->
+  <!-- style-guide: palette=EDU-深青; radius=16; keyword=电路; source=subject -->
+  <style>
+    :root {
+      --bg: #0F302F;
+      --text: #EEFFEB;
+      --primary: #06B17A;
+      --accent: #B6FCE5;
+      --info: #E44B40;
+      --card: #123A37;
+      --card-border: rgba(238, 255, 235, 0.30);
+      --demo-bg: #123A37;
+      --demo-border: #526F68;
+      --demo-grid: #164441;
+      --btn-primary-bg: #06B17A;
+      --btn-primary-fg: #FFFFFF;
+      --btn-2nd-bg: #184C49;
+      --btn-2nd-fg: #EEFFEB;
+      --radius: 16px;
+      --font: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      --wire: #F8EF50;
+      --bulb-off: #526F68;
+      --bulb-on: #FFE566;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: #0a2221;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    #app {
+      min-height: 100vh;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 20px 18px;
+      gap: 12px;
+    }
+
+    header {
+      flex-shrink: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 4px 12px;
+      border: 2px solid var(--card-border);
+      border-radius: 999px;
+      background: var(--card);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 38px);
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.15;
+    }
+
+    .subtitle { font-size: 16px; color: rgba(238, 255, 235, 0.8); margin-top: 4px; }
+
+    .layout {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .demo {
+      position: relative;
+      background: var(--demo-bg);
+      border: 2px solid var(--demo-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      min-height: 320px;
+      background-image:
+        linear-gradient(var(--demo-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--demo-grid) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    #canvas3d {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      cursor: grab;
+    }
+
+    #canvas3d:active { cursor: grabbing; }
+
+    .demo-hint {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      font-size: 13px;
+      color: var(--accent);
+      background: rgba(15, 48, 47, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      pointer-events: none;
+    }
+
+    .circuit-status {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-chip {
+      background: rgba(15, 48, 47, 0.9);
+      border: 2px solid var(--card-border);
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .status-chip.on { border-color: var(--primary); color: var(--primary); }
+    .status-chip.off { border-color: var(--info); color: #ff9b93; }
+
+    aside.panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .meter {
+      text-align: center;
+      padding: 12px;
+      background: #0a2221;
+      border: 2px solid var(--demo-border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+
+    .meter-label { font-size: 13px; color: var(--accent); }
+    .meter-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--wire);
+      font-variant-numeric: tabular-nums;
+    }
+    .meter-unit { font-size: 16px; color: var(--text); }
+
+    .formula {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      padding: 8px;
+      border: 2px dashed var(--demo-border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .control-row {
+      margin-bottom: 12px;
+    }
+
+    .control-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .control-row label span { color: var(--wire); }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .switch-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .switch-big {
+      flex: 1;
+      min-height: 52px;
+      border-radius: var(--radius);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid var(--card-border);
+      font-family: inherit;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .switch-big.open {
+      background: var(--info);
+      color: #fff;
+      border-color: #ff6b60;
+    }
+
+    .switch-big.closed {
+      background: var(--primary);
+      color: #fff;
+      border-color: #04d68f;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-height: 44px;
+      padding: 9px 14px;
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); }
+    .btn-secondary { background: var(--btn-2nd-bg); color: var(--btn-2nd-fg); }
+    .btn:active { filter: brightness(0.95); }
+    .btn.is-active { box-shadow: 0 0 0 2px var(--accent); }
+
+    .tip {
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(238, 255, 235, 0.85);
+    }
+
+    .tip strong { color: var(--accent); }
+
+    .legend-list {
+      list-style: none;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .legend-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      aside.panel { max-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div>
+        <div class="eyebrow">初中物理 · 电学</div>
+        <h1>3D 串联电路动画</h1>
+        <p class="subtitle">闭合开关，观察电子沿导线定向移动，灯泡发光与电流变化</p>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="demo" aria-label="3D电路演示区">
+        <canvas id="canvas3d"></canvas>
+        <div class="circuit-status">
+          <div class="status-chip off" id="chip-circuit">电路：断开</div>
+          <div class="status-chip" id="chip-bulb">灯泡：熄灭</div>
+        </div>
+        <div class="demo-hint">拖拽旋转视角 · 滚轮缩放</div>
+      </section>
+
+      <aside class="panel">
+        <div class="card">
+          <h2>电流表读数</h2>
+          <div class="formula">I = U / R</div>
+          <div class="meter">
+            <div class="meter-label">电流 I</div>
+            <div class="meter-value" id="current-val">0.00</div>
+            <div class="meter-unit">安培 (A)</div>
+          </div>
+          <div class="control-row">
+            <label>电源电压 U <span id="u-val">6.0 V</span></label>
+            <input type="range" id="slider-u" min="3" max="12" step="0.5" value="6">
+          </div>
+          <div class="control-row">
+            <label>电阻 R <span id="r-val">10 Ω</span></label>
+            <input type="range" id="slider-r" min="2" max="20" step="1" value="10">
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>电路控制</h2>
+          <div class="switch-wrap" style="margin-bottom:12px;">
+            <button type="button" class="switch-big open" id="btn-switch">开关：断开</button>
+          </div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" id="btn-play">播放动画</button>
+            <button type="button" class="btn btn-secondary" id="btn-pause">暂停</button>
+            <button type="button" class="btn btn-secondary" id="btn-reset">重置</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>电路结构</h2>
+          <ul class="legend-list">
+            <li><span class="dot" style="background:#E44B40"></span>电池（电源）</li>
+            <li><span class="dot" style="background:#06B17A"></span>开关（可点击切换）</li>
+            <li><span class="dot" style="background:#8B5CF6"></span>定值电阻</li>
+            <li><span class="dot" style="background:#FFE566"></span>小灯泡</li>
+            <li><span class="dot" style="background:#F8EF50"></span>电子流动方向</li>
+          </ul>
+          <p class="tip" style="margin-top:8px;"><strong>串联电路：</strong>电流处处相等，开关断开时整个电路无电流，灯泡不亮。</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script>
+    (function () {
+      const canvas = document.getElementById('canvas3d');
+      const chipCircuit = document.getElementById('chip-circuit');
+      const chipBulb = document.getElementById('chip-bulb');
+      const currentVal = document.getElementById('current-val');
+      const uVal = document.getElementById('u-val');
+      const rVal = document.getElementById('r-val');
+      const sliderU = document.getElementById('slider-u');
+      const sliderR = document.getElementById('slider-r');
+      const btnSwitch = document.getElementById('btn-switch');
+      const btnPlay = document.getElementById('btn-play');
+      const btnPause = document.getElementById('btn-pause');
+      const btnReset = document.getElementById('btn-reset');
+
+      let voltage = 6;
+      let resistance = 10;
+      let switchClosed = false;
+      let playing = true;
+      let autoDemo = false;
+      let demoPhase = 0;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x123a37);
+      scene.fog = new THREE.Fog(0x123a37, 18, 42);
+
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+      camera.position.set(8, 7, 11);
+      camera.lookAt(0, 0.5, 0);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      scene.add(new THREE.AmbientLight(0xb6fce5, 0.45));
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.85);
+      dirLight.position.set(6, 12, 8);
+      dirLight.castShadow = true;
+      scene.add(dirLight);
+      const pointLight = new THREE.PointLight(0xffe566, 0, 8);
+      pointLight.position.set(2.2, 1.8, 0);
+      scene.add(pointLight);
+
+      const board = new THREE.Mesh(
+        new THREE.BoxGeometry(14, 0.35, 8),
+        new THREE.MeshStandardMaterial({ color: 0x164441, roughness: 0.8 })
+      );
+      board.position.y = -0.2;
+      board.receiveShadow = true;
+      scene.add(board);
+
+      const matWire = new THREE.MeshStandardMaterial({ color: 0xf8ef50, emissive: 0x554400, emissiveIntensity: 0.15, metalness: 0.6, roughness: 0.35 });
+      const matBattery = new THREE.MeshStandardMaterial({ color: 0xe44b40, roughness: 0.5 });
+      const matSwitchBase = new THREE.MeshStandardMaterial({ color: 0x184c49, roughness: 0.6 });
+      const matSwitchArm = new THREE.MeshStandardMaterial({ color: 0x06b17a, metalness: 0.3, roughness: 0.4 });
+      const matResistor = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, roughness: 0.55 });
+      const matBulb = new THREE.MeshStandardMaterial({ color: 0x526f68, emissive: 0x000000, emissiveIntensity: 0, roughness: 0.3, metalness: 0.1 });
+      const matBulbGlass = new THREE.MeshStandardMaterial({ color: 0xeeffeb, transparent: true, opacity: 0.35, roughness: 0.1 });
+
+      function box(w, h, d, mat, x, y, z) {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+        m.position.set(x, y, z);
+        m.castShadow = true;
+        scene.add(m);
+        return m;
+      }
+
+      function wire(x1, y1, z1, x2, y2, z2) {
+        const len = Math.hypot(x2 - x1, y2 - y1, z2 - z1);
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, len, 10), matWire);
+        w.position.set((x1 + x2) / 2, (y1 + y2) / 2, (z1 + z2) / 2);
+        w.lookAt(new THREE.Vector3(x2, y2, z2));
+        w.rotateX(Math.PI / 2);
+        w.castShadow = true;
+        scene.add(w);
+        return w;
+      }
+
+      box(1.2, 1.6, 0.8, matBattery, -5, 0.6, 0);
+      box(0.3, 1.2, 0.3, new THREE.MeshStandardMaterial({ color: 0x333333 }), -5, 1.5, 0);
+      box(0.15, 0.5, 0.15, new THREE.MeshStandardMaterial({ color: 0xcccccc }), -5, 2.1, 0);
+
+      const switchBase = box(1.0, 0.25, 0.8, matSwitchBase, -2, 0.35, 0);
+      const switchPivot = new THREE.Group();
+      switchPivot.position.set(-2, 0.5, 0);
+      const switchArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.9, 0.12), matSwitchArm);
+      switchArm.position.y = 0.45;
+      switchPivot.add(switchArm);
+      scene.add(switchPivot);
+
+      box(1.4, 0.5, 0.6, matResistor, 0.5, 0.45, 0);
+      for (let i = 0; i < 4; i++) {
+        box(0.12, 0.35, 0.5, new THREE.MeshStandardMaterial({ color: i % 2 ? 0xf8ef50 : 0x333333 }), 0.1 + i * 0.28, 0.55, 0);
+      }
+
+      const bulbGroup = new THREE.Group();
+      bulbGroup.position.set(3.5, 0.5, 0);
+      const bulbBase = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.3, 16), matBulb);
+      const bulbGlass = new THREE.Mesh(new THREE.SphereGeometry(0.55, 20, 16), matBulbGlass);
+      bulbGlass.position.y = 0.55;
+      const bulbFilament = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.03, 8, 16), new THREE.MeshStandardMaterial({ color: 0x888888, emissive: 0x000000 }));
+      bulbFilament.position.y = 0.5;
+      bulbFilament.rotation.x = Math.PI / 2;
+      bulbGroup.add(bulbBase, bulbGlass, bulbFilament);
+      scene.add(bulbGroup);
+
+      wire(-4.4, 0.5, 0, -2.5, 0.5, 0);
+      wire(-1.5, 0.5, 0, -0.2, 0.5, 0);
+      wire(1.2, 0.5, 0, 2.9, 0.5, 0);
+      wire(4.1, 0.5, 0, 5.5, 0.5, 0);
+      wire(5.5, 0.5, 0, 5.5, 0.5, -2.5);
+      wire(5.5, 0.5, -2.5, -5.5, 0.5, -2.5);
+      wire(-5.5, 0.5, -2.5, -5.5, 0.5, 0);
+
+      const labelTex = (text, color) => {
+        const c = document.createElement('canvas');
+        c.width = 256; c.height = 64;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = color;
+        ctx.font = 'bold 36px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(text, 128, 42);
+        const tex = new THREE.CanvasTexture(c);
+        const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true }));
+        sp.scale.set(2.2, 0.55, 1);
+        return sp;
+      };
+
+      const lblBattery = labelTex('电池', '#EEFFEB');
+      lblBattery.position.set(-5, 2.6, 0);
+      scene.add(lblBattery);
+      const lblSwitch = labelTex('开关', '#B6FCE5');
+      lblSwitch.position.set(-2, 1.8, 0);
+      scene.add(lblSwitch);
+      const lblR = labelTex('电阻', '#EEFFEB');
+      lblR.position.set(0.5, 1.5, 0);
+      scene.add(lblR);
+      const lblBulb = labelTex('灯泡', '#EEFFEB');
+      lblBulb.position.set(3.5, 1.8, 0);
+      scene.add(lblBulb);
+
+      const ELECTRON_COUNT = 48;
+      const pathPoints = [
+        new THREE.Vector3(-4.4, 0.65, 0),
+        new THREE.Vector3(-2.5, 0.65, 0),
+        new THREE.Vector3(-1.5, 0.65, 0),
+        new THREE.Vector3(-0.2, 0.65, 0),
+        new THREE.Vector3(1.2, 0.65, 0),
+        new THREE.Vector3(2.9, 0.65, 0),
+        new THREE.Vector3(4.1, 0.65, 0),
+        new THREE.Vector3(5.5, 0.65, 0),
+        new THREE.Vector3(5.5, 0.65, -2.5),
+        new THREE.Vector3(-5.5, 0.65, -2.5),
+        new THREE.Vector3(-5.5, 0.65, 0),
+        new THREE.Vector3(-4.4, 0.65, 0)
+      ];
+
+      const pathCurve = new THREE.CatmullRomCurve3(pathPoints, true);
+      const electronGeo = new THREE.BufferGeometry();
+      const positions = new Float32Array(ELECTRON_COUNT * 3);
+      electronGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      const electrons = new THREE.Points(
+        electronGeo,
+        new THREE.PointsMaterial({ color: 0xf8ef50, size: 0.18, transparent: true, opacity: 0.9 })
+      );
+      scene.add(electrons);
+
+      const electronTs = Array.from({ length: ELECTRON_COUNT }, (_, i) => i / ELECTRON_COUNT);
+      let flowOffset = 0;
+
+      function getCurrent() {
+        return switchClosed ? voltage / resistance : 0;
+      }
+
+      function updateUI() {
+        const I = getCurrent();
+        currentVal.textContent = I.toFixed(2);
+        uVal.textContent = voltage.toFixed(1) + ' V';
+        rVal.textContent = resistance + ' Ω';
+
+        if (switchClosed) {
+          chipCircuit.textContent = '电路：闭合';
+          chipCircuit.className = 'status-chip on';
+          btnSwitch.textContent = '开关：闭合';
+          btnSwitch.className = 'switch-big closed';
+          switchPivot.rotation.z = -0.55;
+        } else {
+          chipCircuit.textContent = '电路：断开';
+          chipCircuit.className = 'status-chip off';
+          btnSwitch.textContent = '开关：断开';
+          btnSwitch.className = 'switch-big open';
+          switchPivot.rotation.z = 0.45;
+        }
+
+        if (I > 0.01) {
+          chipBulb.textContent = '灯泡：发光';
+          chipBulb.className = 'status-chip on';
+          const intensity = Math.min(I / 0.8, 1);
+          matBulb.emissive.setHex(0xffcc00);
+          matBulb.emissiveIntensity = 0.3 + intensity * 0.7;
+          matBulb.color.setHex(0xffe566);
+          bulbFilament.material.emissive.setHex(0xffaa00);
+          bulbFilament.material.emissiveIntensity = 0.5 + intensity;
+          pointLight.intensity = 0.6 + intensity * 2.5;
+        } else {
+          chipBulb.textContent = '灯泡：熄灭';
+          chipBulb.className = 'status-chip';
+          matBulb.emissive.setHex(0x000000);
+          matBulb.emissiveIntensity = 0;
+          matBulb.color.setHex(0x526f68);
+          bulbFilament.material.emissive.setHex(0x000000);
+          bulbFilament.material.emissiveIntensity = 0;
+          pointLight.intensity = 0;
+        }
+      }
+
+      function updateElectrons() {
+        const I = getCurrent();
+        const speed = I * 0.35;
+        if (playing && I > 0) flowOffset = (flowOffset + speed * 0.016) % 1;
+
+        const pos = electrons.geometry.attributes.position;
+        for (let i = 0; i < ELECTRON_COUNT; i++) {
+          const t = (electronTs[i] + flowOffset) % 1;
+          const p = pathCurve.getPoint(t);
+          pos.setXYZ(i, p.x, p.y + (i % 3 - 1) * 0.04, p.z);
+        }
+        pos.needsUpdate = true;
+        electrons.visible = I > 0.01;
+      }
+
+      let isDragging = false;
+      let prevX = 0, prevY = 0;
+      let camAngle = 0.7;
+      let camHeight = 7;
+      let camDist = 13;
+
+      function updateCamera() {
+        camera.position.x = Math.sin(camAngle) * camDist * 0.7;
+        camera.position.z = Math.cos(camAngle) * camDist;
+        camera.position.y = camHeight;
+        camera.lookAt(0, 0.5, 0);
+      }
+
+      canvas.addEventListener('pointerdown', e => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+      window.addEventListener('pointerup', () => { isDragging = false; });
+      window.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+        camAngle += (e.clientX - prevX) * 0.008;
+        camHeight = Math.max(3, Math.min(12, camHeight - (e.clientY - prevY) * 0.03));
+        prevX = e.clientX; prevY = e.clientY;
+        updateCamera();
+      });
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        camDist = Math.max(8, Math.min(20, camDist + e.deltaY * 0.01));
+        updateCamera();
+      }, { passive: false });
+
+      btnSwitch.addEventListener('click', () => {
+        switchClosed = !switchClosed;
+        updateUI();
+      });
+
+      sliderU.addEventListener('input', () => {
+        voltage = parseFloat(sliderU.value);
+        updateUI();
+      });
+
+      sliderR.addEventListener('input', () => {
+        resistance = parseInt(sliderR.value, 10);
+        updateUI();
+      });
+
+      btnPlay.addEventListener('click', () => {
+        playing = true;
+        autoDemo = true;
+        btnPlay.classList.add('is-active');
+        btnPause.classList.remove('is-active');
+      });
+
+      btnPause.addEventListener('click', () => {
+        playing = false;
+        autoDemo = false;
+        btnPause.classList.add('is-active');
+        btnPlay.classList.remove('is-active');
+      });
+
+      btnReset.addEventListener('click', () => {
+        playing = true;
+        autoDemo = false;
+        switchClosed = false;
+        voltage = 6;
+        resistance = 10;
+        sliderU.value = 6;
+        sliderR.value = 10;
+        flowOffset = 0;
+        camAngle = 0.7;
+        camHeight = 7;
+        camDist = 13;
+        updateCamera();
+        updateUI();
+        btnPlay.classList.remove('is-active');
+        btnPause.classList.remove('is-active');
+      });
+
+      let lastDemo = 0;
+      function autoDemoLoop(t) {
+        if (autoDemo && playing) {
+          if (t - lastDemo > 2500) {
+            lastDemo = t;
+            demoPhase = (demoPhase + 1) % 4;
+            if (demoPhase === 0) { switchClosed = true; }
+            else if (demoPhase === 1) { voltage = 9; sliderU.value = 9; }
+            else if (demoPhase === 2) { resistance = 5; sliderR.value = 5; }
+            else { switchClosed = false; voltage = 6; resistance = 10; sliderU.value = 6; sliderR.value = 10; }
+            updateUI();
+          }
+        }
+      }
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        const w = rect.width;
+        const h = Math.max(rect.height, 320);
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+
+      function animate(t) {
+        requestAnimationFrame(animate);
+        autoDemoLoop(t);
+        updateElectrons();
+        renderer.render(scene, camera);
+      }
+
+      resize();
+      updateCamera();
+      updateUI();
+      window.addEventListener('resize', resize);
+      animate(0);
+    })();
+  </script>
+</body>
+</html>
