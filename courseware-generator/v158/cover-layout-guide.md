@@ -55,12 +55,14 @@ Phase 4 创建 HTML 骨架和生成第 1 页封面前
 
 坐标写法：
 
-| 字段 | 含义 | 换算 |
-|---|---|---|
-| `left` | 左上角横向坐标 | 设计稿 `x / 2` |
-| `top` | 左上角纵向坐标 | 设计稿 `y / 2` |
-| `width` | 容器宽度 | 设计稿 `width / 2` |
-| `height` | 容器高度 | 设计稿 `height / 2` |
+
+| 字段       | 含义      | 换算               |
+| -------- | ------- | ---------------- |
+| `left`   | 左上角横向坐标 | 设计稿 `x / 2`      |
+| `top`    | 左上角纵向坐标 | 设计稿 `y / 2`      |
+| `width`  | 容器宽度    | 设计稿 `width / 2`  |
+| `height` | 容器高度    | 设计稿 `height / 2` |
+
 
 生成 HTML 时必须用固定 px 表达：
 
@@ -78,14 +80,16 @@ Phase 4 创建 HTML 骨架和生成第 1 页封面前
 
 > 字体家族使用 `typography-guide.md` 已选 preset 中的 `--cw-courseware-title-font` / `--cw-courseware-body-font` / `--cw-courseware-label-font`。下表只规定字号、行高和字重；除非字体可读性不足，不要把封面强制改回 `PingFang SC`。
 
-| 层级 | 设计来源 | 960×540 固定换算 |
-|---|---|---|
-| 超大标题 | 研发模式读数 `PingFang SC Medium, 190px/200px` | `font-size: 95px; line-height: 100px; font-weight: 500;` |
-| 150px 大标题 | 研发模式读数 `150px/170px` | `font-size: 75px; line-height: 85px; font-weight: 500;` |
-| 140px 大标题 | 研发模式读数 `140px/150px` | `font-size: 70px; line-height: 75px; font-weight: 500;` |
-| 100px 中标题 | 研发模式读数 `100px/100px` | `font-size: 50px; line-height: 50px; font-weight: 500;` |
-| 副标题 | 研发模式读数 `35px/55px` 或 `90px/90px` | 视版式固定为 `18px/28px` 或 `45px/45px` |
-| 页眉/页脚信息 | 研发模式读数 `25px/50px` 或 `35px/50px` | 视版式固定为 `13px/25px` 或 `18px/25px` |
+
+| 层级        | 设计来源                                     | 960×540 固定换算                                             |
+| --------- | ---------------------------------------- | -------------------------------------------------------- |
+| 超大标题      | 研发模式读数 `PingFang SC Medium, 190px/200px` | `font-size: 95px; line-height: 100px; font-weight: 500;` |
+| 150px 大标题 | 研发模式读数 `150px/170px`                     | `font-size: 75px; line-height: 85px; font-weight: 500;`  |
+| 140px 大标题 | 研发模式读数 `140px/150px`                     | `font-size: 70px; line-height: 75px; font-weight: 500;`  |
+| 100px 中标题 | 研发模式读数 `100px/100px`                     | `font-size: 50px; line-height: 50px; font-weight: 500;`  |
+| 副标题       | 研发模式读数 `35px/55px` 或 `90px/90px`         | 视版式固定为 `18px/28px` 或 `45px/45px`                         |
+| 页眉/页脚信息   | 研发模式读数 `25px/50px` 或 `35px/50px`         | 视版式固定为 `13px/25px` 或 `18px/25px`                         |
+
 
 防溢出规则：
 
@@ -100,12 +104,14 @@ Phase 4 创建 HTML 骨架和生成第 1 页封面前
 
 第 1 页必须在 `page-root` 上写明封面图角色：
 
-| `data-cover-visual` | 含义 | 模板背景关系 |
-|---|---|---|
-| `none` | 无封面生图或无主视觉图 | 模板替换可完整使用模板背景 |
-| `full-bleed-background` | 生图铺满整页作为封面背景 | 模板替换禁用该页模板背景，只保留模板字体、颜色、遮罩和弱装饰 |
-| `side-visual` | 生图作为左侧/右侧主视觉，不铺满整页 | 模板替换保留模板背景，同时保护封面图 |
-| `inline-card` | 生图作为下方/局部卡片图或内容图 | 模板替换保留模板背景，同时保护封面图 |
+
+| `data-cover-visual`     | 含义                 | 模板背景关系                         |
+| ----------------------- | ------------------ | ------------------------------ |
+| `none`                  | 无封面生图或无主视觉图        | 模板替换可完整使用模板背景                  |
+| `full-bleed-background` | 生图铺满整页作为封面背景       | 模板替换禁用该页模板背景，只保留模板字体、颜色、遮罩和弱装饰 |
+| `side-visual`           | 生图作为左侧/右侧主视觉，不铺满整页 | 模板替换保留模板背景，同时保护封面图             |
+| `inline-card`           | 生图作为下方/局部卡片图或内容图   | 模板替换保留模板背景，同时保护封面图             |
+
 
 若有封面图片，必须把图片放入独立媒体层，禁止写成 `page-root` 的内联 `background-image`：
 
@@ -163,15 +169,17 @@ coverImageSlot = {
 4. 如果封面图已生成但比例明显不匹配当前 `coverImageSlot`，不得用裁切掩盖问题；必须改选兼容槽位、使用 `contain` 保护主体，或重新按 slot 比例生成图片。
 5. HTML 中的封面图片容器必须写 `data-cover-slot="<slotId>"`，便于后续检查。
 
-| 版式 | 可用图片槽位 | `data-cover-visual` | 固定槽位 | 960×540 目标像素 | 目标比例 | 生图方向要求 |
-|---|---|---|---|---|---|---|
-| `cover-01-center-stack` | `cover-full-bleed` | `full-bleed-background` | `left=0 top=0 width=960 height=540` | `960×540` | `1.78:1` | 16:9 横向整页背景，主体避开标题安全区 |
-| `cover-02-left-top-stack` | `cover-full-bleed` | `full-bleed-background` | `left=0 top=0 width=960 height=540` | `960×540` | `1.78:1` | 16:9 横向整页背景，左上留文字安全区 |
-| `cover-03-left-lower-stack` | `cover-full-bleed` | `full-bleed-background` | `left=0 top=0 width=960 height=540` | `960×540` | `1.78:1` | 16:9 横向整页背景，左中下留文字安全区 |
-| `cover-04-right-lower-stack` | `cover-full-bleed` | `full-bleed-background` | `left=0 top=0 width=960 height=540` | `960×540` | `1.78:1` | 16:9 横向整页背景，右下留文字安全区 |
-| `cover-05-left-visual-right-title` | `cover-05-left-visual` | `side-visual` | `left=0 top=0 width=480 height=540` | `480×540` | `0.89:1` | 近方形/轻竖向左栏主视觉，主体完整 |
-| `cover-06-organic-visual-left-text-right` | `cover-06-organic-visual` | `side-visual` | 可见遮罩 `left=38 top=0 width=415 height=540`；内部源图 `415×709` 向上偏移 `-85px` | `415×709` | `0.59:1` | 竖向主体图，适合圆形/胶囊遮罩，主体不要贴边 |
-| `cover-07-top-title-image-card` | `cover-07-image-card` | `inline-card` | `left=30 top=107 width=900 height=357` | `900×357` | `2.52:1` | 超宽横向卡片图，主体横向展开，不能生成竖图 |
+
+| 版式                                        | 可用图片槽位                    | `data-cover-visual`     | 固定槽位                                                                  | 960×540 目标像素 | 目标比例     | 生图方向要求                 |
+| ----------------------------------------- | ------------------------- | ----------------------- | --------------------------------------------------------------------- | ------------ | -------- | ---------------------- |
+| `cover-01-center-stack`                   | `cover-full-bleed`        | `full-bleed-background` | `left=0 top=0 width=960 height=540`                                   | `960×540`    | `1.78:1` | 16:9 横向整页背景，主体避开标题安全区  |
+| `cover-02-left-top-stack`                 | `cover-full-bleed`        | `full-bleed-background` | `left=0 top=0 width=960 height=540`                                   | `960×540`    | `1.78:1` | 16:9 横向整页背景，左上留文字安全区   |
+| `cover-03-left-lower-stack`               | `cover-full-bleed`        | `full-bleed-background` | `left=0 top=0 width=960 height=540`                                   | `960×540`    | `1.78:1` | 16:9 横向整页背景，左中下留文字安全区  |
+| `cover-04-right-lower-stack`              | `cover-full-bleed`        | `full-bleed-background` | `left=0 top=0 width=960 height=540`                                   | `960×540`    | `1.78:1` | 16:9 横向整页背景，右下留文字安全区   |
+| `cover-05-left-visual-right-title`        | `cover-05-left-visual`    | `side-visual`           | `left=0 top=0 width=480 height=540`                                   | `480×540`    | `0.89:1` | 近方形/轻竖向左栏主视觉，主体完整      |
+| `cover-06-organic-visual-left-text-right` | `cover-06-organic-visual` | `side-visual`           | 可见遮罩 `left=38 top=0 width=415 height=540`；内部源图 `415×709` 向上偏移 `-85px` | `415×709`    | `0.59:1` | 竖向主体图，适合圆形/胶囊遮罩，主体不要贴边 |
+| `cover-07-top-title-image-card`           | `cover-07-image-card`     | `inline-card`           | `left=30 top=107 width=900 height=357`                                | `900×357`    | `2.52:1` | 超宽横向卡片图，主体横向展开，不能生成竖图  |
+
 
 ---
 
@@ -181,14 +189,16 @@ coverImageSlot = {
 
 ### 4.0 字段填充规则
 
-| 字段 | 含义 | 必须放入的槽位 |
-|---|---|---|
-| `{{title}}` | 课题主标题，只放课题本身，如 `出师表` | `.cover-title` |
-| `{{subtitle}}` | 短副标题，如单元主题、课型、英文副题。没有就留空，不得放教材版本 | `.cover-subtitle` |
-| `{{eyebrow}}` | 顶部小字，如单元、课时、章节编号。没有就留空 | `.cover-eyebrow` |
-| `{{meta}}` | 教材版本、年级、册次、作者、课时等信息，如 `统编版语文 · 九年级下册 · 诸葛亮` | `.cover-meta` |
-| `{{coverImageUrl}}` | 封面图 URL | `.cover-visual img[src]` |
-| `{{coverAlt}}` | 图片替代文本 | `.cover-visual img[alt]` |
+
+| 字段                  | 含义                                          | 必须放入的槽位                  |
+| ------------------- | ------------------------------------------- | ------------------------ |
+| `{{title}}`         | 课题主标题，只放课题本身，如 `出师表`                        | `.cover-title`           |
+| `{{subtitle}}`      | 短副标题，如单元主题、课型、英文副题。没有就留空，不得放教材版本            | `.cover-subtitle`        |
+| `{{eyebrow}}`       | 顶部小字，如单元、课时、章节编号。没有就留空                      | `.cover-eyebrow`         |
+| `{{meta}}`          | 教材版本、年级、册次、作者、课时等信息，如 `统编版语文 · 九年级下册 · 诸葛亮` | `.cover-meta`            |
+| `{{coverImageUrl}}` | 封面图 URL                                     | `.cover-visual img[src]` |
+| `{{coverAlt}}`      | 图片替代文本                                      | `.cover-visual img[alt]` |
+
 
 硬规则：
 
@@ -202,15 +212,17 @@ coverImageSlot = {
 
 生成和验收第 1 页封面时，以此表作为字段和位置的唯一基准。表中坐标均为互动课件 `960×540` 画布内的绝对 px，必须逐项落到 CSS 的 `left/top/width/height`。
 
-| layout | title 槽位 | subtitle 槽位 | eyebrow 槽位 | meta 槽位 | image 槽位 | 标题字体层级 |
-|---|---|---|---|---|---|---|
-| `cover-01-center-stack` | `.cover-copy left=163 top=184 width=634 height=135; center` | 标题下 `16px` | 不用，留空 | `.cover-meta left=211 top=400 width=538 height=25; center` | `cover-full-bleed left=0 top=0 width=960 height=540` | 超大标题 `95px/100px` |
-| `cover-02-left-top-stack` | `.cover-copy left=48 top=119 width=499 height=140; left` | 标题下 `12px` | `.cover-eyebrow left=48 top=43 width=269 height=25; left` | `.cover-meta left=48 top=464 width=403 height=25; left` | `cover-full-bleed left=0 top=0 width=960 height=540` | 大标题 `75px/85px` |
-| `cover-03-left-lower-stack` | `.cover-copy left=58 top=238 width=461 height=130; left` | 标题下 `10px` | `.cover-eyebrow left=48 top=43 width=288 height=25; left` | `.cover-meta left=58 top=464 width=365 height=25; left` | `cover-full-bleed left=0 top=0 width=960 height=540` | 大标题 `75px/85px` |
-| `cover-04-right-lower-stack` | `.cover-copy left=518 top=238 width=384 height=140; right` | 标题下 `10px` | `.cover-eyebrow left=48 top=43 width=288 height=25; left` | `.cover-meta left=58 top=464 width=365 height=25; left` | `cover-full-bleed left=0 top=0 width=960 height=540` | 大标题 `75px/85px` |
-| `cover-05-left-visual-right-title` | `.cover-copy left=557 top=108 width=326 height=184; left` | 标题下 `12px` | 不用，留空 | `.cover-meta left=557 top=454 width=307 height=25; left` | `cover-05-left-visual left=0 top=0 width=480 height=540` | 标题 `70px/75px` |
-| `cover-06-organic-visual-left-text-right` | `.cover-copy left=480 top=162 width=384 height=151; left` | 标题下 `12px` | 不用，留空 | `.cover-meta left=480 top=443 width=326 height=25; left` | `cover-06-organic-visual visible left=38 top=0 width=415 height=540; source image=415×709 offsetY=-85` | 标题 `75px/85px` |
-| `cover-07-top-title-image-card` | `.cover-copy left=48 top=30 width=864 height=50; left` | 禁用，必须空 | 禁用，必须空 | `.cover-meta left=58 top=478 width=672 height=25; left` | `cover-07-image-card left=30 top=107 width=900 height=357` | 中标题 `50px/50px` |
+
+| layout                                    | title 槽位                                                    | subtitle 槽位 | eyebrow 槽位                                                | meta 槽位                                                    | image 槽位                                                                                               | 标题字体层级            |
+| ----------------------------------------- | ----------------------------------------------------------- | ----------- | --------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------- |
+| `cover-01-center-stack`                   | `.cover-copy left=163 top=184 width=634 height=135; center` | 标题下 `16px`  | 不用，留空                                                     | `.cover-meta left=211 top=400 width=538 height=25; center` | `cover-full-bleed left=0 top=0 width=960 height=540`                                                   | 超大标题 `95px/100px` |
+| `cover-02-left-top-stack`                 | `.cover-copy left=48 top=119 width=499 height=140; left`    | 标题下 `12px`  | `.cover-eyebrow left=48 top=43 width=269 height=25; left` | `.cover-meta left=48 top=464 width=403 height=25; left`    | `cover-full-bleed left=0 top=0 width=960 height=540`                                                   | 大标题 `75px/85px`   |
+| `cover-03-left-lower-stack`               | `.cover-copy left=58 top=238 width=461 height=130; left`    | 标题下 `10px`  | `.cover-eyebrow left=48 top=43 width=288 height=25; left` | `.cover-meta left=58 top=464 width=365 height=25; left`    | `cover-full-bleed left=0 top=0 width=960 height=540`                                                   | 大标题 `75px/85px`   |
+| `cover-04-right-lower-stack`              | `.cover-copy left=518 top=238 width=384 height=140; right`  | 标题下 `10px`  | `.cover-eyebrow left=48 top=43 width=288 height=25; left` | `.cover-meta left=58 top=464 width=365 height=25; left`    | `cover-full-bleed left=0 top=0 width=960 height=540`                                                   | 大标题 `75px/85px`   |
+| `cover-05-left-visual-right-title`        | `.cover-copy left=557 top=108 width=326 height=184; left`   | 标题下 `12px`  | 不用，留空                                                     | `.cover-meta left=557 top=454 width=307 height=25; left`   | `cover-05-left-visual left=0 top=0 width=480 height=540`                                               | 标题 `70px/75px`    |
+| `cover-06-organic-visual-left-text-right` | `.cover-copy left=480 top=162 width=384 height=151; left`   | 标题下 `12px`  | 不用，留空                                                     | `.cover-meta left=480 top=443 width=326 height=25; left`   | `cover-06-organic-visual visible left=38 top=0 width=415 height=540; source image=415×709 offsetY=-85` | 标题 `75px/85px`    |
+| `cover-07-top-title-image-card`           | `.cover-copy left=48 top=30 width=864 height=50; left`      | 禁用，必须空      | 禁用，必须空                                                    | `.cover-meta left=58 top=478 width=672 height=25; left`    | `cover-07-image-card left=30 top=107 width=900 height=357`                                             | 中标题 `50px/50px`   |
+
 
 字段归位强校验：
 
@@ -729,18 +741,19 @@ coverImageSlot = {
 
 ## 六、生成检查清单
 
-- [ ] 第 1 页 `page-root` 已写 `data-cover-layout` 和 `data-cover-visual`。
-- [ ] 第 1 页使用的是第四节固定 CSS/HTML 骨架之一，而不是模型自由写出的相似结构。
-- [ ] 若有封面图，素材清单已记录 `coverImageSlot`，封面图 prompt 已包含 slot 目标尺寸、目标比例和横竖方向。
-- [ ] 若有封面图，HTML 媒体层已写 `data-cover-slot="<slotId>"`，且该 slot 与素材清单、prompt 一致。
-- [ ] 使用了 7 种封面版式之一，没有自由发明第 8 种封面结构。
-- [ ] `{{title}}` 只包含课题主标题，教材版本、年级、册次、作者、课时等信息全部在 `.cover-meta`，没有混入 `.cover-title` 或 `.cover-subtitle`。
-- [ ] `.cover-copy`、`.cover-meta`、`.cover-visual` 的 `left/top/width/height` 与 4.1 槽位登记表一致，没有为了内容或图片临时移动槽位。
-- [ ] 所有文字和图片位置均按固定 px 坐标落位，没有使用百分比、`clamp()`、`flex` 自适应或依赖当前浏览器截图缩放的坐标。
-- [ ] 图片槽位按 `left/top/width/height` 固定落位，没有用 `flex: 1`、自动填充或内容撑开代替。
-- [ ] 若封面图是整图背景，图片在独立 `cover-visual` 媒体层中，不是 `page-root background-image`。
-- [ ] 若封面图是局部图，模板背景仍可保留，图片受 `media-block` 保护。
-- [ ] `cover-07-top-title-image-card` 的标题区只放主标题，`.cover-meta` 在左下，图片卡片保持 `left=30px top=107px width=900px height=357px`，教材信息没有放到标题下面。
-- [ ] 封面标题没有继承普通页面标题的左竖杠、下划线、编号、横杠或 `padding-left` 装饰。
-- [ ] 标题、图片、页脚均在 960×540 画布内，不溢出、不遮挡主体。
-- [ ] 没有为了套模板背景移动封面图片或标题位置。
+- 第 1 页 `page-root` 已写 `data-cover-layout` 和 `data-cover-visual`。
+- 第 1 页使用的是第四节固定 CSS/HTML 骨架之一，而不是模型自由写出的相似结构。
+- 若有封面图，素材清单已记录 `coverImageSlot`，封面图 prompt 已包含 slot 目标尺寸、目标比例和横竖方向。
+- 若有封面图，HTML 媒体层已写 `data-cover-slot="<slotId>"`，且该 slot 与素材清单、prompt 一致。
+- 使用了 7 种封面版式之一，没有自由发明第 8 种封面结构。
+- `{{title}}` 只包含课题主标题，教材版本、年级、册次、作者、课时等信息全部在 `.cover-meta`，没有混入 `.cover-title` 或 `.cover-subtitle`。
+- `.cover-copy`、`.cover-meta`、`.cover-visual` 的 `left/top/width/height` 与 4.1 槽位登记表一致，没有为了内容或图片临时移动槽位。
+- 所有文字和图片位置均按固定 px 坐标落位，没有使用百分比、`clamp()`、`flex` 自适应或依赖当前浏览器截图缩放的坐标。
+- 图片槽位按 `left/top/width/height` 固定落位，没有用 `flex: 1`、自动填充或内容撑开代替。
+- 若封面图是整图背景，图片在独立 `cover-visual` 媒体层中，不是 `page-root background-image`。
+- 若封面图是局部图，模板背景仍可保留，图片受 `media-block` 保护。
+- `cover-07-top-title-image-card` 的标题区只放主标题，`.cover-meta` 在左下，图片卡片保持 `left=30px top=107px width=900px height=357px`，教材信息没有放到标题下面。
+- 封面标题没有继承普通页面标题的左竖杠、下划线、编号、横杠或 `padding-left` 装饰。
+- 标题、图片、页脚均在 960×540 画布内，不溢出、不遮挡主体。
+- 没有为了套模板背景移动封面图片或标题位置。
+

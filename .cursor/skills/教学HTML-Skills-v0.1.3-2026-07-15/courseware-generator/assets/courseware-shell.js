@@ -312,23 +312,45 @@ window.__CW_SHELL_MAIN__ = function () {
 
     this.scorm = new ScormRT();
     var start = 0;
-    if (this.scorm.init(this.pages.length)) {
-      var loc = this.scorm.bookmark();
-      if (loc >= 0 && loc < this.pages.length) start = loc;
-      var finish = function () {
-        self.scorm.finish();
-      };
-      window.addEventListener('pagehide', finish);
-      window.addEventListener('beforeunload', finish);
-      window.addEventListener('unload', finish);
+    var scormBooted = false;
+    var finishScorm = function () {
+      self.scorm.finish();
+    };
+    var bindScormLifecycle = function (fromRetry) {
+      if (scormBooted) return;
+      scormBooted = true;
+      var loc = self.scorm.bookmark();
+      var hasBookmark = loc >= 0 && loc < self.pages.length;
+      if (hasBookmark) start = loc;
+      window.addEventListener('pagehide', finishScorm);
+      window.addEventListener('beforeunload', finishScorm);
+      window.addEventListener('unload', finishScorm);
+      // LMS iframe 下 visibility 仍走 suspend/resume，但 ScormRT 已改墙钟，不再把时长清零
       document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'hidden') self.scorm.suspend();
         else self.scorm.resume();
       });
-      this.scorm.keepAlive = setInterval(function () {
+      self.scorm.keepAlive = setInterval(function () {
         self.scorm.tick();
-      }, 10000);
-    }
+      }, 5000);
+      // API 晚到：有书签则跳转恢复；无书签只上报当前页，勿强行 show(0) 打断用户
+      if (fromRetry) {
+        if (hasBookmark) self.show(start, 'forward');
+        else self.scorm.visit(self.index);
+      }
+    };
+    // ClassIn / LMS 常见：API_1484_11 晚于课件挂载，需延迟重试 Initialize
+    (function tryScormBoot(attempt) {
+      if (self.scorm.init(self.pages.length)) {
+        bindScormLifecycle(attempt > 0);
+        return;
+      }
+      if (attempt < 25) {
+        setTimeout(function () {
+          tryScormBoot(attempt + 1);
+        }, 200);
+      }
+    })(0);
 
     this._renderThumbs();
     this.show(start, 'forward');
@@ -542,8 +564,9 @@ window.__CW_SHELL_MAIN__ = function () {
   /* ============================ SCORM 2004 运行时 ============================
    * 导出的单文件 HTML 内置本运行时。放入 LMS（可发现 API_1484_11）时自动上报；
    * 作为普通文件打开（无 API）时静默无副作用。
-   * 上报：session_time（时长）、progress_measure（进度）、completion_status、
-   *       location + suspend_data（断点续学）、score（测验页可选上报）。
+   * 上报：session_time（时长，整秒）、progress_measure（进度）、completion_status、
+   *       location（1-based）+ suspend_data（断点续学）、score（测验页可选上报）。
+   * ClassIn / iframe LMS：墙钟计时、Initialize 延迟重试与 103 续会话。
    * ========================================================================== */
 
   function scormFindAPI(win) {
@@ -569,14 +592,13 @@ window.__CW_SHELL_MAIN__ = function () {
     return api;
   }
 
+  /** 整秒 ISO8601 时长，避免部分 LMS 拒收小数秒 */
   function scormDuration(ms) {
-    var s = Math.max(0, ms / 1000);
-    var h = Math.floor(s / 3600);
-    s -= h * 3600;
-    var m = Math.floor(s / 60);
-    s -= m * 60;
-    var sec = Math.round(s * 100) / 100;
-    return 'PT' + h + 'H' + m + 'M' + sec + 'S';
+    var total = Math.max(0, Math.floor(Number(ms) / 1000));
+    var h = Math.floor(total / 3600);
+    var m = Math.floor((total % 3600) / 60);
+    var s = total % 60;
+    return 'PT' + h + 'H' + m + 'M' + s + 'S';
   }
 
   function ScormRT() {
@@ -585,6 +607,7 @@ window.__CW_SHELL_MAIN__ = function () {
     this.terminated = false;
     this.enterTime = 0;
     this.accumMs = 0;
+    this.wallStart = 0;
     this.visited = {};
     this.total = 0;
     this.completed = false;
@@ -631,35 +654,41 @@ window.__CW_SHELL_MAIN__ = function () {
     if (this.active) this.api.Commit('');
   };
 
-  /** 当前会话累计时长（毫秒），跨可见性切换累加 */
+  /** 墙钟时长：不依赖 pause/resume，避免 LMS iframe visibility 把时长刷成 0 */
   ScormRT.prototype._elapsedMs = function () {
-    var live = this.enterTime ? Date.now() - this.enterTime : 0;
-    return this.accumMs + live;
+    if (!this.wallStart) this.wallStart = this.enterTime || Date.now();
+    return Math.max(0, Date.now() - this.wallStart);
   };
   ScormRT.prototype._pushTime = function () {
     this.set('cmi.session_time', scormDuration(this._elapsedMs()));
   };
   ScormRT.prototype.pause = function () {
-    if (this.enterTime) {
-      this.accumMs += Date.now() - this.enterTime;
-      this.enterTime = 0;
-    }
+    // no-op：墙钟计时，避免 LMS iframe visibility 把时长刷成 0
   };
   ScormRT.prototype.resume = function () {
-    if (!this.enterTime) this.enterTime = Date.now();
+    // no-op
   };
 
   ScormRT.prototype.init = function (total) {
     this.api = scormGetAPI();
     if (!this.api) return false;
-    if (!this._ok(this.api.Initialize(''))) {
-      this.api = null;
-      return false;
+    var initOk = this._ok(this.api.Initialize(''));
+    if (!initOk) {
+      var err = '';
+      try {
+        err = String(this.api.GetLastError());
+      } catch (e) {}
+      // 103 Already Initialized：续用当前会话，勿清空 api
+      if (err !== '103') {
+        this.api = null;
+        return false;
+      }
     }
     this.active = true;
     this.total = total;
     this.enterTime = Date.now();
     this.accumMs = 0;
+    this.wallStart = Date.now();
 
     var suspend = this.get('cmi.suspend_data');
     if (suspend) {
@@ -667,7 +696,7 @@ window.__CW_SHELL_MAIN__ = function () {
         var d = JSON.parse(suspend);
         if (d && d.visited) this.visited = d.visited;
         if (d && d.scores) this.scores = d.scores;
-      } catch (e) {}
+      } catch (e2) {}
     }
     var cs = this.get('cmi.completion_status');
     this.completed = cs === 'completed';
@@ -690,10 +719,12 @@ window.__CW_SHELL_MAIN__ = function () {
     this.commit();
   };
 
+  /** location 为 1-based；返回 0-based 页索引 */
   ScormRT.prototype.bookmark = function () {
     if (!this.active) return -1;
     var loc = parseInt(this.get('cmi.location'), 10);
-    return isNaN(loc) ? -1 : loc;
+    if (isNaN(loc) || loc <= 0) return loc === 0 ? 0 : -1;
+    return loc - 1;
   };
 
   ScormRT.prototype.visit = function (index) {
@@ -703,7 +734,7 @@ window.__CW_SHELL_MAIN__ = function () {
     for (var k in this.visited) if (this.visited.hasOwnProperty(k)) count++;
     var pm = this.total ? Math.min(1, count / this.total) : 0;
     this.set('cmi.progress_measure', pm.toFixed(4));
-    this.set('cmi.location', String(index));
+    this.set('cmi.location', String(index + 1));
     if (count >= this.total && this.total > 0) {
       this.completed = true;
       this.set('cmi.completion_status', 'completed');
