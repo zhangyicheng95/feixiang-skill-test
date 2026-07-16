@@ -1,7 +1,7 @@
 ---
 name: teaching-page-courseware-generator
 description: K12 单文件多页翻页课件 HTML 生成 skill。用于 PPT 式课件、翻页演示、缩略图预览、练习页状态保存、成绩消息、下载或 SCORM；含封面槽位与生图 prompt 命中式增强（generate_images）；沿用 spec、outline、page-data 和验收流程，由 LLM 生成页面模板与业务逻辑，并通过 create_file 注入官方课件壳、写入和回读验证。
-version: v0.1.4
+version: v0.1.4.2
 source_version: teaching-page-v3 + feixiang-imagegen-v158
 ---
 
