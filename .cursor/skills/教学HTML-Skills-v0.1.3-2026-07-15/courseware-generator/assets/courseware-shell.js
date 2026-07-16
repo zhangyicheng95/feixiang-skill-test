@@ -122,6 +122,11 @@ window.__CW_SHELL_MAIN__ = function () {
   CoursewareShell.prototype._handleNavKey = function (e) {
     var t = e.target;
     if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key === 'Escape' && this._isFullscreen()) {
+      e.preventDefault();
+      this._toggleFullscreen();
+      return;
+    }
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
       e.preventDefault();
       this.next();
@@ -193,9 +198,10 @@ window.__CW_SHELL_MAIN__ = function () {
       '<span class="cw-present-icon" aria-hidden="true"></span>' +
       '<span class="cw-present-text">演示</span>';
 
+    // 按钮必须在 body 内：全屏的是 body，放 root 上会进不了全屏层，无法点退出
+    body.appendChild(this.presentBtn);
     root.appendChild(body);
     root.appendChild(footer);
-    root.appendChild(this.presentBtn);
     document.body.appendChild(root);
 
     var self = this;
@@ -364,13 +370,9 @@ window.__CW_SHELL_MAIN__ = function () {
       'html,body{margin:0;height:100%;overflow:hidden}' +
       '.cw-root{height:100vh;display:flex;flex-direction:column;background:#fff;position:relative;' +
       'font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1e293b}' +
-      '.cw-body{flex:1;display:flex;min-height:0;background:' +
-      STAGE_BG +
-      ';outline:none}' +
+      '.cw-body{flex:1;display:flex;min-height:0;background:#fff;outline:none;position:relative}' +
       '.cw-body:fullscreen,.cw-body:-webkit-full-screen{width:100%;height:100%;display:flex;min-height:0;' +
-      'background:' +
-      STAGE_BG +
-      '}' +
+      'background:#fff}' +
       '.cw-body:fullscreen .cw-thumbs,.cw-body:-webkit-full-screen .cw-thumbs{height:100%}' +
       '.cw-thumbs{width:136px;flex-shrink:0;padding:12px 10px;overflow-y:auto;background:#fff;' +
       'border-right:1px solid #e5e7eb}' +
@@ -401,13 +403,9 @@ window.__CW_SHELL_MAIN__ = function () {
       'border-radius:999px;background:#64748b;color:#fff;font-size:11px;font-weight:700;' +
       'display:flex;align-items:center;justify-content:center;z-index:2;line-height:1}' +
       '.cw-thumb--on .cw-thumb-no{background:#10b981}' +
-      '.cw-body:fullscreen .cw-stage,.cw-body:-webkit-full-screen .cw-stage{background:' +
-      STAGE_BG +
-      ';padding:0}' +
+      '.cw-body:fullscreen .cw-stage,.cw-body:-webkit-full-screen .cw-stage{background:#fff;padding:0}' +
       '.cw-stage{flex:1;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;' +
-      'padding:24px;background:' +
-      STAGE_BG +
-      ';outline:none}' +
+      'padding:24px;background:#fff;outline:none}' +
       '.cw-stage-frame{width:' +
       CANVAS_W +
       'px;height:' +
@@ -417,7 +415,7 @@ window.__CW_SHELL_MAIN__ = function () {
       '.cw-main-iframe{width:100%;height:100%;border:none;display:block}' +
       '.cw-footer{height:56px;flex-shrink:0;display:flex;align-items:center;padding:0 120px 0 20px;' +
       'border-top:1px solid #e5e7eb;background:#fff;font-size:12px;color:#64748b}' +
-      '.cw-present-btn{position:absolute;right:20px;bottom:6px;z-index:40;display:inline-flex;align-items:center;' +
+      '.cw-present-btn{position:absolute;right:20px;bottom:12px;z-index:40;display:inline-flex;align-items:center;' +
       'gap:8px;height:44px;padding:0 18px 0 14px;border:none;border-radius:12px;cursor:pointer;' +
       'background:#d8f5e7;color:#0f766e;font-size:15px;font-weight:700;line-height:1;' +
       'font-family:inherit;box-shadow:0 4px 14px rgba(15,118,110,.16);transition:transform .12s,filter .12s}' +
@@ -426,7 +424,7 @@ window.__CW_SHELL_MAIN__ = function () {
       '.cw-present-btn:focus-visible{outline:3px solid rgba(16,185,129,.45);outline-offset:2px}' +
       '.cw-present-icon{width:0;height:0;border-style:solid;border-width:7px 0 7px 12px;' +
       'border-color:transparent transparent transparent #0f766e;margin-left:2px}' +
-      '.cw-present-btn.is-presenting{display:none}';
+      '.cw-present-btn.is-presenting .cw-present-icon{display:none}';
     return style;
   };
 
@@ -495,6 +493,7 @@ window.__CW_SHELL_MAIN__ = function () {
     if (this._isFullscreen()) {
       if (document.exitFullscreen) document.exitFullscreen();
       else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.webkitCancelFullScreen) document.webkitCancelFullScreen();
       return;
     }
     var el = this.bodyEl;
