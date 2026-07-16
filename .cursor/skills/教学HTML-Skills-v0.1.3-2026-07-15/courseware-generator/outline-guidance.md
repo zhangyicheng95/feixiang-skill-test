@@ -41,7 +41,7 @@
 
 `artifact-spec.outline` 需要逐页列出页码、页类型、内容要点、交互设计。每个互动页都要标注自己的 `core-loop`；练习页要说明题型、题量、反馈方式和是否上报分数。封面需要图片时，在 `artifact-spec.assets` 记录 `coverImageSlot`；无外部素材时写明 CSS/SVG/Canvas 自绘。
 
-大纲可用自然语言写图片用途、画面主体与风格倾向，**不得**输出完整生图 prompt，**不得**提前套用 `references/image-generation.md` 的风格库。是否增强 prompt 由 Step 1 真正调用生图工具前按单张图命中判断。
+大纲可用自然语言写图片用途、画面主体与风格倾向，**不得**输出完整生图 prompt，**不得**提前套用 `references/image-generation.md` 的风格库。是否增强 prompt 由 Step 1 真正调用 `generate_images` 前按单张图命中判断。
 
 ## Step 1 自检
 

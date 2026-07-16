@@ -7,7 +7,7 @@
 
 ## 一、硬性规则
 
-1. **禁止手写壳代码**（缩略图、翻页、演示模式等由完整内联的官方 `courseware-shell.js` 提供）。
+1. **禁止手写或输出壳代码**（缩略图、翻页、演示模式等由 create_file 注入的官方 `courseware-shell.js` 提供）。
 2. **交付物**：单个 `<slug>.html`。
 3. **每页一个** `<template class="page-data" data-id="N" data-name="页名">`。
 4. **禁止**在 `<template>` 内写 `<!DOCTYPE>`/`<html>`/`<head>`/`<body>`。
@@ -38,9 +38,7 @@
 <template class="page-data" data-id="1" data-name="封面">…</template>
 <template class="page-data" data-id="2" data-name="…">…</template>
 
-<script>
-/* 完整读取 assets/courseware-shell.js 后，将源码原样内联在这里 */
-</script>
+<!-- COURSEWARE_SHELL_INJECTED_BY_CREATE_FILE -->
 </body>
 </html>
 ```
@@ -48,7 +46,7 @@
 要点：
 
 - `page-shared` 内容注入**每页 iframe 的 head**；外部 CSS/字体必须写在这里，不要写在 HTML `<head>`。
-- 官方壳 `<script>` 放在**所有 template 之后**；必须先完整读取 `assets/courseware-shell.js`，再原样内联。
+- 壳注入占位符放在**所有 template 之后**、`</body>` 之前；不要读取或输出 `assets/courseware-shell.js` 源码。
 - `<template>` 内 `<script>` 不可出现字面量 `</template>`（用 `<\/template>`）。
 
 ---
@@ -88,7 +86,7 @@ html, body, .page-container { background: var(--canvas-bg); }
 2. Read references/cover.md → 第 1 页选封面版式
 3. Read 当前任务的 artifact-spec.outline + assets
 4. Write 完整 `<slug>.html`（所有 page-data 一次到位）
-5. Read assets/courseware-shell.js 到结尾并原样内联
+5. 在 `</body>` 前放置 `<!-- COURSEWARE_SHELL_INJECTED_BY_CREATE_FILE -->`，由 create_file 注入官方壳
 6. 对照 artifact-spec.outline 逐页验收
 ```
 
@@ -159,7 +157,8 @@ window.addEventListener('message', function (e) {
 □ template 数量 = artifact-spec.outline 页数；data-id 从 1 连续递增
 □ page-shared 含 --canvas-bg + 字体变量 + CW_TYPOGRAPHY_DECISION
 □ 第 1 页封面按 references/cover.md 固定版式
-□ 官方 courseware-shell.js 已完整内联，保留 window.__CW_SHELL_MAIN__ 与自执行调用
+□ HTML 含 `<!-- COURSEWARE_SHELL_INJECTED_BY_CREATE_FILE -->`，且未输出 courseware-shell.js 源码
+□ create_file 回读结果已注入官方壳，保留 window.__CW_SHELL_MAIN__ 与自执行调用
 □ 互动页 saveState/restoreState；练习页 cwScore
 □ 对照 outline 无漏页、无空壳页
 ```
@@ -170,4 +169,4 @@ window.addEventListener('message', function (e) {
 
 缩略图、主区预览、演示模式、键盘/滚轮翻页、焦点管理、状态恢复协议、960×540 注入、下载与 SCORM 打包。
 
-完整内联必须保留官方壳的尺寸和同步机制：主 iframe 基准为 960×540；首屏、切页、resize 和 fullscreenchange 后继续走 `_fitMain`；缩略图保持 `.cw-thumb > .cw-thumb-inner > iframe`，外层固定宽高并裁切，inner 为 960×540 且在 inner 层使用 `THUMB_SCALE` 缩放。主舞台、页码、标题、缩略图 active 状态、next/prev 和键盘翻页必须同步。不要在内容页覆盖这些壳结构。
+create_file 注入后的官方壳必须保留尺寸和同步机制：主 iframe 基准为 960×540；首屏、切页、resize 和 fullscreenchange 后继续走 `_fitMain`；缩略图保持 `.cw-thumb > .cw-thumb-inner > iframe`，外层固定宽高并裁切，inner 为 960×540 且在 inner 层使用 `THUMB_SCALE` 缩放。主舞台、页码、标题、缩略图 active 状态、next/prev 和键盘翻页必须同步。不要在内容页覆盖这些壳结构。
