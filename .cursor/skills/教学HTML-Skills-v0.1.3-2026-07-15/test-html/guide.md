@@ -1,50 +1,45 @@
 # 本地 HTML 验收指南
 
 > 路径：`test-html/guide.md`  
-> 与 `SKILL.md` 配合；`html-authoring` / `courseware-generator` 的 Step 3 共用本 skill，可按需补读本文件。
+> 与 `SKILL.md` 配合；`html-authoring` / `courseware-generator` 的 Step 3 共用本 skill。
+
+## 推荐流程（静态优先，纯 Agent）
+
+```
+Read 产物 → Grep 模式 → static-checks.md A→H 逐项勾选 → 结论卡
+                                              ↓
+                              Playwright/浏览器可用时再补动态
+```
+
+**不依赖 Python、Node 或任何验收脚本。**
 
 ## must-cover
 
-| 来源 | 检查方式 |
-|---|---|
-| core-loop | 端到端触发，并看到状态或反馈变化 |
-| require | 必含页面、元素、素材或互动全部出现 |
-| forbid | 禁止项全局不存在 |
-| delivery | 单个 HTML 已写入、可回读、结构完整且无本地运行依赖 |
-| assets | 外链/`generate_images` URL 真实或已声明自绘；生图项有 prompt/styleHit 时与画面一致 |
+| 来源 | 静态（Read/Grep） | 动态 |
+|---|---|---|
+| delivery | 文件、doctype、charset、单文件依赖 | — |
+| core-loop | 关键函数/事件是否存在 | 端到端操作与反馈 |
+| require | id/class/assets 声明 | 是否真发挥作用 |
+| forbid | 路径、占位、双壳 | 滚动、弹窗等行为 |
+| assets | spec 记录、url 非占位 | HTTP 加载 |
 
-多页课件额外检查：
+多页课件额外见 `static-checks.md` 第 F 节。
 
-| 项 | 检查方式 |
-|---|---|
-| 壳加载 | 页面出现缩略图栏和主预览 |
-| 页数 | `template.page-data` 数量等于 `artifact-spec.outline` 页数 |
-| 翻页 | 点击和键盘翻页可用 |
-| 状态恢复 | 互动页操作后离开再返回，状态仍在 |
-| 分数消息 | 有练习页时，完成判分后能发送 `cwScore` |
-| 打包入口 | 如果页面提供 SCORM 包按钮，按钮存在且点击后不报错 |
+## 静态验收
 
-## 人工验收
+1. Read 工具确认的最终 HTML。
+2. 按 `references/static-checks.md` 的「常用 Grep 模式」搜索。
+3. 逐项完成 A→H，记录通过/失败/跳过及行号证据。
+4. 任一硬门槛失败 → 静态未通过。
 
-1. 先回读工具确认的最终 HTML，完成静态结构与依赖检查。
-2. 动态工具可用时，打开工具实际可访问的产物地址。
-3. 按 must-cover 逐项记录通过或失败。
-4. 失败项写清楚页面现象和回修位置。
+## 人工浏览器验收
+
+静态通过后再打开浏览器；确认无阻断性脚本错误、主内容可见；按 must-cover 逐项操作。
 
 ## 本地 Playwright 验收
 
-需要自动化时，用 Playwright 打开工具实际可访问的产物 URL。脚本至少覆盖：
-
-- 标题或主容器可见；
-- 没有明显水平溢出；
-- 核心按钮点击后有状态变化；
-- 答题或拖拽任务有提交、反馈和重置；
-- 多页课件能翻页；
-- 练习页能触发 `cwScore` message；
-- 如果有 SCORM 包按钮，点击后没有页面级错误。
-
-不要只验证「元素存在」。核心互动必须真的走完。
+**仅本地或已部署 Playwright 的环境**；服务端未部署时不要依赖。见 `references/test-templates.md`。
 
 ## 失败处理
 
-默认先判断页面实现是否缺失。只有选择器错误、脚本语法错误、或诊断确认页面正确时，才修改测试脚本。连续失败时先打印 DOM 状态或手动复现，不要放宽验收项。
+静态失败修 HTML，不动验收合同。动态失败时只有断言/选择器错误、或诊断确认页面正确时才改测试脚本。

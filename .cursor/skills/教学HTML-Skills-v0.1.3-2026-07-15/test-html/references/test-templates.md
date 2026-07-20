@@ -1,6 +1,10 @@
 # 本地 Playwright 模板
 
+> **条件能力**：仅本地或已部署 Playwright 的环境使用。服务端未部署 Playwright 时，以 `static-checks.md`（Agent Read/Grep）为主路径，本文件勿强行套用。
+
 这些模板使用 `artifact_url`，其值来自当前工具实际可访问的最终 HTML；不把目录、文件名或端口写死。
+
+写 `playwrightCode` 前的纪律（must-cover 清单、致命写法、失败处理）可参考仓库内 `test-html/v16/SKILL.md` 与 `references/test-templates.md`。
 
 ## 基础渲染
 

@@ -92,7 +92,6 @@
 - 远程资源必须提供 fallback；禁止虚构路径、占位 URL、本机/相对运行路径和大体积 base64 音视频。
 - 不需要真实媒体时，用 SVG、Canvas 或 CSS 自绘。
 - HTML 应能独立运行；所有数据以字面量写入 HTML/JS。
-- **需要 AI 配图时**：先读本 skill 的 `references/image-generation.md`，命中式增强后调用 `generate_images`；工具不可用则自绘并声明。数学示意图优先自绘，不强制套语文/历史风格库。
 
 ## 内容自检
 
