@@ -1,7 +1,7 @@
 # math-design 子链路
 
 > 目录：`html-authoring/math-design/`  
-> **仅当** `html-authoring/SKILL.md` 判定为数学场景时启用。
+> **仅当** `teaching-page-html-authoring` 判定为数学场景时启用。
 
 ## 文件导航
 

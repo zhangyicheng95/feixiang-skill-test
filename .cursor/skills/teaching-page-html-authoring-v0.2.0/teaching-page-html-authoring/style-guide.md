@@ -10,30 +10,24 @@
 
 ## 色板选择
 
-每个页面必须选择一套主色板并在全页统一使用，变量写入 `:root`，并在 `artifact-spec.visualDesign` 中记录。不要临场拼颜色，也不要整页只用同一种蓝色的深浅变化。
-
-**禁止学科锁色。** 不要把「理化 / 实验 → EDU-青或 EDU-深青」「语文 → EDU-橙」等当成硬规则。选色优先级：
-
-1. 用户明确指定色板或色调 → 直接服从；
-2. 否则按课题**气质关键词**（清爽、沉浸、暖活力、黑板感等）从下表任选一套，并写清 `keyword` 与 `source=keyword|user`；
-3. 同一页面内不得混用多套主色板。
+每个页面必须选择一套主色板并在全页统一使用。不要临场拼颜色，也不要整页只用同一种蓝色的深浅变化。用户指定风格时服从用户；否则按课题核心词、学段和学科选择一套最贴近的色板，并在 `artifact-spec.visualDesign` 中记录，例如：
 
 ```json
-"visualDesign": {"palette":"EDU-蓝","radius":16,"keyword":"清爽练习","source":"keyword"}
+"visualDesign": {"palette":"EDU-青","radius":16,"keyword":"酸碱中和","source":"subject"}
 ```
 
-可用色板（「气质」仅供参考，**不是学科绑定**）：
+可用色板如下，生成时应把变量写入 `:root`：
 
-| 色板 | 气质参考（非强制） | 变量 |
+| 色板 | 适用场景 | 变量 |
 |---|---|---|
-| EDU-青 | 冷静、浅底青绿、信息分区清楚 | `--bg:#FFFFFF; --text:#00404D; --primary:#00404D; --accent:#137F8B; --card:#D3F6F4; --card-border:rgba(0,64,77,.30); --demo-bg:#D3F6F4; --demo-border:#93BFC2; --demo-grid:#DBF1F0; --btn-primary-bg:#00404D; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#ECFCFB; --btn-2nd-fg:#00404D; --radius:16px;` |
-| EDU-蓝 | 清爽、浅蓝底、通用练习感 | `--bg:#DFEDFF; --text:#0F2336; --primary:#278DEA; --accent:#40A10B; --card:#FFFFFF; --card-border:rgba(15,35,54,.30); --demo-bg:#FFFFFF; --demo-border:rgba(15,35,54,.30); --demo-grid:#F1F5FB; --btn-primary-bg:#83FE91; --btn-primary-fg:#232323; --btn-2nd-bg:#DFEDFF; --btn-2nd-fg:#000000; --radius:16px;` |
-| EDU-绿 | 柔和叶绿、自然感 | `--bg:#E2ECD3; --text:#012B1F; --primary:#405E28; --accent:#549B22; --card:#F7FDF6; --card-border:rgba(1,43,31,.30); --demo-bg:#F7FDF6; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECF1E6; --btn-primary-bg:#405E28; --btn-primary-fg:#E2ECD3; --btn-2nd-bg:#F7FDF6; --btn-2nd-fg:#012B1F; --radius:16px;` |
-| EDU-橙 | 暖活力、浅橙底 | `--bg:#FFF3D9; --text:#3D3334; --primary:#F8981F; --accent:#9D3E00; --card:#FFFFFF; --card-border:rgba(0,0,0,.30); --demo-bg:#FFFFFF; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECECEC; --btn-primary-bg:#F8981F; --btn-primary-fg:#000000; --btn-2nd-bg:#FFF6E3; --btn-2nd-fg:#000000; --radius:16px;` |
-| EDU-深青 | 深底沉浸、高对比控件 | `--bg:#0F302F; --text:#EEFFEB; --primary:#06B17A; --accent:#B6FCE5; --info:#E44B40; --card:#123A37; --card-border:rgba(238,255,235,.30); --demo-bg:#123A37; --demo-border:#526F68; --demo-grid:#164441; --btn-primary-bg:#06B17A; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#184C49; --btn-2nd-fg:#EEFFEB; --radius:16px;` |
-| EDU-暗黄 | 黑板感、几何/科技对比 | `--bg:#000000; --text:#FFFFFF; --primary:#F8EF50; --accent:#03DEDE; --card:#232323; --card-border:rgba(188,227,223,.30); --demo-bg:#232323; --demo-border:rgba(188,227,223,.30); --demo-grid:#393939; --btn-primary-bg:#F8EF50; --btn-primary-fg:#000000; --btn-2nd-bg:#414141; --btn-2nd-fg:#FFFFFF; --radius:16px;` |
+| EDU-青 | 科学、理化、实验、生态观察 | `--bg:#FFFFFF; --text:#00404D; --primary:#00404D; --accent:#137F8B; --card:#D3F6F4; --card-border:rgba(0,64,77,.30); --demo-bg:#D3F6F4; --demo-border:#93BFC2; --demo-grid:#DBF1F0; --btn-primary-bg:#00404D; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#ECFCFB; --btn-2nd-fg:#00404D; --radius:16px;` |
+| EDU-蓝 | 通用教学、英语、信息技术、清爽练习 | `--bg:#DFEDFF; --text:#0F2336; --primary:#278DEA; --accent:#40A10B; --card:#FFFFFF; --card-border:rgba(15,35,54,.30); --demo-bg:#FFFFFF; --demo-border:rgba(15,35,54,.30); --demo-grid:#F1F5FB; --btn-primary-bg:#83FE91; --btn-primary-fg:#232323; --btn-2nd-bg:#DFEDFF; --btn-2nd-fg:#000000; --radius:16px;` |
+| EDU-绿 | 生物、自然、劳动、环保主题 | `--bg:#E2ECD3; --text:#012B1F; --primary:#405E28; --accent:#549B22; --card:#F7FDF6; --card-border:rgba(1,43,31,.30); --demo-bg:#F7FDF6; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECF1E6; --btn-primary-bg:#405E28; --btn-primary-fg:#E2ECD3; --btn-2nd-bg:#F7FDF6; --btn-2nd-fg:#012B1F; --radius:16px;` |
+| EDU-橙 | 语文、历史、地理、低龄活力主题 | `--bg:#FFF3D9; --text:#3D3334; --primary:#F8981F; --accent:#9D3E00; --card:#FFFFFF; --card-border:rgba(0,0,0,.30); --demo-bg:#FFFFFF; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECECEC; --btn-primary-bg:#F8981F; --btn-primary-fg:#000000; --btn-2nd-bg:#FFF6E3; --btn-2nd-fg:#000000; --radius:16px;` |
+| EDU-深青 | 理化实验、夜间观察、沉浸式模拟 | `--bg:#0F302F; --text:#EEFFEB; --primary:#06B17A; --accent:#B6FCE5; --info:#E44B40; --card:#123A37; --card-border:rgba(238,255,235,.30); --demo-bg:#123A37; --demo-border:#526F68; --demo-grid:#164441; --btn-primary-bg:#06B17A; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#184C49; --btn-2nd-fg:#EEFFEB; --radius:16px;` |
+| EDU-暗黄 | 几何感、科技感、黑板式演示 | `--bg:#000000; --text:#FFFFFF; --primary:#F8EF50; --accent:#03DEDE; --card:#232323; --card-border:rgba(188,227,223,.30); --demo-bg:#232323; --demo-border:rgba(188,227,223,.30); --demo-grid:#393939; --btn-primary-bg:#F8EF50; --btn-primary-fg:#000000; --btn-2nd-bg:#414141; --btn-2nd-fg:#FFFFFF; --radius:16px;` |
 
-演示对象的辅助色从主色板中派生，优先使用 `--primary`、`--accent`、`--info` 和高对比补色。理科和互动演示至少要让“对象、状态、反馈”三类信息颜色不同；深色板必须提高亮度和文字对比，避免舞台显暗。色板是颜色来源，不是艺术方向；艺术方向与视觉主角见 `experience-design.md`。
+演示对象的辅助色从主色板中派生，优先使用 `--primary`、`--accent`、`--info` 和高对比补色。理科和互动演示至少要让“对象、状态、反馈”三类信息颜色不同；深色板必须提高亮度和文字对比，避免舞台显暗。
 
 ## 页面结构
 
@@ -93,7 +87,6 @@ body {
   min-height:100vh;
   padding:28px;
   background:var(--canvas-bg);
-  max-width:100%;
 }
 .page-title {
   display:flex;
@@ -126,13 +119,12 @@ body {
   border-radius:var(--radius);
   padding:16px 18px;
 }
-.demo, .stage {
+.demo {
   background:var(--demo-bg);
   border:2px solid var(--demo-border);
   border-radius:var(--radius);
   position:relative;
   overflow:hidden;
-  min-width:0;
 }
 .btn {
   min-height:44px;

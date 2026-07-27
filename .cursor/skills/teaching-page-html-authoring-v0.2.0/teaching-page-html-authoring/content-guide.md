@@ -88,19 +88,17 @@
 
 ## 素材与自包含
 
-- 只有用户没有要求自包含或禁止外部资源时，外部图片、音频、字体才可来自真实可访问的稳定 HTTPS URL；它们必须记录在 `artifact-spec.assets`，且只能作为非核心增强。需要 AI 配图时，先读 `references/image-generation.md`，工具名为 `generate_images`。
+- 只有用户没有要求自包含或禁止外部资源时，外部图片、音频、字体才可来自真实可访问的稳定 HTTPS URL；它们必须记录在 `artifact-spec.assets`，且只能作为非核心增强。
 - 远程资源必须提供 fallback；禁止虚构路径、占位 URL、本机/相对运行路径和大体积 base64 音视频。
 - 不需要真实媒体时，用 SVG、Canvas 或 CSS 自绘。
 - HTML 应能独立运行；所有数据以字面量写入 HTML/JS。
-- 用户要求“自包含”“不依赖外部资源”或同义限制时，素材策略为 `SELF_DRAWN_ONLY`：不调用图片搜索/生成，不使用工具返回的 OSS/HTTPS URL；主图与素材全部改为内联 SVG、Canvas 或 CSS。
-- 自包含扫描对象是**资源引用**，不是任意字面量：禁止 `src`/`href`/`srcset`/`poster`、CSS `url()`、`@import`、`@font-face` 与 `artifact-spec.assets` 中的远程 `http(s):` 地址。允许并常见：`xmlns="http://www.w3.org/2000/svg"`、`createElementNS('http://www.w3.org/2000/svg', …)` 等 XML/SVG 命名空间 URI（它们不是网络请求）。
+- 用户要求“自包含”“不依赖外部资源”或同义限制时，不调用图片搜索/生成，不使用工具返回的 OSS/HTTPS URL；完整 HTML 中 `http://` 和 `https://` 的字面出现次数都必须为 0，主图与素材全部改为内联 SVG、Canvas 或 CSS。
 
 ## 内容自检
 
 ```text
 □ 单个 <slug>.html 已准备为完整最终内容
 □ <head> 内含可解析的 artifact-spec JSON
-□ artifact-spec.experienceDesign 已写明体验命题、视觉主角、原型、教学可视化、状态叙事和响应策略
 □ 学科、年级、主题、学习目标已体现在内容中
 □ 用户给定原文/公式/数据/题目没有被篡改
 □ 每个模块都有教学任务，不是空版式
@@ -111,6 +109,5 @@
 □ forbid 项未出现
 □ 每个按钮和可点击元素都有反馈
 □ 素材来自 artifact-spec.assets 或已声明自绘
-□ SELF_DRAWN_ONLY 时无远程资源引用（SVG xmlns 命名空间除外）
 □ 没有同目录、本机或 Skill 内部运行依赖
 ```

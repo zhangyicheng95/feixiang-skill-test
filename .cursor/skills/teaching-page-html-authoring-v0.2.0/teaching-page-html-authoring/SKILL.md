@@ -1,19 +1,11 @@
 ---
 name: teaching-page-html-authoring
-description: 生成或修改 K12 单文件教学 HTML。用于教学动画、互动练习、小游戏、教学海报、A4 打印材料及已有单页 HTML 修改；先建立体验命题、教学视觉主角、互动原型与状态叙事，再按通用或数学链路完成自包含资源、正确性、交互反馈和桌面/小屏视口闭环；含 generate_images 与共用 test-html 验收。多页翻页课件使用 teaching-page-courseware-generator。
-version: v0.1.6
-source_version: teaching-page-v3 + teaching-page-html-authoring-v0.2.0
+description: 生成或修改 K12 单文件教学 HTML。用于教学动画、互动练习、小游戏、教学海报、A4 打印材料及已有单页 HTML 修改；先建立体验命题、教学视觉主角、互动原型与状态叙事，再按通用或数学链路完成自包含资源、正确性、交互反馈和桌面/小屏视口闭环。多页翻页课件使用 teaching-page-courseware-generator。
 ---
 
 # 单页教学 HTML
 
 本 skill 负责用一个完整 HTML 完成主要体验的教学产物，包括教学动画、互动练习、小游戏、教学海报、可打印 A4 练习册/试卷/字帖，以及已有单页 HTML 的定向修改。它不负责多页翻页课件；如果用户需要缩略图、翻页、演示壳或多页 PPT 式结构，应改用 `teaching-page-courseware-generator`。
-
-## 新建与编辑入口
-
-先根据用户自然语言判断本轮是新建还是编辑。用户要求生成、创建、再做一份、另外生成、从头生成或明确不要沿用旧产物时，按新建执行，不调用 `read_attachment`。用户要求修改、替换、删除、增加、调整、保持其他内容不变或基于某个版本继续时，按编辑执行；根据系统上下文列出的历史产物名称和 attachment ID 判断目标，再调用 `read_attachment` 并传入对应 `attachment_id`，把返回的完整 HTML 作为唯一源文件。不得编造 ID、改用未列出的附件或根据聊天摘要猜测旧 HTML。无法从用户指令确定目标时先提问；用户要求编辑但 `read_attachment` 不可用时报告能力阻塞。
-
-编辑时先合并用户本轮指令与源 HTML 中已有的 `artifact-spec`（含 `experienceDesign`）。用户要求局部修改时采用最小改动原则，未点名的 DOM、CSS、JS、素材 URL、交互和文案必须保留；用户明确要求整体调整时可以扩大改动范围，但仍须在读取到的源 HTML 上完成。编辑结果也必须作为完整 HTML 调用 `create_file` 生成新产物，禁止覆盖旧文件、只输出差异片段或省略未修改内容。若 `read_attachment` 失败、返回空内容或非完整 HTML，停止编辑并说明失败，不得降级为凭空重建。
 
 ## 产物契约
 
@@ -34,28 +26,26 @@ source_version: teaching-page-v3 + teaching-page-html-authoring-v0.2.0
 ## 文件职责
 
 ```text
-html-authoring/
-├── SKILL.md                         # 本入口：路由、阶段、硬门槛
-├── experience-design.md             # 体验命题、教学视觉主角、原型与状态叙事
-├── content-guide.md                 # 非数学/通用单页内容指南
-├── style-guide.md                   # 非数学/通用视觉指南
-├── references/
-│   └── image-generation.md          # 仅准备调用 generate_images 时读取
+teaching-page-html-authoring/
+├── SKILL.md                    # 本入口：路由、阶段、硬门槛
+├── experience-design.md        # 体验命题、教学视觉主角、原型与状态叙事
+├── content-guide.md            # 非数学/通用单页内容指南
+├── style-guide.md              # 非数学/通用视觉指南
 └── math-design/
-    ├── workflow.md                  # 数学场景的视觉、布局、色板选择权威
-    ├── color-palettes-a.md          # 小学数学色板
-    ├── color-palettes-b.md          # 初高中数学色板
-    └── visual-impact.md             # 数学演示区多色强化
+    ├── workflow.md             # 数学场景的视觉、布局、色板选择权威
+    ├── color-palettes-a.md     # 小学数学色板
+    ├── color-palettes-b.md     # 初高中数学色板
+    └── visual-impact.md        # 数学演示区多色强化
 ```
 
-需求、素材、单文件写入和回读规则在本入口对应步骤中定义；动态/静态验收细节由共用 `teaching-page-test-html` 定义。生图规范只读本目录 `references/image-generation.md`，禁止跨读 courseware-generator。
+需求、素材、单文件写入和回读规则在本入口对应步骤中定义；动态验收细节由 `teaching-page-test-html` 定义。
 
 ## 执行总流程
 
 ```text
 Step 1  输入整理：spec + experienceDesign + assets（写入 artifact-spec）
 Step 2  路由生成：通用链路或数学链路
-Step 3  交付验收：静态回读 + 条件浏览器/Playwright（teaching-page-test-html）
+Step 3  交付验收：静态回读 + 条件浏览器/Playwright
 ```
 
 禁止跳过 Step 1 直接写 HTML。禁止未验收就宣称交付。
@@ -65,23 +55,20 @@ Step 3  交付验收：静态回读 + 条件浏览器/Playwright（teaching-page
 进入任何步骤前，先按当前阶段读取对应文件；未读取完必读文件，不允许进入该阶段的执行动作。
 
 ```text
-Step 1 / Step 2 前必读：
+Step 2 前必读：
 - 所有单页：experience-design.md
 - 非数学、学科不明、普通单页：content-guide.md + style-guide.md
 - 数学单页互动：math-design/workflow.md
 - 数学 workflow 命中色板后：对应的 color-palettes-a.md 或 color-palettes-b.md 片段
 - 数学演示需要强化视觉时：math-design/visual-impact.md
-- 准备调用 generate_images 时：references/image-generation.md
 
 Step 3 前必读：
 - `teaching-page-test-html`
 ```
 
-`style-guide.md` 是通用链路的强制视觉规范，不是可选参考；非数学单页在写 HTML 前必须先读。数学任务不要用 `style-guide.md` 替代 `math-design/workflow.md`，但可以复用其中不影响数学准确性的通用组件原则。
+`style-guide.md` 是通用链路的强制视觉规范，不是可选参考；非数学单页在写 `index.html` 前必须先读。数学任务不要用 `style-guide.md` 替代 `math-design/workflow.md`，但可以复用其中不影响数学准确性的通用组件原则。
 
 ## Step 1：输入整理
-
-判断为编辑时，先从 `read_attachment` 返回的源 HTML 读取既有 `artifact-spec`，再仅按用户本轮明确指令更新契约；不要把未要求变化的既有约束、素材、`experienceDesign` 和 core-loop 丢弃。判断为新建时，按下述规则从用户需求建立新契约。
 
 先整理：
 
@@ -100,13 +87,9 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 
 单页输入补充规则：`mode=single`；`core-loop` 必须描述单页内可完成的闭环，例如“点击开始→观察动画→提交答案→反馈→重置”；无互动时写明“无互动闭环”；单页产物不复制 `courseware-shell.js`。核心教学对象、题目数据和判定逻辑必须内联；无外部素材时在 `assets` 写明 CSS/SVG/Canvas 自绘。稳定 HTTPS 资源只能在用户没有禁止外部资源时作为非核心增强，记录真实 URL、用途、`core:false` 和 fallback。禁止虚构 URL、本机/Skill 内部/相对运行路径和大体积 base64 音视频。
 
-需要 AI 配图且未被自包含约束禁止时：先 Read `references/image-generation.md`，再调用工具 **`generate_images`**，把返回的真实 URL 写入 `artifact-spec.assets`（含 `source`、`fallback`、`prompt` 等）。本地无该工具时降级自绘，禁止虚构 URL。
+用户要求“自包含”“不依赖外部资源”或在 `forbid` 中写出同义限制时，素材策略立即切换为 `SELF_DRAWN_ONLY`：不要调用图片搜索或图片生成，不使用远程字体、音频、视频、CDN，也不接受工具返回的 OSS/HTTPS 临时地址。图片生成结果的 URL 仍是外部依赖，不能当作已内联素材或稳定 fallback。`artifact-spec.assets` 只能记录内联 SVG、Canvas、CSS 或字面数据自绘，不得记录远程 URL。
 
-用户要求“自包含”“不依赖外部资源”或在 `forbid` 中写出同义限制时，素材策略立即切换为 `SELF_DRAWN_ONLY`：不要调用图片搜索或 `generate_images`，不使用远程字体、音频、视频、CDN，也不接受工具返回的 OSS/HTTPS 临时地址。图片生成结果的 URL 仍是外部依赖，不能当作已内联素材或稳定 fallback。`artifact-spec.assets` 只能记录内联 SVG、Canvas、CSS 或字面数据自绘，不得记录远程 URL。
-
-自包含检查扫的是**资源引用**，不是任意 `http` 字面量：禁止 `src`/`href`/`srcset`/`poster`、CSS `url()`、`@import`、`@font-face` 与 `assets[].url` 中的远程地址。允许 SVG/XML 命名空间，例如 `xmlns="http://www.w3.org/2000/svg"` 与 `createElementNS('http://www.w3.org/2000/svg', …)`——它们不发起网络请求，不得因此判失败。
-
-`experienceDesign` 不是视觉形容词清单。它必须让后续代码能够回答：首屏最先看到并操作什么、抽象知识通过什么可观察机制被看懂、交互前后哪些视觉状态发生变化、完成后如何形成阶段感，以及在小视口下保留什么并压缩什么。色板和布局仍由对应学科链路选择，但不能替代这份体验设计；通用色板**禁止学科锁色**（见 `style-guide.md`）。
+`experienceDesign` 不是视觉形容词清单。它必须让后续代码能够回答：首屏最先看到并操作什么、抽象知识通过什么可观察机制被看懂、交互前后哪些视觉状态发生变化、完成后如何形成阶段感，以及在小视口下保留什么并压缩什么。色板和布局仍由对应学科链路选择，但不能替代这份体验设计。
 
 `game-challenge` 的开始状态是教学体验的一部分，不是空白等待页。写入前必须确认首屏除标题、说明和开始按钮之外，至少还存在一种与任务绑定的可见主角：完整关卡路线/节点、一道真实题型预览、可操作教具，或把五关知识点直接组织成可扫读的挑战地图。不能让一个居中的小启动卡悬在超过半屏的空白舞台中；若出现这种结构，先补足任务地图或题型预览再写入。
 
@@ -136,7 +119,7 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 
 ## Step 2：选择生成链路
 
-先判断产物是否属于多页翻页课件；若是，转 `teaching-page-courseware-generator`。否则在已形成的 `experienceDesign` 基础上继续判断数学链路。
+先完整读取 `experience-design.md`，形成 `experienceDesign`；再判断产物是否属于多页翻页课件，若是则转 `teaching-page-courseware-generator`。否则继续判断数学链路。
 
 | 场景 | 读取文件 | 执行重点 |
 |---|---|---|
@@ -192,7 +175,6 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 □ 1440px 与 390px 下内容盒、Grid/Flex 子项和绝对定位装饰都不会扩大文档滚动宽度，核心 SVG/Canvas 主图的关键节点与关系路径完整可见
 □ 无 {{placeholder}}、${data.xxx}、TODO 等未展开模板
 □ 没有本机、同目录或 Skill 内部运行依赖
-□ 未写入课件壳占位符 / courseware-shell / template.page-data / __CW_
 ```
 
 数学任务还要检查：
@@ -207,21 +189,20 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 
 ## Step 3：交付验收
 
-读取 `teaching-page-test-html`。调用 `create_file` 前先检查完整 HTML：以 `<!DOCTYPE html>` 开始；只有一组 `html/head/body`；包含 UTF-8 charset 和 title；style、script、字符串、括号闭合；`artifact-spec` 可解析（含 `experienceDesign`）；所有数据和核心资源已内联；DOM 查询与实际 id/class 一致；无 `{{placeholder}}`、`${data.xxx}`、TODO、空事件函数、可见的 `undefined/null/NaN` 或本地运行依赖。JavaScript 中的用户可见中文文案引用按钮名或术语时使用中文引号 `“”`，禁止在双引号字符串内部直接写未转义的 ASCII 双引号；较长 UI 文案优先放入 `application/json` 数据块后解析。`mode=single` 的完整 HTML 还必须确认不含 `courseware-shell`、`template.page-data`、`__CW_` 或任何 shell/runtime 注入占位符。用户要求自包含或禁止外部资源时，按资源引用扫描远程 `http(s):`（`src`/`href`/`srcset`/`poster`、CSS `url()`、`@import`、`@font-face`、`assets[].url`），**排除** SVG/XML 命名空间 URI；任一真实资源引用命中都必须先替换素材再写入。同时复核页面几何：按 1440px 与 390px 预期 `scrollWidth <= innerWidth`，核心主图语义边界完整。
+读取 `teaching-page-test-html`。调用 `create_file` 前先检查完整 HTML：以 `<!DOCTYPE html>` 开始；只有一组 `html/head/body`；包含 UTF-8 charset 和 title；style、script、字符串、括号闭合；`artifact-spec` 可解析；所有数据和核心资源已内联；DOM 查询与实际 id/class 一致；无 `{{placeholder}}`、`${data.xxx}`、TODO、空事件函数、可见的 `undefined/null/NaN` 或本地运行依赖。JavaScript 中的用户可见中文文案引用按钮名或术语时使用中文引号 `“”`，禁止在双引号字符串内部直接写未转义的 ASCII 双引号，例如 `"点击"下一题"继续"`；较长 UI 文案优先放入 `application/json` 数据块后解析。尤其检查三元表达式、数组和对象中的每个字符串都只有一对匹配定界符。`mode=single` 的完整 HTML 还必须确认不含 `courseware-shell`、`template.page-data`、`__CW_` 或任何 shell/runtime 注入占位符。用户要求“自包含”“不依赖外部资源”或在 `forbid` 中禁止外部资源时，最终 HTML 的字面扫描必须同时满足 `http://` 出现次数为 0、`https://` 出现次数为 0，范围包括 `artifact-spec`、`src`、`href`、CSS `url()`、脚本和注释；`assets` 必须声明自绘，并用内联 SVG、Canvas 或 CSS 完成视觉表达。任一计数非 0 都必须先替换素材再调用 `create_file`。同时复核页面几何：内容根容器 `max-width` 不超过视口，Grid/Flex 子项可收缩，页面内边距不与 `100vw` 叠加，绝对定位装饰不会扩大滚动区域；按 1440px 与 390px 预期 `scrollWidth <= innerWidth`，核心 SVG/Canvas 主图的完整语义边界、关键节点和箭头都可见，越界或裁切时修正布局而非隐藏核心内容。
 
-静态检查通过后，使用 `create_file` 一次性写入完整 `<slug>.html`，不能用对话代码块代替文件。不要使用 ADK `read_file` 回读最终 HTML；`read_file` 只用于读取 skill/reference 文件。写后真实性证据以 `create_file` 返回为准，必须确认返回中包含并满足：
+静态检查通过后，使用 `create_file` 一次性写入完整 `<slug>.html`，不能用对话代码块代替文件。不要使用 ADK `read_file` 回读最终 HTML；`read_file` 只用于读取 skill/reference 文件，不能用于读取 create_file 写入的 Redis 中转产物。当前单页写入工具的可观测回执至少必须满足：
 
 ```text
-key=courseware:html:<task_id>
 bytes>0
 sha256=<非空>
-redis_verify_match=true
-has_artifact_spec=true
 shell_injected=false
 ```
 
-`mode=single` 时 `shell_injected=true` 是硬失败，必须移除壳相关内容后重新写入。没有 create_file 写后回读证据、`redis_verify_match` 不是 true、bytes 为空、`artifact-spec` 缺失或单页被注入 shell 时，不得说“已生成”。若运行时未返回 `redis_verify_match` / `has_artifact_spec`，只能写“完整性待外部验证”，不得臆造为 true；但 `bytes`、`sha256`、`shell_injected=false` 仍须满足。
+`mode=single` 时 `shell_injected=true` 是硬失败，说明内容误带了多页课件壳占位符或触发条件；不能把“已注入”解释成成功。必须移除壳占位符、`courseware-shell.js` 及其导出/翻页依赖后重新写入，并以新的 `shell_injected=false` 回执为准。`redis_verify_match` 或 `has_artifact_spec` 若未由当前工具返回，只能写“完整性待外部验证”，不得靠代码内容、文件大小或经验推断为 true；它们由后续 Artifact 回收、静态检查与浏览器评测补充，不阻止已经成功写入的单页进入外部验证。
 
-浏览器或 Playwright 可用时，再打开工具实际可访问的产物地址，按 `teaching-page-test-html` 覆盖 core-loop、require、forbid、按钮反馈与溢出。动态工具不可用时只能写“静态通过，动态未验证”；用户明确要求运行证据时，不得用静态检查代替。
+bytes 为空、sha256 为空或单页被注入 shell 时不得说“已写入”；缺少外部完整性证据时不得说“已通过完整验收”。
+
+浏览器或 Playwright 可用时，再打开工具实际可访问的产物地址。验收必须覆盖：页面能打开，无明显横向溢出，滚动不影响核心任务完成，core-loop 端到端走通，require 全部出现，forbid 全局不存在，按钮点击有反馈，素材不使用虚构路径。动态工具不可用时只能写“静态通过，动态未验证”；用户明确要求运行证据时，不得用静态检查代替。
 
 未通过时回到 Step 2 修复后复测。`create_file`、写后回读证据或 schema 能力不可用时停止并说明最小继续条件，不退回通用生成。最终必须输出验证结论卡。

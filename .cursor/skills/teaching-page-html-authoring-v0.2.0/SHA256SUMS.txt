@@ -1,0 +1,12 @@
+ba244cc2813f07563524783c03807139347fd3bd0a897a40fb6c0a68a57a8eab  ./CHANGELOG.md
+bb3ff215f6bb54e2aa2eb5cff0465ec7eb3fc757467bc6f2802c7c7cb30adaa5  ./PACKAGE-CONTENTS.txt
+cf5cf64198f3eaeb6456a66f3b81d85386b5ee37bdacfe91382c6842aed9a0f9  ./education-content-runner-system-prompt-v0.3.0.md
+e8e09c7703de6b31b5605f2963b8b54b54ac766597f3229d92efc7cc280fba5c  ./teaching-page-html-authoring.skill
+f2fcd00a628d290b70f8781fce38b2f585df45bc82ce65654f2a8bb063c6bba9  ./teaching-page-html-authoring/SKILL.md
+dd77bf33874b1af431986f165e48a5d3cfbd03b7fa18bbfd302cb2796c091218  ./teaching-page-html-authoring/content-guide.md
+dfc9e96e7159d5d4d615a17dbbcda0495916b04c151b4ccff7467d718c27cfc1  ./teaching-page-html-authoring/experience-design.md
+c755808006938d69403041b7cff371d8117fd12081988912eb5d73b874407007  ./teaching-page-html-authoring/math-design/color-palettes-a.md
+dfdc62b4683beb4a6569d4d039fec6cac89b1564349291b10e8e9779b84c7afa  ./teaching-page-html-authoring/math-design/color-palettes-b.md
+b324bd02945a0c4730675216fe676e1f167ce97d4185562a44c8bcccc52a2a62  ./teaching-page-html-authoring/math-design/visual-impact.md
+38686117442d3e0dbc13230c812aed4de21e30cda71512c2c8d1da4e51748e85  ./teaching-page-html-authoring/math-design/workflow.md
+4601c6c30650eb941f3d445b8d7f2b31731f6b9d6d7e3dd00e4ba610acc4834b  ./teaching-page-html-authoring/style-guide.md

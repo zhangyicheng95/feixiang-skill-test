@@ -1,0 +1,16 @@
+teaching-page-html-authoring-v0.2.0/
+├── CHANGELOG.md
+├── PACKAGE-CONTENTS.txt
+├── SHA256SUMS.txt
+├── education-content-runner-system-prompt-v0.3.0.md
+├── teaching-page-html-authoring.skill
+└── teaching-page-html-authoring/
+    ├── SKILL.md
+    ├── content-guide.md
+    ├── experience-design.md
+    ├── style-guide.md
+    └── math-design/
+        ├── color-palettes-a.md
+        ├── color-palettes-b.md
+        ├── visual-impact.md
+        └── workflow.md
