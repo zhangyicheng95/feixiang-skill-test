@@ -509,6 +509,7 @@ if (!cached && window.__CW_MODE__ !== 'thumbnail') {
 □ 拖拽/连线页有 .dragging 或 data-interactive 防误翻页
 □ 每页 960×540 内无溢出；未用 100vh；未对 html/body 设 overflow:hidden
 □ 未用 alert/confirm/prompt；未用方向键/空格作交互
+□ 浅色卡片/演示区正文 color:var(--text)，无白字浅底（见 style-guide.md「文字对比度」）
 □ 对照 outline 无漏页、无空壳、无凑页；讲解页要点≥2或例证≥1
 □ 需数据收集时：MuskCollect 自检（§8.4）通过
 ```

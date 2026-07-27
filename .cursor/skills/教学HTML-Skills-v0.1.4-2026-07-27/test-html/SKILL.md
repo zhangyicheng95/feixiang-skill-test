@@ -86,6 +86,7 @@ must-cover 至少包含四类：`core-loop`、`require`、`forbid`、`delivery`�
 □ 无 file://、pages/ 兄弟路径、未注入的 courseware-shell.js 外链
 □ artifact-spec 字段齐全；assets 与 DOM 一致；generate_image url 非占位
 □ 多页：page-data 数 = outline 页数；data-id 连续；page-shared 存在；壳已注入
+□ 多页：page-shared 含 --text；浅色卡片/演示区无白字/按钮前景色正文（见 static-checks F.1）
 □ getElementById / #id 查询目标在 HTML 或脚本创建逻辑中存在
 ```
 

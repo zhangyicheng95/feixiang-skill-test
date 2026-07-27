@@ -31,6 +31,7 @@
 | 空事件 | `onclick=""`, `onclick=''` |
 | 弹窗 | `alert\(`, `confirm\(`, `prompt\(` |
 | 滚动 | `overflow:\s*(auto\|scroll)` |
+| 对比度 | `color:\s*(#fff(fff)?\|white\|rgba\(255,\s*255,\s*255)`、`.card[^}]*color:\s*var\(--btn-primary-fg\)` |
 | 多页 | `page-data`, `page-shared`, `artifact-spec`, `COURSEWARE_SHELL` |
 | DOM 查询 | `getElementById\(['"]([^'"]+)['"]` → 核对 HTML 中是否有对应 id |
 
@@ -171,6 +172,20 @@
 □ 练习页脚本含 cwScore 或 postMessage（嗅探，动态再验）
 □ coverImageSlot 对应页引用该 url
 ```
+
+### F.1 文字对比度（多页硬门槛）
+
+投屏/缩略图下正文必须一眼可读。**浅绿/浅蓝卡片 + 白字或近白字 = 硬失败**（典型：`.card { background: var(--card); color: #fff; }` 或 `color: var(--btn-primary-fg)`）。
+
+```text
+□ page-shared :root 声明 --text 与 --text-muted（见 courseware-generator/style-guide.md）
+□ Grep 每个 page-data 的 <style>：.card / .demo / .page-container 内无 color:#fff、color:white、rgba(255,255,255,…)
+□ Grep .card / .demo / p / li / .option 未使用 color:var(--btn-primary-fg)（该变量仅用于 .btn）
+□ 浅色板（--card/--demo-bg 为浅底）上，正文须 color:var(--text)，不得整段 color:var(--primary) 且与背景同色系
+□ 无 opacity<0.7 承载题干/讲解正文
+```
+
+命中后回读上下文：注释、封面 full-bleed 遮罩上的白字标题可例外，但**讲解/练习卡片内段落**不可白字浅底。
 
 ---
 

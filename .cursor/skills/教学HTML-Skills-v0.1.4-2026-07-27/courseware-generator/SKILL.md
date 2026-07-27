@@ -1,7 +1,7 @@
 ---
 name: teaching-page-courseware-generator
 description: K12 单文件多页翻页课件 HTML 生成 skill。用于 PPT 式课件、翻页演示、缩略图预览、练习页状态保存、成绩消息、下载或 SCORM；含封面槽位与生图 prompt 命中式增强（generate_image）；沿用 spec、outline、page-data 和验收流程，由 LLM 生成页面模板与业务逻辑，并通过 create_file 注入官方课件壳、写入和回读验证。
-version: v0.1.6
+version: v0.1.6.1
 ---
 
 # 多页课件生成
@@ -164,6 +164,7 @@ core-loop=各互动页闭环，例如 P6 选题→确认→解析→下一题
 □ page-data 数量 = artifact-spec.outline 页数，data-id 连续
 □ page-shared 包含共享 CSS 和画布背景
 □ page-shared 已落实 style-guide.md 的色板、组件、字号和防溢出规则
+□ 浅色卡片/演示区正文使用 --text，无白字/同色系浅字/低对比灰字（见 style-guide.md「文字对比度」）
 □ 每个 page-data 在 960×540 内无横向/纵向滚动
 □ 第 1 页符合封面规则
 □ 所有互动页有 saveState / restoreState
@@ -181,7 +182,7 @@ core-loop=各互动页闭环，例如 P6 选题→确认→解析→下一题
 
 ### Step 3.1 create_file 前静态验收
 
-调用 `create_file` 前，先对当前准备提交的 HTML 字符串做静态验收：只有一组 doctype/html/head/body；包含 UTF-8 charset 和 title；style、script、字符串、括号闭合；`artifact-spec` 可解析；所有核心数据和资源已内联；DOM 查询与真实 id/class 一致；无模板占位、空事件函数、可见的 `undefined/null/NaN` 或本地运行依赖；`page-data` 数量等于 `artifact-spec.outline` 页数；存在 `page-shared`；存在且只存在一个 `COURSEWARE_SHELL_INJECTED_BY_CREATE_FILE` 壳注入占位符；未输出 `courseware-shell.js` 源码。
+调用 `create_file` 前，先对当前准备提交的 HTML 字符串做静态验收：只有一组 doctype/html/head/body；包含 UTF-8 charset 和 title；style、script、字符串、括号闭合；`artifact-spec` 可解析；所有核心数据和资源已内联；DOM 查询与真实 id/class 一致；无模板占位、空事件函数、可见的 `undefined/null/NaN` 或本地运行依赖；`page-data` 数量等于 `artifact-spec.outline` 页数；存在 `page-shared`；存在且只存在一个 `COURSEWARE_SHELL_INJECTED_BY_CREATE_FILE` 壳注入占位符；未输出 `courseware-shell.js` 源码。**文字对比度**：`page-shared` 含 `--text`；Grep 各 `page-data` 内 `.card`/`.demo` 无 `color:#fff`/`white`/`var(--btn-primary-fg)` 用于正文（见 `style-guide.md`「文字对比度」与 `teaching-page-test-html` static-checks F.1）。
 
 ### Step 3.2 create_file 写入与回读证据
 

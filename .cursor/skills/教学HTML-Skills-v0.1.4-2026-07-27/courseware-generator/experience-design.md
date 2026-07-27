@@ -30,7 +30,7 @@
 
 ```json
 {
-  "paletteIntent": "明暗、活跃度和对比需求",
+  "paletteIntent": "明暗、活跃度和对比需求（浅底必须用深 --text，禁止浅字浅底）",
   "paletteAnchors": ["背景", "正文", "主色", "信号色"],
   "imageLanguage": "图片与自绘图形共享的线条、质感和构图方向",
   "stableTokens": "全课稳定的字体角色、描边、圆角区间和颜色语义"

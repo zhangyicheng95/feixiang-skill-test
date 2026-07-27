@@ -26,16 +26,59 @@
 
 | 色板 | 气质参考（非强制） | 变量 |
 |---|---|---|
-| EDU-青 | 冷静、浅底青绿、信息分区清楚 | `--bg:#FFFFFF; --text:#00404D; --primary:#00404D; --accent:#137F8B; --card:#D3F6F4; --card-border:rgba(0,64,77,.30); --demo-bg:#D3F6F4; --demo-border:#93BFC2; --demo-grid:#DBF1F0; --btn-primary-bg:#00404D; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#ECFCFB; --btn-2nd-fg:#00404D; --radius:16px;` |
-| EDU-蓝 | 清爽、浅蓝底、通用练习感 | `--bg:#DFEDFF; --text:#0F2336; --primary:#278DEA; --accent:#40A10B; --card:#FFFFFF; --card-border:rgba(15,35,54,.30); --demo-bg:#FFFFFF; --demo-border:rgba(15,35,54,.30); --demo-grid:#F1F5FB; --btn-primary-bg:#83FE91; --btn-primary-fg:#232323; --btn-2nd-bg:#DFEDFF; --btn-2nd-fg:#000000; --radius:16px;` |
-| EDU-绿 | 柔和叶绿、自然感 | `--bg:#E2ECD3; --text:#012B1F; --primary:#405E28; --accent:#549B22; --card:#F7FDF6; --card-border:rgba(1,43,31,.30); --demo-bg:#F7FDF6; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECF1E6; --btn-primary-bg:#405E28; --btn-primary-fg:#E2ECD3; --btn-2nd-bg:#F7FDF6; --btn-2nd-fg:#012B1F; --radius:16px;` |
-| EDU-橙 | 暖活力、浅橙底 | `--bg:#FFF3D9; --text:#3D3334; --primary:#F8981F; --accent:#9D3E00; --card:#FFFFFF; --card-border:rgba(0,0,0,.30); --demo-bg:#FFFFFF; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECECEC; --btn-primary-bg:#F8981F; --btn-primary-fg:#000000; --btn-2nd-bg:#FFF6E3; --btn-2nd-fg:#000000; --radius:16px;` |
-| EDU-深青 | 深底沉浸、高对比控件 | `--bg:#0F302F; --text:#EEFFEB; --primary:#06B17A; --accent:#B6FCE5; --info:#E44B40; --card:#123A37; --card-border:rgba(238,255,235,.30); --demo-bg:#123A37; --demo-border:#526F68; --demo-grid:#164441; --btn-primary-bg:#06B17A; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#184C49; --btn-2nd-fg:#EEFFEB; --radius:16px;` |
-| EDU-暗黄 | 黑板感、几何/科技对比 | `--bg:#000000; --text:#FFFFFF; --primary:#F8EF50; --accent:#03DEDE; --card:#232323; --card-border:rgba(188,227,223,.30); --demo-bg:#232323; --demo-border:rgba(188,227,223,.30); --demo-grid:#393939; --btn-primary-bg:#F8EF50; --btn-primary-fg:#000000; --btn-2nd-bg:#414141; --btn-2nd-fg:#FFFFFF; --radius:16px;` |
+| EDU-青 | 冷静、浅底青绿、信息分区清楚 | `--bg:#FFFFFF; --text:#00404D; --text-muted:#2d5a63; --primary:#00404D; --accent:#137F8B; --card:#D3F6F4; --card-border:rgba(0,64,77,.30); --demo-bg:#D3F6F4; --demo-border:#93BFC2; --demo-grid:#DBF1F0; --btn-primary-bg:#00404D; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#ECFCFB; --btn-2nd-fg:#00404D; --radius:16px;` |
+| EDU-蓝 | 清爽、浅蓝底、通用练习感 | `--bg:#DFEDFF; --text:#0F2336; --text-muted:#3d4f63; --primary:#278DEA; --accent:#40A10B; --card:#FFFFFF; --card-border:rgba(15,35,54,.30); --demo-bg:#FFFFFF; --demo-border:rgba(15,35,54,.30); --demo-grid:#F1F5FB; --btn-primary-bg:#83FE91; --btn-primary-fg:#232323; --btn-2nd-bg:#DFEDFF; --btn-2nd-fg:#000000; --radius:16px;` |
+| EDU-绿 | 柔和叶绿、自然感 | `--bg:#E2ECD3; --text:#012B1F; --text-muted:#2a4a38; --primary:#405E28; --accent:#549B22; --card:#F7FDF6; --card-border:rgba(1,43,31,.30); --demo-bg:#F7FDF6; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECF1E6; --btn-primary-bg:#405E28; --btn-primary-fg:#E2ECD3; --btn-2nd-bg:#F7FDF6; --btn-2nd-fg:#012B1F; --radius:16px;` |
+| EDU-橙 | 暖活力、浅橙底 | `--bg:#FFF3D9; --text:#3D3334; --text-muted:#5c4f45; --primary:#F8981F; --accent:#9D3E00; --card:#FFFFFF; --card-border:rgba(0,0,0,.30); --demo-bg:#FFFFFF; --demo-border:rgba(0,0,0,.30); --demo-grid:#ECECEC; --btn-primary-bg:#F8981F; --btn-primary-fg:#000000; --btn-2nd-bg:#FFF6E3; --btn-2nd-fg:#000000; --radius:16px;` |
+| EDU-深青 | 深底沉浸、高对比控件 | `--bg:#0F302F; --text:#EEFFEB; --text-muted:#c8e8d8; --primary:#06B17A; --accent:#B6FCE5; --info:#E44B40; --card:#123A37; --card-border:rgba(238,255,235,.30); --demo-bg:#123A37; --demo-border:#526F68; --demo-grid:#164441; --btn-primary-bg:#06B17A; --btn-primary-fg:#FFFFFF; --btn-2nd-bg:#184C49; --btn-2nd-fg:#EEFFEB; --radius:16px;` |
+| EDU-暗黄 | 黑板感、几何/科技对比 | `--bg:#000000; --text:#FFFFFF; --text-muted:#d0d0d0; --primary:#F8EF50; --accent:#03DEDE; --card:#232323; --card-border:rgba(188,227,223,.30); --demo-bg:#232323; --demo-border:rgba(188,227,223,.30); --demo-grid:#393939; --btn-primary-bg:#F8EF50; --btn-primary-fg:#000000; --btn-2nd-bg:#414141; --btn-2nd-fg:#FFFFFF; --radius:16px;` |
 
 演示对象的辅助色从主色板中派生，优先使用 `--primary`、`--accent`、`--info` 和高对比补色。理科和互动演示至少要让“对象、状态、反馈”三类信息颜色不同；深色板必须提高亮度和文字对比，避免舞台显暗。
 
-## 课件页结构
+## 文字对比度（硬门槛）
+
+课件页在投屏/缩略图/主预览三种视图下，**正文必须一眼可读**。截图中「浅绿卡片 + 近白色正文」属于硬失败，写入前必须排除。
+
+### 语义色变量（必须用，禁止临场拼色）
+
+选定色板后，`page-shared` 的 `:root` 必须完整声明下表变量，**正文区只许用这些变量**，不得为单页另写 `#fff`、`#e8f5e9`、`rgba(255,255,255,.8)` 等近似色：
+
+| 变量 | 用途 | 规则 |
+|---|---|---|
+| `--text` | 正文、列表、卡片内段落、选项文字 | 浅色底上的默认前景色 |
+| `--text-muted` | 注释、页脚、次要说明 | 须比 `--text` 浅，但**仍须可读**；禁止 `#ccc`/`opacity<.55` 承载核心说明 |
+| `--primary` | 页标题、强调词、关键标签 | 可用于标题，**禁止**作为大段正文色铺在 `--card`/`--demo-bg` 上 |
+| `--card` / `--demo-bg` | 卡片与演示区背景 | 浅色板时须明显亮于 `--text` 的色相对比 |
+| `--btn-primary-fg` | 仅用于主按钮文字 | **禁止**用于 `.card`、`.demo`、段落 |
+
+若色板表未给出 `--text-muted`，在 `:root` 追加：`--text-muted: color-mix(in srgb, var(--text) 72%, var(--card) 28%);`（或手写深灰，但不得低于 WCAG 大字号可读阈值）。
+
+### 前景/背景配对（禁止组合）
+
+| 背景类型 | 允许正文色 | 禁止 |
+|---|---|---|
+| `--card`、`--demo-bg`、`--bg`（浅底） | `--text`；强调词可用 `--primary`/`--accent` **少量** | `#fff`、`#f5f5f5`、`color: white`、与背景同色相的浅绿/浅蓝正文 |
+| `--card` 与 `--demo-bg` 同色或近色时 | 统一 `--text`，靠边框/标题区分区域 | 在卡片上再用 `background: var(--demo-bg)` 且不设 `color` |
+| 深色板（`--bg` 深） | `--text`（浅色） | 浅灰小字、低对比 `--accent` 正文 |
+| 按钮 | `--btn-primary-fg` / `--btn-2nd-fg` | 把按钮前景色复用到正文区 |
+
+**典型错误（须重写）**：`.card { background:#D3F6F4; color:#fff; }`、`.card p { color: var(--primary); }` 且 `--primary` 与 `--card` 同色系、正文 `opacity:.5`、浅灰 `#999` 承载题干。
+
+### 写入前对比度自检
+
+对每个 `template.page-data`，在脑中按 960×540 截图检查：
+
+```text
+□ page-shared 已声明完整色板变量（含 --text），未临场发明未记录色值
+□ .card / .demo / .page-container 及其内 p、li、选项默认 color: var(--text)
+□ 浅色卡片/演示区上无白色或近白色大段正文
+□ 页标题用 --primary 时，与 --canvas-bg 仍可辨认；正文不整段用 --primary
+□ 注释/次要文字用 --text-muted，且仍能轻松阅读（不是浅灰糊一片）
+□ 无 opacity<0.7 承载教学正文；无 text-shadow 代替对比度
+```
+
+不满足任一条，**先改 CSS 再写入**，不得交付。
+
 
 每页是 960×540 的固定教学画布，不是普通长网页。推荐根结构如下：
 
@@ -65,6 +108,7 @@
 :root {
   --bg:#DFEDFF;
   --text:#0F2336;
+  --text-muted:#3d4f63;
   --primary:#278DEA;
   --accent:#40A10B;
   --card:#FFFFFF;
@@ -137,12 +181,26 @@ html, body {
   border:2px solid var(--card-border);
   border-radius:var(--radius);
   padding:14px 16px;
+  color:var(--text);
 }
+.card p, .card li, .card .note { color:var(--text); }
+.card .muted, .card .caption { color:var(--text-muted); }
+/* 正文区强制深色字：禁止把按钮前景色复用到卡片/演示区 */
+.page-container,
+.page-container p, .page-container li, .page-container span,
+.card, .card p, .card li, .card span, .card div,
+.demo, .demo p, .demo li, .demo span,
+.note, .stem, .option, .feedback, .parse {
+  color:var(--text);
+}
+.card .muted, .caption, .subtle { color:var(--text-muted); }
+.page-title h2, .card h2, .card h3 { color:var(--primary); }
 .demo {
   min-height:0;
   background:var(--demo-bg);
   border:2px solid var(--demo-border);
   border-radius:var(--radius);
+  color:var(--text);
   background-image:
     linear-gradient(var(--demo-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--demo-grid) 1px, transparent 1px);
@@ -199,4 +257,4 @@ html, body {
 
 ## 反模板感清单
 
-生成前自查这些问题：紫蓝渐变铺满封面或卡片；卡片靠阴影漂浮；标题和按钮堆 emoji；默认蓝 `#2563eb` 贯穿全课件；圆角大小混乱；演示区纯白无边界；每页只有卡片没有舞台；按钮没有明确主次；大段浅灰细字；控件和反馈相距太远；页与页之间风格完全不一致。出现这些问题时，优先回到色板、结构和组件配方重写样式，而不是再加装饰。
+生成前自查这些问题：紫蓝渐变铺满封面或卡片；卡片靠阴影漂浮；标题和按钮堆 emoji；默认蓝 `#2563eb` 贯穿全课件；圆角大小混乱；演示区纯白无边界；每页只有卡片没有舞台；按钮没有明确主次；大段浅灰细字；**浅色卡片/演示区上用白色或近白色正文**；**正文与背景同色系导致看不清**；控件和反馈相距太远；页与页之间风格完全不一致。出现这些问题时，优先回到色板、结构和组件配方重写样式，而不是再加装饰。

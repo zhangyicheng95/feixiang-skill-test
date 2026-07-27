@@ -1,7 +1,7 @@
 ---
-name: test-html
+
+## name: test-html
 description: test_html 工具的使用指南：测试模板、编写规范和失败处理流程
----
 
 更新时间：2026-04-27
 
@@ -17,11 +17,13 @@ description: test_html 工具的使用指南：测试模板、编写规范和失
 ### 用户反馈诊断适用范围
 
 适合用测试诊断的反馈类型：
+
 - 功能异常："按钮点不了"、"表单提交没反应"、"下拉菜单不工作"
 - 布局问题："手机上显示乱了"、"文字被截断"、"有水平滚动条"
 - 渲染异常："公式没显示"、"图片加载不出来"、"元素重叠了"
 
 不适合用测试诊断的反馈（直接读代码分析）：
+
 - 视觉审美："颜色不好看"、"风格不搭"
 - 性能感受："加载太慢"、"动画卡顿"
 
@@ -41,6 +43,7 @@ description: test_html 工具的使用指南：测试模板、编写规范和失
 - 如果要用函数组织代码，定义后必须手动调用
 
 错误写法：
+
 ```python
 def test_something(page):
     expect(page.locator("h1")).to_be_visible()
@@ -48,6 +51,7 @@ def test_something(page):
 ```
 
 正确写法：
+
 ```python
 # 直接写顶层语句
 expect(page.locator("h1")).to_be_visible()
@@ -63,12 +67,14 @@ check_layout()  # 必须调用
 
 测试代码中可直接使用以下变量（无需 import）：
 
-| 变量 | 类型 | 说明 |
-|------|------|------|
-| `page` | `Page` | 已加载 HTML 的页面对象 |
-| `context` | `BrowserContext` | 浏览器上下文 |
-| `browser` | `Browser` | 浏览器实例 |
-| `expect` | `function` | Playwright 断言 API |
+
+| 变量        | 类型               | 说明                |
+| --------- | ---------------- | ----------------- |
+| `page`    | `Page`           | 已加载 HTML 的页面对象    |
+| `context` | `BrowserContext` | 浏览器上下文            |
+| `browser` | `Browser`        | 浏览器实例             |
+| `expect`  | `function`       | Playwright 断言 API |
+
 
 等待请用 `page.wait_for_timeout(毫秒)` 而不是 `time.sleep()`。
 
@@ -219,19 +225,22 @@ assert len(broken_images) == 0, f"有 {len(broken_images)} 张图片加载失败
 
 ## 测试组合决策
 
-| HTML 特征 | 必选测试 |
-|-----------|---------|
-| 任何 HTML | 基础渲染验证 |
-| 有 CSS 布局、flex、grid | + 响应式布局检测 |
+
+| HTML 特征                       | 必选测试         |
+| ----------------------------- | ------------ |
+| 任何 HTML                       | 基础渲染验证       |
+| 有 CSS 布局、flex、grid            | + 响应式布局检测    |
 | 有 `MathJax`、`KaTeX`、`\(`、`$$` | + LaTeX 公式渲染 |
-| 有 button、input、form、onclick | + 交互功能测试 |
-| 有 img、video、audio | + 资源加载检查 |
+| 有 button、input、form、onclick   | + 交互功能测试     |
+| 有 img、video、audio             | + 资源加载检查     |
+
 
 根据页面内容组合多个测试片段到一次 `test_html` 调用中，减少调用次数。
 
 ## 测试结果处理
 
 ### 通过
+
 继续后续流程。
 
 ### 未通过（重要）
@@ -239,21 +248,24 @@ assert len(broken_images) == 0, f"有 {len(broken_images)} 张图片加载失败
 **核心原则：先分析错误根因，再决定修改 HTML 还是测试代码。**
 
 处理流程：
+
 1. **分析错误信息**：仔细阅读 `message`、`console` 和 `error` 字段，判断问题出在哪一方
 2. **判断根因**：
-   - **HTML 问题**（大多数情况）：元素缺失、样式错误、JS 逻辑 bug、CDN 资源未加载等 → 修复 HTML
-   - **测试代码问题**：选择器与实际 DOM 结构不匹配、断言条件不合理、等待时间不足等 → 修正测试代码
+  - **HTML 问题**（大多数情况）：元素缺失、样式错误、JS 逻辑 bug、CDN 资源未加载等 → 修复 HTML
+  - **测试代码问题**：选择器与实际 DOM 结构不匹配、断言条件不合理、等待时间不足等 → 修正测试代码
 3. **执行修复**：使用 `edit_file` 修改对应文件，拿到新 resourceId 后重新测试
 4. **如仍未通过**：换一种修复思路，不要重复同样的修复方式。例如：
-   - 换一种 CSS 布局方案（flex → grid，固定宽度 → 百分比）
-   - 换一种 JavaScript 实现方式
-   - 调整测试中的选择器以匹配实际 DOM 结构
-   - 检查是否遗漏了必要的依赖（CDN 库、字体等）
+  - 换一种 CSS 布局方案（flex → grid，固定宽度 → 百分比）
+  - 换一种 JavaScript 实现方式
+  - 调整测试中的选择器以匹配实际 DOM 结构
+  - 检查是否遗漏了必要的依赖（CDN 库、字体等）
 5. **持续尝试**：直到测试通过或已尝试 3 种以上不同的修复策略
 
 **优先级**：优先考虑修复 HTML，仅当确认测试代码本身有明显错误时才修改测试。
 
 **禁止以下行为**：
+
 - 为了让测试通过而无理由地放宽断言条件
 - 连续失败后直接放弃，不尝试其他修复策略
 - 删除或跳过失败的测试用例
+
