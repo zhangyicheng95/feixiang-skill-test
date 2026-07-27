@@ -1,7 +1,7 @@
 ---
 name: teaching-page-html-authoring
 description: 生成或修改 K12 单文件教学 HTML。用于教学动画、互动练习、小游戏、教学海报、A4 打印材料及已有单页 HTML 修改；先建立体验命题、教学视觉主角、互动原型与状态叙事，再按通用或数学链路完成自包含资源、正确性、交互反馈和桌面/小屏视口闭环；含 generate_images 与共用 test-html 验收。多页翻页课件使用 teaching-page-courseware-generator。
-version: v0.1.6
+version: v0.1.6.1
 source_version: teaching-page-v3 + teaching-page-html-authoring-v0.2.0
 ---
 
@@ -100,7 +100,14 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 
 单页输入补充规则：`mode=single`；`core-loop` 必须描述单页内可完成的闭环，例如“点击开始→观察动画→提交答案→反馈→重置”；无互动时写明“无互动闭环”；单页产物不复制 `courseware-shell.js`。核心教学对象、题目数据和判定逻辑必须内联；无外部素材时在 `assets` 写明 CSS/SVG/Canvas 自绘。稳定 HTTPS 资源只能在用户没有禁止外部资源时作为非核心增强，记录真实 URL、用途、`core:false` 和 fallback。禁止虚构 URL、本机/Skill 内部/相对运行路径和大体积 base64 音视频。
 
-需要 AI 配图且未被自包含约束禁止时：先 Read `references/image-generation.md`，再调用工具 **`generate_images`**，把返回的真实 URL 写入 `artifact-spec.assets`（含 `source`、`fallback`、`prompt` 等）。本地无该工具时降级自绘，禁止虚构 URL。
+### 素材与生图（Step 1）
+
+1. **是否生图**：语文/历史情境插画、海报主视觉、真实景物/人物、用户明确要求 AI 配图 → 可列入 `assets` 并在 Step 2 调用 `generate_images`；数学几何、实验结构、流程图、UI 图标、关系图解 → 优先 SVG/CSS/Canvas 自绘。
+2. **自包含优先**：用户要求自包含或 `forbid` 禁止外部资源 → `experienceDesign.assetPlan` 写 `SELF_DRAWN_ONLY`，**Step 1/2 均不得**调用 `generate_images`。
+3. **生图前必读**：准备调用 `generate_images` 前，必须完整 Read `references/image-generation.md`，对 `imageDescriptions` 每条做命中式风格增强与槽位约束；不命中不套风格库。
+4. **大纲阶段不写完整 prompt**：Step 1 只在 `assets` 记录用途、槽位意向、是否待生图；完整 prompt 在调用工具前按 image-generation 组装。
+
+需要 AI 配图且未被自包含约束禁止时：先 Read `references/image-generation.md`，再调用服务端工具 **`generate_images`**（参数 `imageDescriptions: string[]`），把返回的真实 URL 逐条写入 `artifact-spec.assets`（含 `source`、`fallback`、`prompt`、`styleHit`、`imageSlot` 等）。当前会话工具清单无 `generate_images` 时降级自绘，禁止虚构 URL。
 
 用户要求“自包含”“不依赖外部资源”或在 `forbid` 中写出同义限制时，素材策略立即切换为 `SELF_DRAWN_ONLY`：不要调用图片搜索或 `generate_images`，不使用远程字体、音频、视频、CDN，也不接受工具返回的 OSS/HTTPS 临时地址。图片生成结果的 URL 仍是外部依赖，不能当作已内联素材或稳定 fallback。`artifact-spec.assets` 只能记录内联 SVG、Canvas、CSS 或字面数据自绘，不得记录远程 URL。
 
@@ -155,6 +162,12 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 
 交互粒度要跟用户表达一致。用户点名的每个值、模式、角色、分类、难度、题型、单位或阶段，都应能被看见或操作；如果为了体验做了默认合并，要在 spec 注释中说明取舍，并保证不丢失用户硬要求。所有入口都要通向实际功能，不能出现“开始”“提交”“重置”“下一题”等无效果按钮。
 
+### 生图（Step 2，按需）
+
+- **Step 1 未列入且非 SELF_DRAWN_ONLY**：生成过程中若强互动页/海报确需补图，可再调用 `generate_images`；每次调用前必须再 Read `references/image-generation.md`。
+- **调用顺序**：定槽位 → 命中式增强 prompt → `generate_images` → URL 追加进 `artifact-spec.assets` → HTML 引用该 URL。
+- **数学链路**：默认不自绘以外的生图；用户明确要求氛围插画且不影响准确性时例外，且通常不命中第四节风格库。
+
 ### 数学链路要求
 
 生成数学单页前必须先读取 `math-design/workflow.md`。按 workflow 判断 pool、palette 和 layout，只读取命中的色板段落，不全量加载色板文件。把选择结果写入 `artifact-spec.mathDesign`：
@@ -193,6 +206,8 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 □ 无 {{placeholder}}、${data.xxx}、TODO 等未展开模板
 □ 没有本机、同目录或 Skill 内部运行依赖
 □ 未写入课件壳占位符 / courseware-shell / template.page-data / __CW_
+□ 若调用过生图：已 Read references/image-generation.md；已命中增强；source=generate_images；含 imageSlot/prompt；无虚构 URL
+□ SELF_DRAWN_ONLY 时未调用 generate_images，且无远程资源引用（SVG xmlns 除外）
 ```
 
 数学任务还要检查：
