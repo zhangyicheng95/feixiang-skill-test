@@ -88,7 +88,7 @@
 
 ## 素材与自包含
 
-- 只有用户没有要求自包含或禁止外部资源时，外部图片、音频、字体才可来自真实可访问的稳定 HTTPS URL；它们必须记录在 `artifact-spec.assets`，且只能作为非核心增强。需要 AI 配图时，**先 Read `references/image-generation.md`**，再调用服务端 **`generate_images`**（`imageDescriptions: string[]`）。
+- 只有用户没有要求自包含或禁止外部资源时，外部图片、音频、字体才可来自真实可访问的稳定 HTTPS URL；它们必须记录在 `artifact-spec.assets`，且只能作为非核心增强。需要 AI 配图时，**先 Read `references/image-generation.md`**，再调用服务端 **`generate_image`**（`imageDescriptions: string[]`）。
 - 远程资源必须提供 fallback；禁止虚构路径、占位 URL、本机/相对运行路径和大体积 base64 音视频。
 - 不需要真实媒体时，用 SVG、Canvas 或 CSS 自绘。
 - HTML 应能独立运行；所有数据以字面量写入 HTML/JS。
@@ -111,7 +111,7 @@
 □ forbid 项未出现
 □ 每个按钮和可点击元素都有反馈
 □ 素材来自 artifact-spec.assets 或已声明自绘
-□ 若调用 generate_images：已 Read references/image-generation.md；assets 含 source=generate_images、prompt、url
+□ 若调用 generate_image：已 Read references/image-generation.md；assets 含 source=generate_image、prompt、url
 □ SELF_DRAWN_ONLY 时无远程资源引用（SVG xmlns 命名空间除外）
 □ 没有同目录、本机或 Skill 内部运行依赖
 ```

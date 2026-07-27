@@ -79,7 +79,7 @@ mobile        375–390px 下保留哪些核心对象，哪些信息折叠或后
 
 ## 7. 素材策略
 
-图片数量不构成目标或限制。只有当真实图片能提供 CSS/SVG 难以替代的情境、人物、地点、自然质感或观察细节，且用户没有要求自包含或禁止外部资源时，才考虑图片生成；调用前须读取同 skill 的 `references/image-generation.md`，工具名为 `generate_images`。图解、流程、数学关系、实验装置和状态反馈优先使用可控的 SVG/Canvas/CSS。图片生成工具返回的 OSS/HTTPS URL 仍是外部运行依赖，不能视为内联素材。用户要求“自包含”“不依赖外部资源”或同义约束时，素材策略必须写成 `SELF_DRAWN_ONLY`，不调用图片搜索/`generate_images`，所有主图、环境层、箭头、热点和打印态都用内联 SVG、Canvas 或 CSS。自包含扫描只针对资源引用（`src`/`href`/`url()`/`assets[].url` 等），**不**把 SVG/XML 命名空间 URI（如 `http://www.w3.org/2000/svg`）算作外部依赖。每个素材都要写明用途、是否核心、失败降级与语义关系，禁止用多张装饰图掩盖教学主角缺失。
+图片数量不构成目标或限制。只有当真实图片能提供 CSS/SVG 难以替代的情境、人物、地点、自然质感或观察细节，且用户没有要求自包含或禁止外部资源时，才考虑图片生成；调用前须读取同 skill 的 `references/image-generation.md`，工具名为 `generate_image`。图解、流程、数学关系、实验装置和状态反馈优先使用可控的 SVG/Canvas/CSS。图片生成工具返回的 OSS/HTTPS URL 仍是外部运行依赖，不能视为内联素材。用户要求“自包含”“不依赖外部资源”或同义约束时，素材策略必须写成 `SELF_DRAWN_ONLY`，不调用图片搜索/`generate_image`，所有主图、环境层、箭头、热点和打印态都用内联 SVG、Canvas 或 CSS。自包含扫描只针对资源引用（`src`/`href`/`url()`/`assets[].url` 等），**不**把 SVG/XML 命名空间 URI（如 `http://www.w3.org/2000/svg`）算作外部依赖。每个素材都要写明用途、是否核心、失败降级与语义关系，禁止用多张装饰图掩盖教学主角缺失。
 
 ## 8. 响应策略
 

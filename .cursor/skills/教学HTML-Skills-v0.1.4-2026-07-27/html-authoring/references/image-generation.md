@@ -1,7 +1,7 @@
 # 单页教学 HTML · 生图提示词增强指南
 
 > 路径：`html-authoring/references/image-generation.md`  
-> **只在已经准备调用 `generate_images` 时读取。** 本指南仅服务本 skill（单页教学 HTML），不决定是否生图，不新增图片需求，不替换用户上传图/教材原图/已写入 `artifact-spec.assets` 的 URL。  
+> **只在已经准备调用 `generate_image` 时读取。** 本指南仅服务本 skill（单页教学 HTML），不决定是否生图，不新增图片需求，不替换用户上传图/教材原图/已写入 `artifact-spec.assets` 的 URL。  
 > **禁止**读取 `courseware-generator/references/image-generation.md` 或 `cover.md`。
 
 ---
@@ -19,7 +19,7 @@
   ├─ 命中：只给该条追加右侧风格提示词
   └─ 不命中：不套风格库，只保留原始需求 + 通用质量约束
   ↓
-调用 generate_images（imageDescriptions: string[]）
+调用 generate_image（imageDescriptions: string[]）
   ↓
 写入 artifact-spec.assets（url、用途、槽位、source、fallback、prompt、styleHit）
 ```
@@ -31,7 +31,7 @@
 3. **不改变教学内容**：只能补画风、构图、质感、色彩与质量约束。
 4. **非命中不硬套**：数学示意图、实验装置结构图、统计图、流程图、UI/按钮图标等，禁止强行工笔/水墨/敦煌/剪纸等。
 5. **不替换已有素材**：用户上传、教材原图、题图、已确定 URL，不因本指南重生。
-6. **自包含禁止生图**：`forbid` 或 `experienceDesign.assetPlan=SELF_DRAWN_ONLY` 时**不得**调用 `generate_images`；改 SVG/CSS/Canvas 自绘。
+6. **自包含禁止生图**：`forbid` 或 `experienceDesign.assetPlan=SELF_DRAWN_ONLY` 时**不得**调用 `generate_image`；改 SVG/CSS/Canvas 自绘。
 7. **禁止虚构路径**：不得编造 `*_placeholder.png`、相对本机路径、Skill 内部路径；工具不可用时改自绘并在 `assets` 声明。
 
 ---
@@ -40,11 +40,11 @@
 
 ### 2.1 工具名与调用
 
-本服务部署的生图工具名为 **`generate_images`**（复数）。必须以**当前会话工具清单**为准；不要臆造 `generate_image`、`picture_gen`、`dalle`、`image_gen` 等别名。
+本服务部署的生图工具名为 **`generate_image`**（复数）。必须以**当前会话工具清单**为准；不要臆造 `generate_image`、`picture_gen`、`dalle`、`image_gen` 等别名。
 
 | 项 | 说明 |
 |---|---|
-| 工具名 | `generate_images` |
+| 工具名 | `generate_image` |
 | 典型参数 | `imageDescriptions: string[]` — 数组每项为**一条完整 prompt 字符串**（已含风格增强与槽位约束） |
 | 返回 | 真实可访问的图片 URL（如 `*.fbcontent.cn`），须写入 `artifact-spec.assets[].url` |
 
@@ -61,7 +61,7 @@
 → 逐条写入 artifact-spec.assets
 ```
 
-**服务端无 `generate_images` 时**：不调用、不等待；在 `assets` 写明 `source: "self-drawn"` 及原因，用 SVG/CSS/Canvas 自绘。**禁止**虚构 URL。
+**服务端无 `generate_image` 时**：不调用、不等待；在 `assets` 写明 `source: "self-drawn"` 及原因，用 SVG/CSS/Canvas 自绘。**禁止**虚构 URL。
 
 **禁止**用图片搜索、通用 HTTP 下载、或工具返回以外的 OSS 地址冒充生图结果。
 
@@ -79,7 +79,7 @@
   "url": "https://...",
   "role": "hero",
   "location": "stage-background",
-  "source": "generate_images",
+  "source": "generate_image",
   "core": false,
   "fallback": "CSS gradient + inline SVG",
   "imageSlot": {
@@ -88,7 +88,7 @@
     "aspectRatio": "2.4:1",
     "promptHint": "横向主视觉，主体居中，不含文字/边框"
   },
-  "prompt": "最终发给 generate_images 的完整描述",
+  "prompt": "最终发给 generate_image 的完整描述",
   "styleHit": "水彩淡彩 | none"
 }
 ```
@@ -103,7 +103,7 @@
 
 ## 三、单页图片槽位约束
 
-单页无课件封面版式；主视觉须与 `experienceDesign.visualProtagonist` 和页面布局一致。调用 `generate_images` 前：
+单页无课件封面版式；主视觉须与 `experienceDesign.visualProtagonist` 和页面布局一致。调用 `generate_image` 前：
 
 1. 确定图片在页面中的 **slotId** 与目标像素/比例（见下表或自定义）。
 2. 把 `imageSlot` 写入 `artifact-spec.assets`。
@@ -229,7 +229,7 @@ Prompt 模板（按槽位填入）：
 | 自绘 SVG/CSS/Canvas | 数学图、实验结构示意、流程图、UI 图标、精确几何关系、教学视觉主角的可控关系图 |
 | 禁止生图 | `SELF_DRAWN_ONLY`；STEM 原题/原卷必须保真；用户要求一比一还原原图；已有真实 URL |
 
-数学单页默认走 `math-design/` 自绘；仅当用户明确要求插画氛围且不影响数学准确性时才考虑 `generate_images`，且通常**不命中**风格库。
+数学单页默认走 `math-design/` 自绘；仅当用户明确要求插画氛围且不影响数学准确性时才考虑 `generate_image`，且通常**不命中**风格库。
 
 同一角色或连续场景多张图：保持角色设定、服装、色调一致。
 
@@ -247,6 +247,6 @@ Prompt 模板（按槽位填入）：
 □ 未要求图片内可见文字/标题/公式/按钮文案
 □ 连续角色/场景设定一致
 □ 未替换用户上传图、教材原图、已确定 URL
-□ 会话工具清单中存在 generate_images；不可用时已改为自绘并在 assets 声明，无虚构 URL
-□ 结果已写入 artifact-spec.assets，source=generate_images
+□ 会话工具清单中存在 generate_image；不可用时已改为自绘并在 assets 声明，无虚构 URL
+□ 结果已写入 artifact-spec.assets，source=generate_image
 ```

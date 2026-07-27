@@ -1,7 +1,7 @@
 # 多页课件 · 生图提示词增强指南
 
 > 路径：`courseware-generator/references/image-generation.md`  
-> **只在已经准备调用 `generate_images` 时读取。** 本指南仅服务本 skill（多页翻页课件），不决定是否生图，不新增图片需求，不替换用户上传图/教材原图/已写入 `artifact-spec.assets` 的 URL。
+> **只在已经准备调用 `generate_image` 时读取。** 本指南仅服务本 skill（多页翻页课件），不决定是否生图，不新增图片需求，不替换用户上传图/教材原图/已写入 `artifact-spec.assets` 的 URL。
 
 ---
 
@@ -18,7 +18,7 @@
   ├─ 命中：只给该条追加右侧风格提示词
   └─ 不命中：不套风格库，只保留原始需求 + 通用质量约束
   ↓
-调用 generate_images → 拿回真实 URL
+调用 generate_image → 拿回真实 URL
   ↓
 写入 artifact-spec.assets（url、用途、页码/位置、source、fallback）
 ```
@@ -31,7 +31,7 @@
 4. **非命中不硬套**：数学示意图、公式推导、实验装置结构图、统计图、流程图、UI/按钮图标等，禁止强行工笔/水墨/敦煌/剪纸等。
 5. **不替换已有素材**：用户上传、教材原图、题图、已确定 URL，不因本指南重生。
 6. **封面先定槽位**：第 1 页封面图无论是否命中风格映射，都必须先按 `references/cover.md` 写清 `coverImageSlot`（`targetPx` / `aspectRatio` / `promptHint`）。
-7. **禁止虚构路径**：不得编造 `*_placeholder.png`、相对本机路径、Skill 内部路径；`generate_images` 不可用时改 SVG/CSS/Canvas 自绘，并在 `assets` 声明。
+7. **禁止虚构路径**：不得编造 `*_placeholder.png`、相对本机路径、Skill 内部路径；`generate_image` 不可用时改 SVG/CSS/Canvas 自绘，并在 `assets` 声明。
 
 ---
 
@@ -39,15 +39,15 @@
 
 ### 2.1 工具名
 
-本服务部署的生图工具名为 **`generate_images`**（复数）。必须以当前会话工具清单为准；不要臆造 `generate_image`、`picture_gen` 等别名。
+本服务部署的生图工具名为 **`generate_image`**（复数）。必须以当前会话工具清单为准；不要臆造 `generate_image`、`picture_gen` 等别名。
 
 | 项 | 说明 |
 |---|---|
-| 工具名 | `generate_images` |
+| 工具名 | `generate_image` |
 | 典型参数 | `imageDescriptions: string[]`（每项一条完整 prompt 字符串） |
 | 返回 | 真实可访问的图片 URL（如 `*.fbcontent.cn`），写入 `artifact-spec.assets` |
 
-本地开发环境若未挂载 `generate_images`，降级为 SVG/CSS/Canvas 自绘，并在 `assets` 声明原因；**禁止**虚构 URL。
+本地开发环境若未挂载 `generate_image`，降级为 SVG/CSS/Canvas 自绘，并在 `assets` 声明原因；**禁止**虚构 URL。
 
 ### 2.2 提示词语言
 
@@ -63,7 +63,7 @@
   "url": "https://...",
   "role": "cover",
   "page": 1,
-  "source": "generate_images",
+  "source": "generate_image",
   "core": false,
   "fallback": "CSS gradient + SVG icon",
   "coverImageSlot": {
@@ -74,7 +74,7 @@
     "aspectRatio": "2.52:1",
     "promptHint": "超宽横向图，主体居中，不含文字/边框"
   },
-  "prompt": "最终发给 generate_images 的完整描述",
+  "prompt": "最终发给 generate_image 的完整描述",
   "styleHit": "水彩淡彩 | none"
 }
 ```
@@ -87,7 +87,7 @@
 
 ## 三、封面图槽位约束（高优先级）
 
-封面图调用 `generate_images` 前：
+封面图调用 `generate_image` 前：
 
 1. 读取 `references/cover.md`，确定 `data-cover-visual`、`data-cover-layout`、`coverImageSlot`。
 2. 把 slot 写入 `artifact-spec.assets`。
@@ -235,6 +235,6 @@
 □ 未要求图片内可见文字/标题/公式/按钮文案
 □ 连续角色/场景设定一致
 □ 未替换用户上传图、教材原图、已确定 URL
-□ generate_images 不可用时已改为自绘并在 assets 声明，无虚构 URL
-□ 结果已写入 artifact-spec.assets，source=generate_images
+□ generate_image 不可用时已改为自绘并在 assets 声明，无虚构 URL
+□ 结果已写入 artifact-spec.assets，source=generate_image
 ```

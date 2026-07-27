@@ -30,9 +30,9 @@
 
 ### 生图
 
-1. `courseware-generator/references/image-generation.md` — 多页 + 封面槽位 + `generate_images`
+1. `courseware-generator/references/image-generation.md` — 多页 + 封面槽位 + `generate_image`
 2. `html-authoring/references/image-generation.md` — 单页独立副本
-3. 服务生图工具名：**`generate_images`**
+3. 服务生图工具名：**`generate_image`**
 
 ### 验收
 
@@ -47,7 +47,7 @@
 3. 1440/390 视口几何闭包；自包含时 `SELF_DRAWN_ONLY`（禁远程 URL）
 4. 通用视觉改为舞台优先；**保留禁止学科锁色**（不恢复理化→青色硬绑）
 5. 数学 workflow：布局按原型选择、响应式字号/按钮；去掉机械 hash 默认底栏
-6. **保留**：新建/编辑 `read_attachment`、`generate_images` + 本目录 image-generation、`create_file` 的 `redis_verify_match`，并叠加 `shell_injected=false`
+6. **保留**：新建/编辑 `read_attachment`、`generate_image` + 本目录 image-generation、`create_file` 的 `redis_verify_match`，并叠加 `shell_injected=false`
 
 ## 入口
 

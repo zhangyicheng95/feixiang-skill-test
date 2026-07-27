@@ -41,7 +41,7 @@ flowchart TD
     SLOT -->|是| R_COVER[Read cover.md 定 coverImageSlot]
     SLOT -->|否| R_IMG[Read image-generation.md<br/>命中式增强 prompt]
     R_COVER --> R_IMG
-    R_IMG --> CALL_IMG[调用 generate_images]
+    R_IMG --> CALL_IMG[调用 generate_image]
     CALL_IMG --> REC[写入 artifact-spec.assets<br/>真实 URL + prompt + styleHit]
     IMG -->|否| S1_CHECK{Step 1 自检通过?}
     REC --> S1_CHECK
@@ -50,7 +50,7 @@ flowchart TD
 ```
 
 **阶段数据**：`artifact-spec.outline`、`artifact-spec.assets`  
-**生图闸门**：调用 `generate_images` 前必读 `references/cover.md`（封面）+ `references/image-generation.md`；工具不可用则自绘并声明。
+**生图闸门**：调用 `generate_image` 前必读 `references/cover.md`（封面）+ `references/image-generation.md`；工具不可用则自绘并声明。
 
 ---
 

@@ -123,7 +123,7 @@
 3. 必含字段：`mode`, `slug`, `requirements`, `require`, `forbid`, `coreLoop`, `assets`。
 4. **单页**（`mode=single` 或无 `page-data`）：另含可解析的 `experienceDesign`（至少含 `archetype`、`thesis`、`visualProtagonist`、`stateStoryboard`、`assetPlan`、`responsivePolicy`）；缺任一关键键 → 硬失败。
 5. **多页**另含 `outline`，且 `outline.length` 等于 `template.page-data` 个数；多页不要求 `experienceDesign`。
-6. `assets` 中 `source=generate_images` 的 `url` 非 example.com / placeholder。
+6. `assets` 中 `source=generate_image` 的 `url` 非 example.com / placeholder。
 7. 若 `forbid`/素材策略声明自包含或 `SELF_DRAWN_ONLY`：按资源引用扫描远程 `http(s):`（`src`/`href`/`srcset`/`poster`、CSS `url()`、`@import`、`@font-face`、`assets[].url`）；**排除** `xmlns` / `createElementNS` 等 SVG/XML 命名空间 URI。真实资源引用命中 → 硬失败。
 8. 无法解析 → **硬失败**。
 

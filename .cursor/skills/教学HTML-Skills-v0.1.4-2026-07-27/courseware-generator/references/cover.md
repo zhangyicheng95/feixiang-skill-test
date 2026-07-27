@@ -8,7 +8,7 @@
 
 ## 一、使用时机
 
-- **素材阶段（若第 1 页需要封面图）**：先据本文件选版式、定 `coverImageSlot`（目标像素/比例/方向），再读 `references/image-generation.md`，按命中式规则增强 prompt 后调用 `generate_images`（真实 URL，禁止 base64、禁止虚构路径）。
+- **素材阶段（若第 1 页需要封面图）**：先据本文件选版式、定 `coverImageSlot`（目标像素/比例/方向），再读 `references/image-generation.md`，按命中式规则增强 prompt 后调用 `generate_image`（真实 URL，禁止 base64、禁止虚构路径）。
 - **生成第 1 页封面 HTML 前**：完整套用本文件的版式坐标 + `references/typography.md` 已选字体 preset。
 
 硬边界：

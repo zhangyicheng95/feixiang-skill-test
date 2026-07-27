@@ -469,7 +469,7 @@ if (!cached && window.__CW_MODE__ !== 'thumbnail') {
 4. **完成态**（庆祝、得分、总结）
 5. **技术标注**（anime.js、Web Audio、Canvas 等）
 
-生成时须按剧本实现，不得简化反馈。强互动页 JS 宜 ≥100 行；可按需补调 `generate_images`（见 `references/image-generation.md`），不受 Step 1 素材条数限制。
+生成时须按剧本实现，不得简化反馈。强互动页 JS 宜 ≥100 行；可按需补调 `generate_image`（见 `references/image-generation.md`），不受 Step 1 素材条数限制。
 
 ### 9.4 通用生成规则
 

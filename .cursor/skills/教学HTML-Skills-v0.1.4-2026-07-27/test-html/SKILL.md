@@ -84,7 +84,7 @@ must-cover 至少包含四类：`core-loop`、`require`、`forbid`、`delivery`�
 □ JS/CSS 括号与引号平衡；artifact-spec JSON 可解析且无尾逗号/注释
 □ 无 {{}}、${}、TODO、可见 undefined/null/NaN、空 onclick
 □ 无 file://、pages/ 兄弟路径、未注入的 courseware-shell.js 外链
-□ artifact-spec 字段齐全；assets 与 DOM 一致；generate_images url 非占位
+□ artifact-spec 字段齐全；assets 与 DOM 一致；generate_image url 非占位
 □ 多页：page-data 数 = outline 页数；data-id 连续；page-shared 存在；壳已注入
 □ getElementById / #id 查询目标在 HTML 或脚本创建逻辑中存在
 ```
@@ -104,7 +104,7 @@ must-cover 至少包含四类：`core-loop`、`require`、`forbid`、`delivery`�
 □ forbid 项全局不存在
 □ 每个关键按钮点击后有可见反馈
 □ 外部图片和音频能加载，或 artifact-spec.assets 声明自绘和 fallback
-□ 若 assets 含 source=generate_images：url 非虚构；多页封面含 coverImageSlot
+□ 若 assets 含 source=generate_image：url 非虚构；多页封面含 coverImageSlot
 ```
 
 多页课件额外检查：
