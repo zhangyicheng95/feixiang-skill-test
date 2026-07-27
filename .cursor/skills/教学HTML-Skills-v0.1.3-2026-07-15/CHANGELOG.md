@@ -34,6 +34,17 @@
 
 - Step 3 **共用** `test-html/`（生成任务与「仅验收」任务同一套合同）
 
+### 单页体验层（合并自 teaching-page-html-authoring v0.2.0）
+
+以本包 `html-authoring/` 为准吸收 v0.2.0 变更，并保留 v0.1.3 已有能力：
+
+1. 新增 `experience-design.md`；`artifact-spec.experienceDesign` 为必填
+2. 状态源、数据层正确性、可访问控件与「操作→状态→反馈」闭环
+3. 1440/390 视口几何闭包；自包含时 `SELF_DRAWN_ONLY`（禁远程 URL）
+4. 通用视觉改为舞台优先；**保留禁止学科锁色**（不恢复理化→青色硬绑）
+5. 数学 workflow：布局按原型选择、响应式字号/按钮；去掉机械 hash 默认底栏
+6. **保留**：新建/编辑 `read_attachment`、`generate_images` + 本目录 image-generation、`create_file` 的 `redis_verify_match`，并叠加 `shell_injected=false`
+
 ## 入口
 
 | 场景 | 入口 |
