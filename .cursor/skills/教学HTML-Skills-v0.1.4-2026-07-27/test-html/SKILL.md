@@ -1,7 +1,7 @@
 ---
 name: teaching-page-test-html
 description: 单文件教学 HTML 验收 skill。用于检查 html-authoring 或 courseware-generator 生成的一个 HTML；Agent 回读产物并按 static-checks.md 做静态验收（标签闭合、语法格式、artifact-spec、依赖、占位）与 must-cover；多页额外检查内联壳、翻页、状态恢复、cwScore。服务端无 Playwright 时以纯 Markdown 静态清单为主路径。浏览器或本地 Playwright 可用时补动态验证。
-version: v0.1.5
+version: 0.1.7.2
 source_version: teaching-page-v3
 ---
 
@@ -86,8 +86,8 @@ must-cover 至少包含四类：`core-loop`、`require`、`forbid`、`delivery`�
 □ 无 file://、pages/ 兄弟路径、未注入的 courseware-shell.js 外链
 □ artifact-spec 字段齐全；assets 与 DOM 一致；generate_image url 非占位
 □ 多页：page-data 数 = outline 页数；data-id 连续；page-shared 存在；壳已注入
-□ 多页：page-shared 含 --text；浅色卡片/演示区无白字/按钮前景色正文（见 static-checks F.1）
 □ getElementById / #id 查询目标在 HTML 或脚本创建逻辑中存在
+□ create_file 成功证据包含 cover_attached=true；否则附件封面未关联，不得交付
 ```
 
 细则见 **`references/static-checks.md`**。
@@ -105,7 +105,8 @@ must-cover 至少包含四类：`core-loop`、`require`、`forbid`、`delivery`�
 □ forbid 项全局不存在
 □ 每个关键按钮点击后有可见反馈
 □ 外部图片和音频能加载，或 artifact-spec.assets 声明自绘和 fallback
-□ 若 assets 含 source=generate_image：url 非虚构；多页封面含 coverImageSlot
+□ 若 assets 含 source=generate_image：url 非虚构；多页页面主视觉含 coverImageSlot
+□ create_file 返回 cover_attached=true（附件封面由服务端关联，不能仅凭 HTML 图片推断）
 ```
 
 多页课件额外检查：

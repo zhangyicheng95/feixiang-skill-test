@@ -39,6 +39,8 @@
 
 色彩、字体和图像语言不得由学科名称直接决定。色板与风格参考只是兼容选项，最终选择服务当前学习任务、内容气质和投屏可读性。`visualInvariant` 只锁定语义身份，不锁死整套色板和构图。
 
+**三维空间页**：`visual.object` 须指向 WebGL 场景内的可观察实体（网格、向量、分子等），不得写成「CSS 立体卡片」或 `preserve-3d` 层叠；`interaction` 须支持旋转/缩放/选中等 3D 操作，技术栈写 `THREE.js`（见 `references/html.md` §9.5）。
+
 ## 4. 为每页丰富生产卡
 
 在每个内容骨架对象上补充 `task / visual / interaction / layout`。封面和纯讲解页也要有 task；无交互页把 `interaction.type` 写为 `NONE`，不要虚构点击行为。

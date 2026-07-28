@@ -95,6 +95,38 @@
 - 用户要求“自包含”“不依赖外部资源”或同义限制时，素材策略为 `SELF_DRAWN_ONLY`：不调用图片搜索/生成，不使用工具返回的 OSS/HTTPS URL；主图与素材全部改为内联 SVG、Canvas 或 CSS。
 - 自包含扫描对象是**资源引用**，不是任意字面量：禁止 `src`/`href`/`srcset`/`poster`、CSS `url()`、`@import`、`@font-face` 与 `artifact-spec.assets` 中的远程 `http(s):` 地址。允许并常见：`xmlns="http://www.w3.org/2000/svg"`、`createElementNS('http://www.w3.org/2000/svg', …)` 等 XML/SVG 命名空间 URI（它们不是网络请求）。
 
+## 三维可视化（Three.js / WebGL 强制）
+
+当用户需求、`requirements` 或 `experienceDesign` 涉及**三维空间观察或操作**（立体几何体、分子/晶体、空间向量、可旋转机械/电路模型、三维模拟实验等），本页 3D 教学主角**必须**用 **Three.js（WebGL）** 实现，以保证旋转、缩放、拖拽观察的顺滑与一致性。
+
+**必须**
+
+- 在 `<head>` 或 `</body>` 前引入 Three.js（推荐 r150+ 稳定 CDN，只引入一次）。
+- 舞台内提供 `<canvas>`（或 `WebGLRenderer.domElement`），用 `Scene` / `Camera` / `Renderer` 搭建场景；`requestAnimationFrame` 驱动渲染循环。
+- 交互（OrbitControls 或等价拖拽/缩放）与教学状态（选中对象、参数变化）绑定同一 JS 状态源；重置按钮恢复相机/物体姿态。
+- `window.resize` 时调用 `renderer.setSize` 与相机 `aspect` 更新，保证 1440px 与 390px 下画布可用。
+
+**严禁（CSS 伪 3D）**
+
+```css
+/* 以下不得用于承担 3D 教学主角 */
+transform-style: preserve-3d;
+perspective: …;
+transform: rotateX(…) rotateY(…) translateZ(…);
+```
+
+禁止用多层 `div` + CSS 3D 变换模拟可旋转立方体、分子、球体、向量箭头空间关系；禁止声称「3D 实验/模型」但无可交互 WebGL 画布。
+
+**写入前自检**
+
+```text
+□ 需求/体验命题要求 3D → 存在 THREE / WebGLRenderer / canvas#webgl（或等价）
+□ 无 preserve-3d / perspective / rotateX|Y|Z 承担主视觉
+□ 重置可恢复 3D 姿态
+```
+
+纯 2D 内容（平面几何、数轴、流程图）不要用 Three.js；用户明确要 3D 时不得降级为 CSS 3D 或静态贴图。
+
 ## 内容自检
 
 ```text
@@ -114,4 +146,5 @@
 □ 若调用 generate_image：已 Read references/image-generation.md；assets 含 source=generate_image、prompt、url
 □ SELF_DRAWN_ONLY 时无远程资源引用（SVG xmlns 命名空间除外）
 □ 没有同目录、本机或 Skill 内部运行依赖
+□ 涉及 3D：已用 Three.js/WebGL + canvas，无 CSS preserve-3d/perspective/rotateX|Y|Z 伪 3D
 ```

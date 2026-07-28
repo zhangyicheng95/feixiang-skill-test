@@ -187,6 +187,18 @@
 
 命中后回读上下文：注释、封面 full-bleed 遮罩上的白字标题可例外，但**讲解/练习卡片内段落**不可白字浅底。
 
+### F.2 三维可视化（按需硬门槛）
+
+当 `artifact-spec.outline`（多页）或 `artifact-spec.requirements` / 用户需求（单页 `mode=single`）含「三维、立体、3D、旋转观察、分子模型、空间向量」等且该页为强互动/模拟页时：
+
+```text
+□ 存在 THREE / WebGLRenderer 或等价 WebGL canvas 主舞台
+□ Grep 该页 HTML（单页全文或多页对应 page-data）无 perspective / preserve-3d / rotateX|rotateY|rotateZ 承担 3D 教学主角
+□ 非仅 CSS transition 一次性翻转冒充可交互 3D
+```
+
+纯 2D 页不要求 Three.js；要求 3D 却仅有 CSS 3D → **硬失败**（多页见 courseware-generator/references/html.md §9.5；单页见 html-authoring/content-guide.md「三维可视化」）。
+
 ---
 
 ## G. 单页静态契约

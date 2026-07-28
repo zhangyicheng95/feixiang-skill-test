@@ -1,7 +1,7 @@
 ---
 name: teaching-page-courseware-generator
 description: K12 单文件多页翻页课件 HTML 生成 skill。用于 PPT 式课件、翻页演示、缩略图预览、练习页状态保存、成绩消息、下载或 SCORM；含封面槽位与生图 prompt 命中式增强（generate_image）；沿用 spec、outline、page-data 和验收流程，由 LLM 生成页面模板与业务逻辑，并通过 create_file 注入官方课件壳、写入和回读验证。
-version: v0.1.6.1
+version: v0.1.6.2
 ---
 
 # 多页课件生成
@@ -21,6 +21,18 @@ version: v0.1.6.1
 多页课件中的每一个 `template.page-data` 都是一张 960×540 的课件页，必须在这一页内完整呈现当前教学任务，不允许依赖页面滚动、局部滚动容器或隐藏滚动条承载核心内容。内容超量时必须拆页、精简、改成逐步展示或同页状态切换；不能用滚动兜底。
 
 这个约束高于普通布局偏好。不得用 `overflow:auto`、固定高度滚动面板或隐藏滚动条来放超量内容；也不得用 `overflow:hidden` 裁掉内容后声称通过。验收时每个 iframe 页都必须满足 `scrollWidth <= clientWidth` 且 `scrollHeight <= clientHeight`，初始态、反馈态、解析展开、题目切换和动画结束态都要检查。
+
+## 3D 与空间互动（硬门槛）
+
+当教学目标、大纲或用户要求涉及**三维空间**（立体几何、分子/晶体模型、空间向量、电路/机械三维示意、可旋转观察的实体等）时：
+
+1. **必须用 Three.js（WebGL）** 在 `<canvas>` 上渲染可交互 3D 场景，用 `requestAnimationFrame` 驱动平滑旋转、缩放、拖拽观察与状态更新。
+2. **严禁用 CSS 伪 3D 代替**：禁止 `transform-style: preserve-3d`、`perspective`、`rotateX/Y/Z`、`translateZ`、`backface-visibility` 等 CSS 3D 变换堆叠来模拟可旋转立体、分子或空间关系；禁止用多层 `div` + CSS 变换冒充 Three.js 场景。
+3. **允许**：同一页内 UI 控件（按钮、标签、侧栏）仍用普通 CSS；3D **教学主角** 必须在 WebGL 画布内。
+4. **库引入**：Three.js（及必要扩展）通过 `page-shared` 以 `<script src="…">` 引入一次，各页共用；`restoreState` 须恢复相机/物体姿态。
+5. **不是 3D 的场景**：纯 2D 拖拽、平面几何、统计图、流程图仍用 SVG/Canvas/CSS，不要误上 Three.js。
+
+用户未要求 3D 时不得强行加 WebGL；用户明确要求 3D 或大纲页型为三维观察/模拟时，不得降级为 CSS 3D。细则见 `references/html.md` §9.5。
 
 ## 文件职责
 
@@ -173,6 +185,7 @@ core-loop=各互动页闭环，例如 P6 选题→确认→解析→下一题
 □ 每个可点击入口都有可见效果
 □ 素材来自 artifact-spec.assets 或已声明 CSS/SVG/Canvas 自绘
 □ 若调用过生图：已按 references/image-generation.md 命中增强；封面含 coverImageSlot；source=generate_image；无虚构 URL
+□ 涉及 3D 的页：已用 Three.js/WebGL + canvas，无 CSS preserve-3d/perspective/rotateX|Y|Z 伪 3D（见 html.md §9.5）
 □ 没有本机、同目录或 Skill 内部真实运行依赖
 ```
 

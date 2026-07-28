@@ -449,7 +449,7 @@ if (!cached && window.__CW_MODE__ !== 'thumbnail') {
 ### 9.2 强互动页判定（满足任一即为强互动）
 
 1. 学生动手探究：拖拽学具、排序/匹配/分类、涂抹/划线、连线等
-2. Canvas/SVG/3D 动态可视化，超出 CSS 动画表现力
+2. **Canvas/SVG/3D 动态可视化**，超出 CSS 动画表现力；其中 **3D 必须用 Three.js/WebGL**（§9.5），不得用 CSS 3D 变换替代
 3. 游戏化练习：闯关、计时、积分、翻牌配对等
 4. 实时判定 + 差异化反馈（正确/错误动画与反馈不同）
 
@@ -467,9 +467,60 @@ if (!cached && window.__CW_MODE__ !== 'thumbnail') {
 2. **过程反馈**（跟随、悬停、阴影等）
 3. **结果反馈**（正确/错误须差异化）
 4. **完成态**（庆祝、得分、总结）
-5. **技术标注**（anime.js、Web Audio、Canvas 等）
+5. **技术标注**（Three.js/WebGL、anime.js、Web Audio、Canvas 2D 等；3D 页必须标注 Three.js）
 
-生成时须按剧本实现，不得简化反馈。强互动页 JS 宜 ≥100 行；可按需补调 `generate_image`（见 `references/image-generation.md`），不受 Step 1 素材条数限制。
+生成时须按剧本实现，不得简化反馈。强互动页 JS 宜 ≥100 行；**含 3D 的页**须含完整 WebGL 场景与交互循环，不得用 CSS 伪 3D 敷衍。可按需补调 `generate_image`（见 `references/image-generation.md`），不受 Step 1 素材条数限制。
+
+### 9.5 三维可视化（Three.js / WebGL 强制）
+
+当页型、大纲或用户要求涉及**三维空间观察或操作**（立体几何体、分子/晶体、空间向量、可旋转机械/电路模型、三维模拟实验等），本页 3D 教学主角**必须**用 **Three.js（WebGL）** 实现，以保证旋转、缩放、拖拽观察的顺滑与一致性。
+
+**必须**
+
+- 在 `page-shared` 引入 Three.js（推荐 r150+ 稳定 CDN，只引入一次）。
+- 演示区使用全尺寸或主舞台 `<canvas>`，`renderer.setSize` 适配 960×540 内演示区；`requestAnimationFrame` 持续渲染。
+- 交互：OrbitControls 或等价指针/触摸旋转缩放；状态变化同步 `saveState`（相机、选中物体、高亮等可序列化字段）。
+- `restoreState` 恢复场景姿态，跳过重复入场动画。
+
+**严禁（CSS 伪 3D）**
+
+```css
+/* 以下不得用于承担 3D 教学主角 */
+perspective: …;
+transform-style: preserve-3d;
+transform: rotateX(…) rotateY(…) translateZ(…);
+```
+
+禁止用多层 `div` + CSS 3D 变换模拟可旋转立方体、分子、球体、向量箭头空间关系；禁止声称「3D 实验/模型」但无可交互 WebGL 画布。
+
+**最小结构示例**
+
+```html
+<template class="page-shared">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+</template>
+
+<template class="page-data" data-id="5" data-name="分子结构观察">
+  <div class="demo" id="stage-3d" style="width:100%;height:100%;min-height:0;">
+    <canvas id="webgl-canvas"></canvas>
+  </div>
+  <script>
+    /* Scene, Camera, WebGLRenderer, mesh, OrbitControls, animate(), saveState/restoreState */
+  </script>
+</template>
+```
+
+**自检**
+
+```text
+□ 大纲/用户要求 3D → 存在 THREE / WebGLRenderer / canvas#webgl
+□ 无 preserve-3d / perspective / rotateX|Y|Z 承担主视觉
+□ 指针/触摸可平滑旋转或操作，非一次性 CSS transition
+□ saveState / restoreState 含 3D 姿态
+```
+
+纯 2D 内容（平面几何、数轴、流程图）不要用 Three.js；用户明确要 3D 时不得降级为 CSS 3D 或静态贴图。
 
 ### 9.4 通用生成规则
 
@@ -554,3 +605,5 @@ create_file 注入后的官方壳须保留：主 iframe 基准 960×540；`_fitM
 | 手写 `musk-collect.js` | 壳已注入 |
 | 假定 `window.muskCollect` 等小写预置实例 | 须 `new MuskCollect()` |
 | `save` 无 `__CW_MODE__ === 'thumbnail'` 守卫 | 缩略图污染数据 |
+| 3D 页用 CSS `preserve-3d`/`perspective`/`rotateX|Y|Z` 冒充立体 | 必须用 Three.js/WebGL（§9.5） |
+| 要求 3D 但无 `THREE`/WebGLRenderer/canvas | 教学主角未真实可交互 |

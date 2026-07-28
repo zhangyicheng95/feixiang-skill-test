@@ -1,7 +1,7 @@
 ---
 name: teaching-page-html-authoring
 description: 生成或修改 K12 单文件教学 HTML。用于教学动画、互动练习、小游戏、教学海报、A4 打印材料及已有单页 HTML 修改；先建立体验命题、教学视觉主角、互动原型与状态叙事，再按通用或数学链路完成自包含资源、正确性、交互反馈和桌面/小屏视口闭环；含 generate_image 与共用 test-html 验收。多页翻页课件使用 teaching-page-courseware-generator。
-version: v0.1.6.1
+version: v0.1.6.2
 source_version: teaching-page-v3 + teaching-page-html-authoring-v0.2.0
 ---
 
@@ -30,6 +30,18 @@ source_version: teaching-page-v3 + teaching-page-html-authoring-v0.2.0
 不要把滚动当作内容组织的唯一方案。内容超量时优先考虑 Tabs、Accordion、步骤分页、题目分页、锚点目录或拆成多页课件；如果选择滚动，要保证结构可扫读、返回路径清楚、核心操作可达。不要用隐藏滚动条、裁切内容或过深嵌套滚动制造“看起来能放下”的假象。
 
 页面横向几何必须形成闭包。内容根容器使用 `max-width:100%`，Grid/Flex 子项允许收缩（必要时 `min-width:0`），有页面内边距时不再用 `100vw` 扩张内部内容；绝对定位的光环、纹理等纯装饰放在独立装饰层内并受容器边界约束，不能扩大文档滚动宽度。裁切只允许作用于不承载教学信息和操作的装饰层，不能用来遮住内容溢出。SVG、Canvas 或 CSS 教学主图在小屏要通过完整 `viewBox`、等比缩放、标签简化或布局重排保留全部关键节点与关系路径，不能用固定像素画布、`cover` 或裁切容器丢失主图一侧。写入前分别按 1440px 桌面和 390px 小屏推演，预期 `document.documentElement.scrollWidth <= window.innerWidth`，且核心主图的语义边界完整可见。
+
+## 3D 与空间互动（硬门槛）
+
+当用户需求、`requirements` 或 `experienceDesign` 涉及**三维空间观察或操作**（立体几何体、分子/晶体、空间向量、可旋转机械/电路模型、三维模拟实验等），本页 3D 教学主角**必须**用 **Three.js（WebGL）** 实现，以保证旋转、缩放、拖拽观察的顺滑与一致性。
+
+1. **必须用 Three.js（WebGL）** 在 `<canvas>` 上渲染可交互 3D 场景，用 `requestAnimationFrame` 驱动平滑旋转、缩放、拖拽观察与状态更新。
+2. **严禁用 CSS 伪 3D 代替**：禁止 `transform-style: preserve-3d`、`perspective`、`rotateX/Y/Z`、`translateZ`、`backface-visibility` 等 CSS 3D 变换堆叠来模拟可旋转立体、分子或空间关系；禁止用多层 `div` + CSS 变换冒充 WebGL 场景。
+3. **允许**：同一页内 UI 控件（按钮、标签、侧栏）仍用普通 CSS；3D **教学主角** 必须在 WebGL 画布内。
+4. **库引入**：Three.js（及必要扩展）在 `<head>` 或 `</body>` 前以 `<script src="…">` 引入一次；`window.resize` 时同步 `renderer.setSize`；重置须恢复相机/物体姿态到页面 JS 状态源。
+5. **不是 3D 的场景**：纯 2D 拖拽、平面几何、统计图、流程图仍用 SVG/Canvas/CSS，不要误上 Three.js。
+
+用户未要求 3D 时不得强行加 WebGL；用户明确要求 3D 或体验命题指向三维观察/模拟时，不得降级为 CSS 3D。细则见 `content-guide.md`「三维可视化」。
 
 ## 文件职责
 
@@ -208,6 +220,7 @@ core-loop=单页内可完成的互动闭环，例如 点击开始→观察动画
 □ 未写入课件壳占位符 / courseware-shell / template.page-data / __CW_
 □ 若调用过生图：已 Read references/image-generation.md；已命中增强；source=generate_image；含 imageSlot/prompt；无虚构 URL
 □ SELF_DRAWN_ONLY 时未调用 generate_image，且无远程资源引用（SVG xmlns 除外）
+□ 涉及 3D：已用 Three.js/WebGL + canvas，无 CSS preserve-3d/perspective/rotateX|Y|Z 伪 3D（见 content-guide.md「三维可视化」）
 ```
 
 数学任务还要检查：
